@@ -1,0 +1,3 @@
+[submodule "/Users/jeremstym/thesis/MulModDVM/MulModVM/XTab"]
+	path = /Users/jeremstym/thesis/MulModDVM/MulModVM/XTab
+	url = https://github.com/creatis-myriad/XTab.git
