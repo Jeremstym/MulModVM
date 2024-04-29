@@ -75,11 +75,41 @@ crop_scale_lower: 0.08
 # tabular
 corruption_rate: 0.3
 one_hot: True
-eval_one_hot: True
+eval_one_hot: False
+use_transformer: True
 
 encoder_num_layers: 2
 projector_num_layers: 1
 init_strat: kaiming
+
+# tabular_transformer
+tabular_tokenizer:
+  _target_: MulModVM.models.TabularTokenizer.TabularTokenizer
+  d_token: ${models.embedding_dim}
+tabular_transformer:
+  _target_: autogluon.multimodal.models.ft_transformer.FT_Transformer
+  d_token: ${models.embedding_dim}
+  n_self_blocks: 3
+  n_cross_blocks: 2
+  attention_n_heads: 8
+  attention_dropout: 0.2
+  attention_initialization: kaiming
+  attention_normalization: layer_norm
+  ffn_d_hidden: ${tabular_transformer.d_token}
+  ffn_dropout: 0.1
+  ffn_activation: reglu
+  ffn_normalization: layer_norm
+  residual_dropout: 0.1
+  prenormalization: True
+  first_prenormalization: False
+  last_layer_query_idx: null
+  cross_attention: False
+  n_tokens: null # Only used when compressing the input sequence (`kv_compression_ratio is not None`)
+  kv_compression_ratio: null # Only used when compressing the input sequence (`kv_compression_ratio is not None`)
+  kv_compression_sharing: null # Only used when compressing the input sequence (`kv_compression_ratio is not None`)
+  head_activation: False # Only used when using a projection head (`projection=True`)
+  head_normalization: null # Only used when using a projection head (`projection=True`)
+  d_out: null # Only used when using a projection head (`projection=True`)
 
 # Evaluator
 generate_embeddings: False

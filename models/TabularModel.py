@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 
 from models.TabularEncoder import TabularEncoder
+from models.TabularTransformer import TabularTransformer
 
 class TabularModel(nn.Module):
   """
@@ -13,7 +14,7 @@ class TabularModel(nn.Module):
   def __init__(self, args):
     super(TabularModel, self).__init__()
 
-    self.encoder = TabularEncoder(args)
+    self.encoder = TabularEncoder(args) if not args.use_transformer else TabularTransformer(args)
     self.classifier = nn.Linear(args.embedding_dim, args.num_classes)
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:

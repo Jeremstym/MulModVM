@@ -73,7 +73,7 @@ def evaluate(hparams, wandb_logger):
   if hparams.task == 'regression':
     model = Evaluator_Regression(hparams)
   else:
-    model = Evaluator(hparams)
+    model = Evaluator(hparams, dataset=train_dataset)
   
   mode = 'max'
   

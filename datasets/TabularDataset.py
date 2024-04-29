@@ -1,8 +1,10 @@
 from typing import Tuple
 import csv
+import pandas as pd
 
 import torch
 from torch.utils.data import Dataset
+from TabularAttributes import check_categorical_data
 
 class TabularDataset(Dataset):
   """"
@@ -35,12 +37,22 @@ class TabularDataset(Dataset):
     """
     Does what it says on the box
     """
-    with open(path,'r') as f:
-      reader = csv.reader(f)
-      data = []
-      for r in reader:
-        r2 = [float(r1) for r1 in r]
-        data.append(r2)
+    df = pd.read_csv(path)
+    cat_mask = check_categorical_data(df)
+    self.cat_mask = cat_mask
+    field_lengths_tensor = torch.tensor(self.field_lengths)
+    self.cat_card = field_lengths_tensor[cat_mask]
+    columns = df.columns
+    has_header = all(isinstance(c, str) for c in columns)
+    if has_header:
+      data = df.values.tolist()
+    else:
+      with open(path,'r') as f:
+        reader = csv.reader(f)
+        data = []
+        for r in reader:
+          r2 = [float(r1) for r1 in r]
+          data.append(r2)
     return data
 
   def one_hot_encode(self, subject: torch.Tensor) -> torch.Tensor:
@@ -54,6 +66,18 @@ class TabularDataset(Dataset):
       else:
         out.append(torch.nn.functional.one_hot(torch.clamp(subject[i],min=0,max=self.field_lengths[i]-1).long(), num_classes=int(self.field_lengths[i])))
     return torch.cat(out)
+
+  def get_cat_mask(self) -> torch.Tensor:
+    """
+    Returns the categorical mask
+    """
+    return torch.tensor(self.cat_mask)
+
+  def get_cat_card(self) -> torch.Tensor:
+    """
+    Returns the categorical cardinalities
+    """
+    return torch.tensor(self.cat_card)
 
   def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
     return self.data[index], self.labels[index]

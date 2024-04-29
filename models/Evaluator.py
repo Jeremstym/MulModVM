@@ -4,13 +4,17 @@ import torch
 import torchmetrics
 import pytorch_lightning as pl
 
+import hydra
+from omegaconf import DictConfig
+
+from models.TabularTokenizer import TabularTokenizer
 from models.TabularModel import TabularModel
 from models.ImagingModel import ImagingModel
 from models.MultimodalModel import MultimodalModel
 
 
 class Evaluator(pl.LightningModule):
-  def __init__(self, hparams):
+  def __init__(self, hparams, dataset=None):
     super().__init__()
     self.save_hyperparameters(hparams)
 
@@ -20,6 +24,15 @@ class Evaluator(pl.LightningModule):
       self.model = TabularModel(self.hparams)
     if self.hparams.datatype == 'imaging_and_tabular':
       self.model = MultimodalModel(self.hparams)
+    if self.hparams.use_transformer:
+      assert dataset is not None, 'Dataset must be provided for transformer models'
+      if args.use_transformer:
+        cat_mask = train_dataset.get_cat_mask()
+        self.cat_mask = cat_mask
+        num_cont = train_dataset.__len__() - cat_mask.sum()
+        cat_card = train_dataset.get_cat_card()
+      assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
+      self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
 
     task = 'binary' if self.hparams.num_classes == 2 else 'multiclass'
     
@@ -41,6 +54,10 @@ class Evaluator(pl.LightningModule):
     """
     Generates a prediction from a data point
     """
+    if self.hparams.use_transformer:
+      x_num = x[:, ~self.cat_mask]
+      x_cat = x[:, self.cat_mask]
+      x = self.tokenizer(x_num=x_num, x_cat=x_cat)
     y_hat = self.model(x)
 
     # Needed for gradcam
