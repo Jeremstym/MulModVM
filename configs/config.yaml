@@ -1,7 +1,7 @@
 defaults:
   - _self_
   - models: resnet50
-  - dataset: cardiac_new
+  - dataset: dvm_all_server
 
 # Command Center
 pretrain: False
