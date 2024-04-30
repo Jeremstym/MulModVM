@@ -4,7 +4,7 @@ import pandas as pd
 
 import torch
 from torch.utils.data import Dataset
-from TabularAttributes import check_categorical_data
+from .TabularAttributes import check_categorical_data
 
 class TabularDataset(Dataset):
   """"
@@ -37,16 +37,17 @@ class TabularDataset(Dataset):
     """
     Does what it says on the box
     """
-    df = pd.read_csv(path)
-    cat_mask = check_categorical_data(df)
-    self.cat_mask = cat_mask
-    field_lengths_tensor = torch.tensor(self.field_lengths)
-    self.cat_card = field_lengths_tensor[cat_mask]
-    columns = df.columns
-    has_header = all(isinstance(c, str) for c in columns)
     if has_header:
+      df = pd.read_csv(path)
+      cat_mask = check_categorical_data(df)
+      self.cat_mask = cat_mask
+      field_lengths_tensor = torch.tensor(self.field_lengths)
+      self.cat_card = field_lengths_tensor[cat_mask]
+      columns = df.columns
+      has_header = all(isinstance(c, str) for c in columns)
       data = df.values.tolist()
     else:
+      print("WARNING: dataframe has no headers for tokenization")
       with open(path,'r') as f:
         reader = csv.reader(f)
         data = []
