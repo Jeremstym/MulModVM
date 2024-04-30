@@ -12,11 +12,11 @@ class TabularDataset(Dataset):
   """
   def __init__(self, data_path: str, labels_path: str, eval_one_hot: bool=True, field_lengths_tabular: str=None, use_header: bool=True):
     super(TabularDataset, self).__init__()
+    self.use_header = use_header
     self.data = self.read_and_parse_csv(data_path)
     self.labels = torch.load(labels_path)
     self.eval_one_hot = eval_one_hot
     self.field_lengths = torch.load(field_lengths_tabular)
-    self.use_header = use_header
 
     if self.eval_one_hot:
       for i in range(len(self.data)):
