@@ -11,6 +11,7 @@ import torch
 import torch.nn as nn
 
 from models.TokenLayers import PositionalEncoding, CLSToken
+from datasets.TabularAttributes import CAT_FEATURES, NUM_FEATURES
 
 class TabularTransformer(nn.Module):
     """
@@ -20,7 +21,8 @@ class TabularTransformer(nn.Module):
         super(TabularTransformer, self).__init__()
 
         self.cls_token = CLSToken(d_token=args.embedding_dim)
-        self.positional_encoding = PositionalEncoding(args.sequence_len, args.embedding_dim)
+        sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES)
+        self.positional_encoding = PositionalEncoding(sequence_len, args.embedding_dim)
         self.TransformerEncoder = hydra.utils.instantiate(args.tabular_transformer)
         self.head = nn.Linear(args.embedding_dim, args.num_classes)
 
