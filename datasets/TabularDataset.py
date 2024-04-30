@@ -44,9 +44,6 @@ class TabularDataset(Dataset):
       self.cat_mask = cat_mask
       field_lengths_tensor = torch.tensor(self.field_lengths)
       self.cat_card = field_lengths_tensor[cat_mask]
-      print("Categorical mask: ", self.cat_mask)
-      print("Categorical cardinalities: ", self.cat_card)
-      raise Exception("STOP")
       data = df.values.tolist()
     else:
       print("WARNING: dataframe has no headers for tokenization")
