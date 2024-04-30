@@ -17,6 +17,7 @@ class TabularDataset(Dataset):
     self.eval_one_hot = eval_one_hot
     self.field_lengths = torch.load(field_lengths_tabular)
     self.data = self.read_and_parse_csv(data_path)
+    self.sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES)
 
     if self.eval_one_hot:
       for i in range(len(self.data)):
