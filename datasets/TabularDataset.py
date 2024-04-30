@@ -4,18 +4,19 @@ import pandas as pd
 
 import torch
 from torch.utils.data import Dataset
-from .TabularAttributes import check_categorical_data
+from .TabularAttributes import check_categorical_data, CAT_FEATURES, NUM_FEATURES, CAT_FEATURES_WITH_LABEL
 
 class TabularDataset(Dataset):
   """"
   Dataset for the evaluation of tabular data
   """
-  def __init__(self, data_path: str, labels_path: str, eval_one_hot: bool=True, field_lengths_tabular: str=None):
+  def __init__(self, data_path: str, labels_path: str, eval_one_hot: bool=True, field_lengths_tabular: str=None, use_header: bool=True):
     super(TabularDataset, self).__init__()
     self.data = self.read_and_parse_csv(data_path)
     self.labels = torch.load(labels_path)
     self.eval_one_hot = eval_one_hot
     self.field_lengths = torch.load(field_lengths_tabular)
+    self.use_header = use_header
 
     if self.eval_one_hot:
       for i in range(len(self.data)):
@@ -37,14 +38,15 @@ class TabularDataset(Dataset):
     """
     Does what it says on the box
     """
-    if has_header:
+    if self.use_header:
       df = pd.read_csv(path)
       cat_mask = check_categorical_data(df)
       self.cat_mask = cat_mask
       field_lengths_tensor = torch.tensor(self.field_lengths)
       self.cat_card = field_lengths_tensor[cat_mask]
-      columns = df.columns
-      has_header = all(isinstance(c, str) for c in columns)
+      print("Categorical mask: ", self.cat_mask)
+      print("Categorical cardinalities: ", self.cat_card)
+      raise Exception("STOP")
       data = df.values.tolist()
     else:
       print("WARNING: dataframe has no headers for tokenization")
