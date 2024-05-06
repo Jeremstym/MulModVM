@@ -9,9 +9,9 @@ from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from utils.utils import grab_image_augmentations, grab_wids, create_logdir
 from utils.ssl_online_custom import SSLOnlineEvaluator
 
-from datasets.ContrastiveImagingAndTabularDataset import ContrastiveImagingAndTabularDataset
-from datasets.ContrastiveImageDataset import ContrastiveImageDataset
-from datasets.ContrastiveTabularDataset import ContrastiveTabularDataset
+from datasets_processor.ContrastiveImagingAndTabularDataset import ContrastiveImagingAndTabularDataset
+from datasets_processor.ContrastiveImageDataset import ContrastiveImageDataset
+from datasets_processor.ContrastiveTabularDataset import ContrastiveTabularDataset
 
 from models.MultimodalSimCLR import MultimodalSimCLR
 from models.SimCLR import SimCLR

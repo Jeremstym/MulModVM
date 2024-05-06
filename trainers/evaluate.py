@@ -6,9 +6,9 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from torch.utils.data.sampler import WeightedRandomSampler
 
-from datasets.ImageDataset import ImageDataset
-from datasets.TabularDataset import TabularDataset
-from datasets.ImagingAndTabularDataset import ImagingAndTabularDataset
+from datasets_processor.ImageDataset import ImageDataset
+from datasets_processor.TabularDataset import TabularDataset
+from datasets_processor.ImagingAndTabularDataset import ImagingAndTabularDataset
 from models.Evaluator import Evaluator
 from models.Evaluator_regression import Evaluator_Regression
 from utils.utils import grab_arg_from_checkpoint, grab_hard_eval_image_augmentations, grab_wids, create_logdir

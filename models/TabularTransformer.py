@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 
 from models.TokenLayers import PositionalEncoding, CLSToken
-from datasets.TabularAttributes import CAT_FEATURES, NUM_FEATURES
+from datasets_processor.TabularAttributes import CAT_FEATURES, NUM_FEATURES
 
 class TabularTransformer(nn.Module):
     """

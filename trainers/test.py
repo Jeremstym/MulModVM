@@ -1,8 +1,8 @@
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer
-from datasets.ImageDataset import ImageDataset
-from datasets.TabularDataset import TabularDataset
+from datasets_processor.ImageDataset import ImageDataset
+from datasets_processor.TabularDataset import TabularDataset
 from models.Evaluator import Evaluator
 from utils.utils import grab_arg_from_checkpoint
 

@@ -4,8 +4,8 @@ import torch
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from datasets.ImageDataset import ImageDataset
-from datasets.TabularDataset import TabularDataset
+from datasets_processor.ImageDataset import ImageDataset
+from datasets_processor.TabularDataset import TabularDataset
 from models.TabularEmbeddingModel import TabularEmbeddingModel
 from models.ResnetEmbeddingModel import ResnetEmbeddingModel
 
