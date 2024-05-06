@@ -55,7 +55,7 @@ class Evaluator(pl.LightningModule):
     """
     if self.hparams.use_transformer:
       x_num = x[:, ~self.cat_mask]
-      x_cat = x[:, self.cat_mask].type(torch.LongTensor)
+      x_cat = x[:, self.cat_mask].type(torch.int64)
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)
     y_hat = self.model(x)
 
