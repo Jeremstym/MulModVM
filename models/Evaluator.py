@@ -26,10 +26,10 @@ class Evaluator(pl.LightningModule):
       self.model = MultimodalModel(self.hparams)
     if self.hparams.use_transformer:
       assert dataset is not None, 'Dataset must be provided for transformer models'
-      cat_mask = train_dataset.get_cat_mask()
+      cat_mask = dataset.get_cat_mask()
       self.cat_mask = cat_mask
-      num_cont = train_dataset.__len__() - cat_mask.sum()
-      cat_card = train_dataset.get_cat_card()
+      num_cont = dataset.__len__() - cat_mask.sum()
+      cat_card = dataset.get_cat_card()
       assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
       self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
 
