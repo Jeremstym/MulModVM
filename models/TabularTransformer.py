@@ -21,7 +21,7 @@ class TabularTransformer(nn.Module):
         super(TabularTransformer, self).__init__()
 
         self.cls_token = CLSToken(d_token=args.embedding_dim)
-        sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES)
+        sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES) + 1 # +1 for CLS token
         self.positional_encoding = PositionalEncoding(sequence_len, args.embedding_dim)
         self.TransformerEncoder = hydra.utils.instantiate(args.tabular_transformer)
         self.head = nn.Linear(args.embedding_dim, args.num_classes)
