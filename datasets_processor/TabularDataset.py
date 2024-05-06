@@ -79,6 +79,12 @@ class TabularDataset(Dataset):
     """
     return torch.tensor(self.cat_card)
 
+  def get_number_of_numerical_features(self) -> int:
+    """
+    Returns the number of numerical features
+    """
+    return len(NUM_FEATURES)
+
   def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
     return self.data[index], self.labels[index]
 

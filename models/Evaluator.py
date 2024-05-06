@@ -28,7 +28,7 @@ class Evaluator(pl.LightningModule):
       assert dataset is not None, 'Dataset must be provided for transformer models'
       cat_mask = dataset.get_cat_mask()
       self.cat_mask = cat_mask
-      num_cont = dataset.__len__() - cat_mask.sum()
+      num_cont = dataset.get_number_of_numerical_features()
       cat_card = dataset.get_cat_card()
       assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
       self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
