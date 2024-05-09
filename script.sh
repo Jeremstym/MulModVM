@@ -12,5 +12,5 @@ uname -a
 nvidia-smi
 cd MulModVM
 
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=tabular max_epochs=100
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=tabular max_epochs=100 use_transformer=False
 
