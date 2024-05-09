@@ -19,8 +19,6 @@ class TabularModel(nn.Module):
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     x = self.encoder(x)
-    # extract CLS token
-    x = x[:, -1, :]
     x = self.classifier(x)
     return x
     
