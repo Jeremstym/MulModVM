@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=electronic
+#SBATCH --partition=hard
 #SBATCH --job-name=BoBW-attention
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
