@@ -48,7 +48,8 @@ def run(args: DictConfig):
     generate_embeddings(args)
     return args
   
-  base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+  # base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+  base_dir = args.output_dir
   if args.use_wandb:
     if args.resume_training and args.wandb_id:
       wandb_logger = WandbLogger(project=args.wandb_project, entity=args.wandb_entity, save_dir=base_dir, offline=args.offline, id=args.wandb_id, resume='must')

@@ -142,6 +142,7 @@ combine_train_and_val: False
 weighted_sampler: False
 classifier_freq: 5
 unit_test: False
+output_dir: /home/stympopper/MulModVM
 
 transform:
 version:
