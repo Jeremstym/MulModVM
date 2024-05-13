@@ -25,7 +25,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
       transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
       transforms.RandomGrayscale(p=0.2),
       transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
-      transforms.RandomResizedCrop(size=(img_size,img_size), scale=(crop_scale_lower, 1.0), ratio=(0.75, 1.3333333333333333)),
+      transforms.RandomResizedCrop(size=(img_size,img_size), scale=(crop_scale_lower, 1.0), ratio=(0.75, 1.3333333333333333), antialias=False),
       transforms.RandomHorizontalFlip(p=0.5),
       #transforms.Resize(size=(img_size,img_size)),
       transforms.Lambda(lambda x : x.float())
@@ -35,7 +35,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
       transforms.RandomHorizontalFlip(),
       transforms.RandomRotation(45),
       transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
-      transforms.RandomResizedCrop(size=img_size, scale=(0.2,1)),
+      transforms.RandomResizedCrop(size=img_size, scale=(0.2,1), antialias=False),
       transforms.Lambda(lambda x: x.float())
     ])
   return transform
@@ -48,7 +48,7 @@ def grab_soft_eval_image_augmentations(img_size: int) -> transforms.Compose:
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(20),
     transforms.ColorJitter(brightness=0.25, contrast=0.25, saturation=0.25),
-    transforms.RandomResizedCrop(size=img_size, scale=(0.8,1)),
+    transforms.RandomResizedCrop(size=img_size, scale=(0.8,1), antialias=False),
     transforms.Lambda(lambda x: x.float())
   ])
   return transform
@@ -62,7 +62,7 @@ def grab_hard_eval_image_augmentations(img_size: int, target: str) -> transforms
       transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
       transforms.RandomGrayscale(p=0.2),
       transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
-      transforms.RandomResizedCrop(size=(img_size,img_size), scale=(0.6, 1.0), ratio=(0.75, 1.3333333333333333)),
+      transforms.RandomResizedCrop(size=(img_size,img_size), scale=(0.6, 1.0), ratio=(0.75, 1.3333333333333333), antialias=False),
       transforms.RandomHorizontalFlip(p=0.5),
       transforms.Resize(size=(img_size,img_size)),
       transforms.Lambda(lambda x : x.float())
@@ -72,7 +72,7 @@ def grab_hard_eval_image_augmentations(img_size: int, target: str) -> transforms
       transforms.RandomHorizontalFlip(),
       transforms.RandomRotation(45),
       transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
-      transforms.RandomResizedCrop(size=img_size, scale=(0.6,1)),
+      transforms.RandomResizedCrop(size=img_size, scale=(0.6,1), antialias=False),
       transforms.Lambda(lambda x: x.float())
     ])
   return transform
