@@ -143,6 +143,7 @@ weighted_sampler: False
 classifier_freq: 5
 unit_test: False
 output_dir: /home/stympopper/MulModVM
+missing_values: [2695,11562]
 
 transform:
 version:
