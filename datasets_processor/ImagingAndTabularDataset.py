@@ -37,7 +37,7 @@ class ImagingAndTabularDataset(Dataset):
     self.transform_train = grab_hard_eval_image_augmentations(img_size, target)
 
     self.default_transform = transforms.Compose([
-      transforms.Resize(size=(img_size,img_size)),
+      transforms.Resize(size=(img_size,img_size), antialias=False),
       transforms.Lambda(lambda x : x.float())
     ])
 
