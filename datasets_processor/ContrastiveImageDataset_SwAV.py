@@ -29,7 +29,7 @@ class ContrastiveImageDataset_SwAV(Dataset):
         im[0,:,:] = 0
 
     self.default_transform = transforms.Compose([
-      transforms.Resize(size=(img_size,img_size)),
+      transforms.Resize(size=(img_size,img_size), antialias=False),
       transforms.Lambda(lambda x : x.float())
     ])
 

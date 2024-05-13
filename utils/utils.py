@@ -64,7 +64,7 @@ def grab_hard_eval_image_augmentations(img_size: int, target: str) -> transforms
       transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
       transforms.RandomResizedCrop(size=(img_size,img_size), scale=(0.6, 1.0), ratio=(0.75, 1.3333333333333333), antialias=False),
       transforms.RandomHorizontalFlip(p=0.5),
-      transforms.Resize(size=(img_size,img_size)),
+      transforms.Resize(size=(img_size,img_size), antialias=False),
       transforms.Lambda(lambda x : x.float())
     ])
   else:
