@@ -99,6 +99,7 @@ def grab_arg_from_checkpoint(args: str, arg_name: str):
   Loads a lightning checkpoint and returns an argument saved in that checkpoints hyperparameters
   """
   if args.checkpoint:
+    raise ValueError('Checkpoint not found')
     ckpt = torch.load(args.checkpoint)
     load_args = ckpt['hyper_parameters']
   else:
