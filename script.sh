@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=funky
+#SBATCH --partition=hard
 #SBATCH --job-name=BoBW-attention
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
@@ -12,5 +12,5 @@ uname -a
 nvidia-smi
 cd MulModVM
 
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=tabular max_epochs=1000
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=1000 pretrain=True
 
