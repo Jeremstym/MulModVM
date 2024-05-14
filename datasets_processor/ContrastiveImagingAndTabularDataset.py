@@ -25,7 +25,8 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = []) -> None:
             
     # Imaging
-    self.data_imaging = torch.load(data_path_imaging)
+    self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
+    print(f'Loaded imaging data from {data_path_imaging}')
     self.transform = augmentation
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
@@ -62,6 +63,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
           continue
         r2 = [float(r1) for r1 in r]
         data.append(r2)
+    print(f'Loaded tabular data from {path_tabular}')
     return data
 
   def generate_marginal_distributions(self, data_path: str) -> None:
@@ -70,6 +72,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     data_df = pd.read_csv(data_path)
     self.marginal_distributions = data_df.transpose().values.tolist()
+    print('Generated marginal distributions')
 
   def get_input_size(self) -> int:
     """
