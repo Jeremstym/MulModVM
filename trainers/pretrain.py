@@ -54,6 +54,7 @@ def load_datasets(hparams):
   else:
     raise Exception(f'Unknown datatype {hparams.datatype}')
   print("ALL LOADED")
+  print(train_dataset)
   raise Exception("ALL LOADED")
   return train_dataset, val_dataset
 
