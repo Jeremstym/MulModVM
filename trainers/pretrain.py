@@ -30,7 +30,7 @@ def load_datasets(hparams):
     train_dataset = ContrastiveImagingAndTabularDataset(
       hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
       hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
-      hparams.labels_train, hparams.img_size, hparams.live_loading)
+      hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values)
     val_dataset = ContrastiveImagingAndTabularDataset(
       hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
       hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
