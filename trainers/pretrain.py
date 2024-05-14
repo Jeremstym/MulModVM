@@ -117,7 +117,8 @@ def pretrain(hparams, wandb_logger):
   callbacks.append(LearningRateMonitor(logging_interval='epoch'))
 
   trainer = Trainer.from_argparse_args(hparams, gpus=1, callbacks=callbacks, logger=wandb_logger, max_epochs=hparams.max_epochs, check_val_every_n_epoch=hparams.check_val_every_n_epoch, limit_train_batches=hparams.limit_train_batches, limit_val_batches=hparams.limit_val_batches, enable_progress_bar=hparams.enable_progress_bar)
-
+  print("Trainer created")
+  raise Exception("Trainer created")
   if hparams.resume_training:
     trainer.fit(model, train_loader, val_loader, ckpt_path=hparams.checkpoint)
   else:
