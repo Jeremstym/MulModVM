@@ -53,8 +53,8 @@ def load_datasets(hparams):
     hparams.input_size = train_dataset.get_input_size()
   else:
     raise Exception(f'Unknown datatype {hparams.datatype}')
-    print("ALL LOADED")
-    raise Exception("ALL LOADED")
+  print("ALL LOADED")
+  raise Exception("ALL LOADED")
   return train_dataset, val_dataset
 
 
