@@ -56,7 +56,7 @@ pretrained_imaging_strategy: trainable
 
 multiple_lr: False
 
-batch_size: 512
+batch_size: 128
 lr_eval: 1.e-3
 weight_decay_eval: 0
 val_check_interval: 1.0
