@@ -120,4 +120,4 @@ def pretrain(hparams, wandb_logger):
   if hparams.resume_training:
     trainer.fit(model, train_loader, val_loader, ckpt_path=hparams.checkpoint)
   else:
-    trainer.fit(model, train_loader, val_loader)
+    trainer.fit(model, train_loader, val_loader, profiler=hparams.profiler)
