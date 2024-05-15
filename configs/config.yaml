@@ -24,7 +24,7 @@ multitarget:
 
 wandb_entity: 
 data_base: 
-num_workers: 0
+num_workers: 1
 
 wandb_project: 
 sql_address: 
