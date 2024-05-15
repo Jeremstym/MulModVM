@@ -27,6 +27,12 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     # Imaging
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
     print(f'Loaded imaging data from {data_path_imaging}')
+    print(f'Number of images: {len(self.data_imaging)}')
+    print(self.data_imaging[0].shape)
+    print(self.data_imaging[0].dtype)
+    print(self.data_imaging[0].max())
+    print(self.data_imaging[0].min())
+    raise Exception('Stop here')
     self.transform = augmentation
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
