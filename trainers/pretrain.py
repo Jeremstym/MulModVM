@@ -116,8 +116,20 @@ def pretrain(hparams, wandb_logger):
   callbacks.append(ModelCheckpoint(filename='checkpoint_last_epoch_{epoch:02d}', dirpath=logdir, save_on_train_epoch_end=True, auto_insert_metric_name=False))
   callbacks.append(LearningRateMonitor(logging_interval='epoch'))
 
-  trainer = Trainer.from_argparse_args(hparams, accelerator="gpu", devices=1, callbacks=callbacks, logger=wandb_logger, max_epochs=hparams.max_epochs, check_val_every_n_epoch=hparams.check_val_every_n_epoch, limit_train_batches=hparams.limit_train_batches, limit_val_batches=hparams.limit_val_batches, enable_progress_bar=hparams.enable_progress_bar)
+  trainer = Trainer.from_argparse_args(
+    hparams,
+    accelerator="gpu",
+    devices=1,
+    callbacks=callbacks,
+    logger=wandb_logger,
+    max_epochs=hparams.max_epochs,
+    check_val_every_n_epoch=hparams.check_val_every_n_epoch,
+    limit_train_batches=hparams.limit_train_batches,
+    limit_val_batches=hparams.limit_val_batches,
+    enable_progress_bar=hparams.enable_progress_bar,
+    profiler=hparams.profiler)
+    
   if hparams.resume_training:
     trainer.fit(model, train_loader, val_loader, ckpt_path=hparams.checkpoint)
   else:
-    trainer.fit(model, train_loader, val_loader, profiler=hparams.profiler)
+    trainer.fit(model, train_loader, val_loader)
