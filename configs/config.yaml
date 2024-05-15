@@ -155,6 +155,7 @@ transform_test:
 dataset_length:
 resume_training:
 wandb_id:
+wandb_name: null
 
 labels_train_short:
 labels_val_short:
