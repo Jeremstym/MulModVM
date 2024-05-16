@@ -141,15 +141,15 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     
     return ims, orig_im
 
-    def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
-      """
-      Caches the augmented images for later use in a list
-      """
-      ims, orig_im = self.generate_imaging_views(index)
-      ims = [torch.tensor(im) for im in ims]
-      self.cache_list.append(ims)
-      self.cache_list_original.append(orig_im)
-      return
+  def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
+    """
+    Caches the augmented images for later use in a list
+    """
+    ims, orig_im = self.generate_imaging_views(index)
+    ims = [torch.tensor(im) for im in ims]
+    self.cache_list.append(ims)
+    self.cache_list_original.append(orig_im)
+    return
 
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
     if self.use_cache:
