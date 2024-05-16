@@ -8,6 +8,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from torchvision.transforms import transforms
 from torchvision.io import read_image
+import cv2
 
 
 class ContrastiveImagingAndTabularDataset(Dataset):
@@ -115,7 +116,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
-      im = read_image(im)
+      im = cv2.imread(im)
       im = im / 255
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
