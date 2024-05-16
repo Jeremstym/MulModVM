@@ -116,10 +116,11 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
-      im = cv2.imread(im)
+      im = read_image(im)
       im = im / 255
-      print(f'image shape is {im.shape}')
-      print(f'image is {im}')
+      print(f"image shape is {im.shape}")
+      print(f"image is {im}")
+      raise Exception("stop")
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
       ims.append(self.transform(im))
