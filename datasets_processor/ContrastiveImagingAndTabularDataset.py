@@ -118,6 +118,8 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     if self.live_loading:
       im = cv2.imread(im).transpose(2,0,1)
       im = im / 255
+      print(f"image shape is {im.shape}")
+      raise Exception("Live loading not implemented for imaging yet")
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
       ims.append(self.transform(im))
