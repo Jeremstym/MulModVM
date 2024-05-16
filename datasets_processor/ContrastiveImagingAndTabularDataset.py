@@ -34,13 +34,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.augmentation_rate = augmentation_rate
     self.live_loading = live_loading
     self.use_cache = use_cache
-    if use_cache:
-      print('Caching images')
-      self.cache_list = []
-      self.cache_list_original = []
-      for i in tqdm(range(len(self.data_imaging))):
-        self.transforms_and_cache_images(i)
-
 
     if self.delete_segmentation:
       for im in self.data_imaging:
@@ -52,6 +45,13 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       transforms.ToTensor(),
       transforms.Lambda(lambda x : x.float())
     ])
+
+    if self.use_cache:
+      print('Caching images')
+      self.cache_list = []
+      self.cache_list_original = []
+      for i in tqdm(range(len(self.data_imaging))):
+        self.transforms_and_cache_images(i)
 
     # Tabular
     self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values)
