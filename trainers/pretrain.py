@@ -98,6 +98,20 @@ def pretrain(hparams, wandb_logger):
     num_workers=hparams.num_workers, batch_size=hparams.batch_size,  
     pin_memory=True, shuffle=True, persistent_workers=hparams.persistent_workers)
 
+  from time import time  
+  import multiprocessing as mp
+
+  for num_workers in range(2, mp.cpu_count(), 2):    
+      train_loader = DataLoader(train_dataset, shuffle=True, num_workers=hparams.num_workers, batch_size=hparams.batch_size, pin_memory=True)  
+      start = time()  
+      for epoch in range(1, 3):  
+          for i, data in enumerate(train_loader, 0):  
+              pass  
+      end = time()  
+      print("Finish with:{} second, num_workers={}".format(end - start, num_workers))
+  
+  raise Exception('stop')
+
   val_loader = DataLoader(
     val_dataset,
     num_workers=hparams.num_workers, batch_size=hparams.batch_size,  
