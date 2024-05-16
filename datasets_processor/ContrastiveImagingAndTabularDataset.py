@@ -117,7 +117,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
-      im = cv2.imread(im).astype(np.uint8)
+      im = cv2.imread(im).astype(np.float32)
       im = im / 255
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
