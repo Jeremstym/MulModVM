@@ -116,9 +116,8 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
-      im = cv2.imread(im)
+      im = cv2.imread(im).transpose(2,0,1)
       im = im / 255
-      im = torch.tensor(im, dtype=torch.float).permute(2,0,1)
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
       ims.append(self.transform(im))
