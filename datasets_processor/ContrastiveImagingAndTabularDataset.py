@@ -10,6 +10,8 @@ from torchvision.transforms import transforms
 from torchvision.io import read_image
 import cv2
 
+from time import time
+
 
 class ContrastiveImagingAndTabularDataset(Dataset):
   """
@@ -116,9 +118,12 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
+      start = time()
       im = cv2.imread(im)
       im = im / 255
       im = torch.tensor(im, dtype=torch.float).permute(2,0,1)
+      end = time()
+      print(f'Loaded image in {end-start} seconds')
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
       ims.append(self.transform(im))
