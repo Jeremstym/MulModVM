@@ -103,7 +103,7 @@ def pretrain(hparams, wandb_logger):
 
   print("Starting NUM_WORKERS test")
   for num_workers in range(0, os.cpu_count(), 2):    
-      train_loader = DataLoader(train_dataset, shuffle=True, num_workers=hparams.num_workers, batch_size=hparams.batch_size, pin_memory=True)  
+      train_loader = DataLoader(train_dataset, shuffle=True, num_workers=num_workers, batch_size=hparams.batch_size, pin_memory=True)  
       start = time()  
       for epoch in range(1, 3):  
           for i, data in enumerate(train_loader, 0):  
