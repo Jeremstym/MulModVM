@@ -12,6 +12,6 @@ uname -a
 nvidia-smi
 cd MulModVM
 
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=128 num_workers=32 use_transformer=False wandb_name=Test1-noTransformer
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=128 num_workers=32 use_transformer=True wandb_name=Test1-withTransformer
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=128 num_workers=32 use_cache=False use_transformer=False wandb_name=Test1-noTransformer
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=128 num_workers=32 use_cache=False use_transformer=True wandb_name=Test1-withTransformer
 
