@@ -56,8 +56,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         self.transforms_and_cache_images(i)
 
     # Tabular
-    if use_transformer:
-      use_header = True
+    use_header = True if use_transformer else False
     self.generate_marginal_distributions(data_path_tabular)
     self.c = corruption_rate
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
