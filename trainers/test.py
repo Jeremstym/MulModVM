@@ -31,7 +31,7 @@ def test(hparams, wandb_logger=None):
   test_loader = DataLoader(
     test_dataset,
     num_workers=hparams.num_workers, batch_size=hparams.batch_size,  
-    pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=True)
+    pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=hparams.persistent_workers)
 
   hparams.dataset_length = len(test_loader)
 

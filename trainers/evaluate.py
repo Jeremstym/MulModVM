@@ -61,12 +61,12 @@ def evaluate(hparams, wandb_logger):
   train_loader = DataLoader(
     train_dataset,
     num_workers=hparams.num_workers, batch_size=hparams.batch_size, sampler=sampler,
-    pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=True)
+    pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=hparams.persistent_workers)
 
   val_loader = DataLoader(
     val_dataset,
     num_workers=hparams.num_workers, batch_size=512,
-    pin_memory=True, shuffle=False, persistent_workers=True)
+    pin_memory=True, shuffle=False, persistent_workers=hparams.persistent_workers)
 
   logdir = create_logdir('eval', hparams.resume_training, wandb_logger)
 
@@ -111,7 +111,7 @@ def evaluate(hparams, wandb_logger):
     test_loader = DataLoader(
       test_dataset,
       num_workers=hparams.num_workers, batch_size=hparams.batch_size,  
-      pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=True)
+      pin_memory=True, shuffle=False, drop_last=drop, persistent_workers=hparams.persistent_workers)
 
     model.freeze()
 
