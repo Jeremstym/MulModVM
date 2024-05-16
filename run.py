@@ -54,7 +54,7 @@ def run(args: DictConfig):
     if args.resume_training and args.wandb_id:
       wandb_logger = WandbLogger(project=args.wandb_project, name=args.wandb_name, entity=args.wandb_entity, save_dir=base_dir, offline=args.offline, id=args.wandb_id, resume='must')
     else:
-      wandb_logger = WandbLogger(project=args.wandb_project, entity=args.wandb_entity, save_dir=base_dir, offline=args.offline)
+      wandb_logger = WandbLogger(project=args.wandb_project, name=args.wand_name, entity=args.wandb_entity, save_dir=base_dir, offline=args.offline)
   else:
     wandb_logger = WandbLogger(project='Test', entity='', save_dir=base_dir, offline=args.offline)
   args.wandb_id = wandb_logger.version
