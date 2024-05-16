@@ -29,7 +29,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
       transforms.RandomResizedCrop(size=(img_size,img_size), scale=(crop_scale_lower, 1.0), ratio=(0.75, 1.3333333333333333), antialias=False),
       transforms.RandomHorizontalFlip(p=0.5),
       #transforms.Resize(size=(img_size,img_size)),
-      # transforms.Lambda(lambda x : x.float())
+      transforms.Lambda(lambda x : x.float())
     ])
   else:
     transform = transforms.Compose([
