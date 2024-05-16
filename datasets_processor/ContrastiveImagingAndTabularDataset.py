@@ -38,6 +38,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         im[0,:,:] = 0
 
     self.default_transform = transforms.Compose([
+      transforms.ToPILImage(),
       transforms.Resize(size=(img_size,img_size), antialias=False),
       transforms.Lambda(lambda x : x.float())
     ])
