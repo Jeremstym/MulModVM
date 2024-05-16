@@ -9,6 +9,9 @@ from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from utils.utils import grab_image_augmentations, grab_wids, create_logdir
 from utils.ssl_online_custom import SSLOnlineEvaluator
 
+from time import time
+import os
+
 from datasets_processor.ContrastiveImagingAndTabularDataset import ContrastiveImagingAndTabularDataset
 from datasets_processor.ContrastiveImageDataset import ContrastiveImageDataset
 from datasets_processor.ContrastiveTabularDataset import ContrastiveTabularDataset
@@ -98,10 +101,7 @@ def pretrain(hparams, wandb_logger):
     num_workers=hparams.num_workers, batch_size=hparams.batch_size,  
     pin_memory=True, shuffle=True, persistent_workers=hparams.persistent_workers)
 
-  from time import time  
-  import multiprocessing as mp
-
-  for num_workers in range(2, mp.cpu_count(), 2):    
+  for num_workers in range(2, os.cpu_count(), 2):    
       train_loader = DataLoader(train_dataset, shuffle=True, num_workers=hparams.num_workers, batch_size=hparams.batch_size, pin_memory=True)  
       start = time()  
       for epoch in range(1, 3):  
