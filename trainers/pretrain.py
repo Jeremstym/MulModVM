@@ -141,6 +141,7 @@ def pretrain(hparams, wandb_logger):
     limit_train_batches=hparams.limit_train_batches,
     limit_val_batches=hparams.limit_val_batches,
     enable_progress_bar=hparams.enable_progress_bar,
+    num_sanity_val_steps=hparams.num_sanity_val_steps,
     profiler=hparams.profiler)
     
   if hparams.resume_training:

@@ -27,6 +27,7 @@ data_base:
 num_workers: 0
 persistent_workers: False
 use_cache: True
+num_sanity_val_steps: 2
 
 wandb_project: 
 sql_address: 
