@@ -22,6 +22,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
   """
   if target.lower() == 'dvm':
     transform = transforms.Compose([
+      transforms.ToPilImage(),
       transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
       transforms.RandomGrayscale(p=0.2),
       transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
