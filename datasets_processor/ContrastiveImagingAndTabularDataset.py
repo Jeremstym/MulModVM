@@ -146,7 +146,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     Caches the augmented images for later use in a list
     """
     ims, orig_im = self.generate_imaging_views(index)
-    ims = [torch.tensor(im) for im in ims]
+    # ims = [torch.tensor(im) for im in ims]
     self.cache_list.append(ims)
     self.cache_list_original.append(orig_im)
     return
