@@ -10,6 +10,7 @@ import pandas as pd
 from torchvision.transforms import transforms
 from torchvision.io import read_image
 import cv2
+from tqdm import tqdm
 
 
 class ContrastiveImagingAndTabularDataset(Dataset):
@@ -24,7 +25,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       self, 
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
-      labels_path: str, img_size: int, live_loading: bool, missing_values: list = []) -> None:
+      labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], use_cache: bool = False) -> None:
             
     # Imaging
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
@@ -32,6 +33,14 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
     self.live_loading = live_loading
+    self.use_cache = use_cache
+    if use_cache:
+      print('Caching images')
+      self.cache_list = []
+      self.cache_list_original = []
+      for i in tqdm(range(len(self.data_imaging))):
+        self.transforms_and_cache_images(i)
+
 
     if self.delete_segmentation:
       for im in self.data_imaging:
@@ -132,8 +141,22 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     
     return ims, orig_im
 
+    def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
+      """
+      Caches the augmented images for later use in a list
+      """
+      ims, orig_im = self.generate_imaging_views(index)
+      ims = [torch.tensor(im) for im in ims]
+      self.cache_list.append(ims)
+      self.cache_list_original.append(orig_im)
+      return
+
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
-    imaging_views, unaugmented_image = self.generate_imaging_views(index)
+    if self.use_cache:
+      imaging_views = self.cache_list[index]
+      unaugmented_image = self.cache_list_original[index]
+    else:
+      imaging_views, unaugmented_image = self.generate_imaging_views(index)
     tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
     if self.one_hot_tabular:
       tabular_views = [self.one_hot_encode(tv) for tv in tabular_views]

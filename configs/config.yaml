@@ -26,6 +26,7 @@ wandb_entity:
 data_base: 
 num_workers: 0
 persistent_workers: False
+use_cache: True
 
 wandb_project: 
 sql_address: 
