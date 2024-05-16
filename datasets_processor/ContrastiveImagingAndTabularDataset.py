@@ -12,6 +12,8 @@ from torchvision.io import read_image
 import cv2
 from tqdm import tqdm
 
+from .TabularAttributes import check_categorical_data, CAT_FEATURES, NUM_FEATURES, CAT_FEATURES_WITH_LABEL
+
 
 class ContrastiveImagingAndTabularDataset(Dataset):
   """
@@ -25,7 +27,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       self, 
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
-      labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], use_cache: bool = False) -> None:
+      labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], use_cache: bool = False, use_transformer: bool = False) -> None:
             
     # Imaging
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
@@ -54,7 +56,9 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         self.transforms_and_cache_images(i)
 
     # Tabular
-    self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values)
+    if use_transformer:
+      use_header = True
+    self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header)
     self.generate_marginal_distributions(data_path_tabular)
     self.c = corruption_rate
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
@@ -63,18 +67,27 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     # Classifier
     self.labels = torch.load(labels_path)
   
-  def read_and_parse_csv(self, path_tabular: str, missing_values: list = []) -> List[List[float]]:
+  def read_and_parse_csv(self, path_tabular: str, missing_values: list = [], use_header: bool = False) -> List[List[float]]:
     """
     Does what it says on the box.
     """
-    with open(path_tabular,'r') as f:
-      reader = csv.reader(f)
-      data = []
-      for idx, r in enumerate(reader):
-        if idx in missing_values:
-          continue
-        r2 = [float(r1) for r1 in r]
-        data.append(r2)
+    if use_header:
+      df = pd.read_csv(path_tabular)
+      df.drop(missing_values, axis=0, inplace=True)
+      cat_mask = check_categorical_data(df)
+      self.cat_mask = cat_mask
+      field_lengths_tensor = torch.tensor(self.field_lengths)
+      self.cat_card = field_lengths_tensor[cat_mask]
+      data = df.values.tolist()
+    else:
+      with open(path_tabular,'r') as f:
+        reader = csv.reader(f)
+        data = []
+        for idx, r in enumerate(reader):
+          if idx in missing_values:
+            continue
+          r2 = [float(r1) for r1 in r]
+          data.append(r2)
     print(f'Loaded tabular data from {path_tabular}')
     return data
 

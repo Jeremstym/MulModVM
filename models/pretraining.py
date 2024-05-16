@@ -26,7 +26,10 @@ class Pretraining(pl.LightningModule):
     self.projector_imaging = SimCLRProjectionHead(self.pooled_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
 
   def initialize_tabular_encoder_and_projector(self) -> None:
-    self.encoder_tabular = TabularEncoder(self.hparams)
+    if hparams.use_transformer:
+      self.encoder_tabular = TabularTransformer(self.hparams)
+    else:
+      self.encoder_tabular = TabularEncoder(self.hparams)
     self.projector_tabular = SimCLRProjectionHead(self.hparams.embedding_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
 
   def initialize_classifier_and_metrics(self, nclasses_train, nclasses_val):
