@@ -2,6 +2,7 @@ from typing import List, Tuple
 import random
 import csv
 import copy
+import numpy as np
 
 import torch
 from torch.utils.data import Dataset
@@ -116,7 +117,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     im = self.data_imaging[index]
     if self.live_loading:
-      im = cv2.imread(im)
+      im = cv2.imread(im).astype(np.uint8)
       im = im / 255
     ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
