@@ -30,7 +30,7 @@ class MultimodalSimCLR(Pretraining):
     self.initialize_tabular_encoder_and_projector(dataset=dataset)
 
     # Multimodal
-    nclasses = hparams.num_classes
+    nclasses = hparams.batch_size
     self.criterion_val = CLIPLoss(temperature=self.hparams.temperature, lambda_0=self.hparams.lambda_0)
     if self.hparams.loss.lower() == 'remove_fn':
       self.criterion_train = RemoveFNLoss(temperature=self.hparams.temperature, lambda_0=self.hparams.lambda_0)
@@ -47,7 +47,7 @@ class MultimodalSimCLR(Pretraining):
     elif self.hparams.loss.lower() == 'ntxent':
       self.criterion_train = NTXentLoss(self.hparams.temperature)
       self.criterion_val = self.criterion_train
-      nclasses = hparams.num_classes*2-1
+      nclasses = hparams.batch_size*2-1
     else:
       raise ValueError('The only implemented losses currently are CLIP, NTXent, supcon, and remove_fn')
 
