@@ -10,6 +10,7 @@ from pl_bolts.optimizers.lr_scheduler import LinearWarmupCosineAnnealingLR
 from pl_bolts.utils.self_supervised import torchvision_ssl_encoder
 
 from models.TabularEncoder import TabularEncoder
+from models.TabularTransformer import TabularTransformer
 
 class Pretraining(pl.LightningModule):
     
