@@ -106,7 +106,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     if self.one_hot_tabular:
       return int(sum(self.field_lengths_tabular))
     else:
-      return len(self.data[0])
+      return len(self.data_tabular)
 
   def corrupt(self, subject: List[float]) -> List[float]:
     """
