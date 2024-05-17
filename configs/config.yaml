@@ -77,7 +77,7 @@ crop_scale_lower: 0.08
 
 # tabular
 corruption_rate: 0.3
-one_hot: ~${use_transformer}
+one_hot: not ${use_transformer}
 eval_one_hot: False
 use_transformer: True
 
