@@ -28,10 +28,9 @@ from models.SCARF import SCARF
 
 def load_datasets(hparams):
   if hparams.datatype == 'multimodal':
-    print(f'One hot is {hparams.one_hot}')
-    raise(Exception('Multimodal not implemented'))
     transform = grab_image_augmentations(hparams.img_size, hparams.target)
     hparams.transform = transform.__repr__()
+    assert (hparams.one_hot != hparams.use_transformer), 'Cannot use one hot encoding and transformer at the same time'
     train_dataset = ContrastiveImagingAndTabularDataset(
       hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
       hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
