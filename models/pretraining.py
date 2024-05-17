@@ -9,6 +9,9 @@ from lightly.models.modules import SimCLRProjectionHead
 from pl_bolts.optimizers.lr_scheduler import LinearWarmupCosineAnnealingLR
 from pl_bolts.utils.self_supervised import torchvision_ssl_encoder
 
+import hydra
+from omegaconf import DictConfig
+
 from models.TabularEncoder import TabularEncoder
 from models.TabularTransformer import TabularTransformer
 
