@@ -61,7 +61,7 @@ def load_datasets(hparams):
 
 def select_model(hparams, train_dataset):
   if hparams.datatype == 'multimodal':
-    model = MultimodalSimCLR(hparams)
+    model = MultimodalSimCLR(hparams, dataset=train_dataset)
   elif hparams.datatype == 'imaging':
     if hparams.loss.lower() == 'byol':
       model = BYOL(**hparams)

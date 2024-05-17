@@ -17,7 +17,7 @@ class MultimodalSimCLR(Pretraining):
   """
   Lightning module for multimodal SimCLR.
   """
-  def __init__(self, hparams):
+  def __init__(self, hparams, dataset=None):
     super().__init__(hparams)
 
     # Imaging
@@ -27,7 +27,7 @@ class MultimodalSimCLR(Pretraining):
       self.load_pretrained_imaging_weights()
     
     # Tabular
-    self.initialize_tabular_encoder_and_projector()
+    self.initialize_tabular_encoder_and_projector(dataset=dataset)
 
     # Multimodal
     nclasses = hparams.batch_size

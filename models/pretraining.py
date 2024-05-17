@@ -26,9 +26,15 @@ class Pretraining(pl.LightningModule):
     self.pooled_dim = 2048 if self.hparams.model=='resnet50' else 512
     self.projector_imaging = SimCLRProjectionHead(self.pooled_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
 
-  def initialize_tabular_encoder_and_projector(self) -> None:
+  def initialize_tabular_encoder_and_projector(self, dataset=None) -> None:
     if self.hparams.use_transformer:
       self.encoder_tabular = TabularTransformer(self.hparams)
+      cat_mask = dataset.get_cat_mask()
+      self.cat_mask = cat_mask
+      num_cont = dataset.get_number_of_numerical_features()
+      cat_card = dataset.get_cat_card()
+      assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
+      self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
     else:
       self.encoder_tabular = TabularEncoder(self.hparams)
     self.projector_tabular = SimCLRProjectionHead(self.hparams.embedding_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
@@ -93,6 +99,10 @@ class Pretraining(pl.LightningModule):
     """
     Generates projection and encoding of tabular data.
     """
+    if self.hparams.use_transformer:
+      x_num = x[:, ~self.cat_mask]
+      x_cat = x[:, self.cat_mask].type(torch.int64)
+      x = self.tokenizer(x_num=x_num, x_cat=x_cat)
     y = self.encoder_tabular(x).flatten(start_dim=1)
     z = self.projector_tabular(y)
     return z, y

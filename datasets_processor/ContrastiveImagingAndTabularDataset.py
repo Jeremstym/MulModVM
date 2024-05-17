@@ -60,7 +60,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.generate_marginal_distributions(data_path_tabular)
     self.c = corruption_rate
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
-    self.field_lengths = torch.load(field_lengths_tabular)
     self.one_hot_tabular = one_hot_tabular
     self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header)
     
@@ -76,7 +75,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       df.drop(missing_values, axis=0, inplace=True)
       cat_mask = check_categorical_data(df)
       self.cat_mask = cat_mask
-      field_lengths_tensor = torch.tensor(self.field_lengths)
+      field_lengths_tensor = torch.tensor(self.field_lengths_tabular)
       self.cat_card = field_lengths_tensor[cat_mask]
       data = df.values.tolist()
     else:
@@ -163,6 +162,24 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.cache_list.append(ims)
     self.cache_list_original.append(orig_im)
     return
+
+  def get_cat_mask(self) -> torch.Tensor:
+    """
+    Returns the categorical mask
+    """
+    return torch.tensor(self.cat_mask)
+
+  def get_cat_card(self) -> torch.Tensor:
+    """
+    Returns the categorical cardinalities
+    """
+    return torch.tensor(self.cat_card)
+
+  def get_number_of_numerical_features(self) -> int:
+    """
+    Returns the number of numerical features
+    """
+    return len(NUM_FEATURES)
 
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
     if self.use_cache:
