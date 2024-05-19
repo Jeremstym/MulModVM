@@ -24,14 +24,14 @@ class Evaluator(pl.LightningModule):
       self.model = TabularModel(self.hparams)
     if self.hparams.datatype == 'imaging_and_tabular':
       self.model = MultimodalModel(self.hparams)
-      if self.hparams.use_transformer:
-        assert dataset is not None, 'Dataset must be provided for transformer models'
-        cat_mask = dataset.get_cat_mask()
-        self.cat_mask = cat_mask
-        num_cont = dataset.get_number_of_numerical_features()
-        cat_card = dataset.get_cat_card()
-        assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
-        self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
+    if self.hparams.use_transformer:
+      assert dataset is not None, 'Dataset must be provided for transformer models'
+      cat_mask = dataset.get_cat_mask()
+      self.cat_mask = cat_mask
+      num_cont = dataset.get_number_of_numerical_features()
+      cat_card = dataset.get_cat_card()
+      assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
+      self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
 
     task = 'binary' if self.hparams.num_classes == 2 else 'multiclass'
     
