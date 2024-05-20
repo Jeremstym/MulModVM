@@ -41,6 +41,6 @@ def check_categorical_data(df: pd.DataFrame):
   Checks if the data is categorical or not
   """
   categorizing = [c in CAT_FEATURES for c in FEATURES]
-  typing = [df[c].dtype == np.dtype('int64') for c in df.columns]
+  typing = [df[c].dtype == np.dtype('int64') for c in df.iloc[0]]
   assert all([c == t for c,t in zip(categorizing, typing)]), "Mismatch between categorical and numerical data"
   return categorizing

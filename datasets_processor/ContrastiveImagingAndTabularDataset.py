@@ -27,7 +27,8 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       self, 
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
-      labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], use_cache: bool = False, use_transformer: bool = False) -> None:
+      labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
+      use_cache: bool = False, use_transformer: bool = False, use_labels: bool = False) -> None:
             
     # Imaging
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
@@ -36,6 +37,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.augmentation_rate = augmentation_rate
     self.live_loading = live_loading
     self.use_cache = use_cache
+    self.use_labels = use_labels
 
     if self.delete_segmentation:
       for im in self.data_imaging:
@@ -70,8 +72,11 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     Does what it says on the box.
     """
-    if use_header:
-      df = pd.read_csv(path_tabular)
+    if use_header and self.use_labels:
+      FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
+    elif use_header:
+      FEATURES = NUM_FEATURES + CAT_FEATURES
+      df = pd.read_csv(path_tabular, names=FEATURES)
       df.drop(missing_values, axis=0, inplace=True)
       cat_mask = check_categorical_data(df)
       self.cat_mask = cat_mask
