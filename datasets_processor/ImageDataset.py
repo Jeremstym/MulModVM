@@ -33,7 +33,7 @@ class ImageDataset(Dataset):
     self.transform_train = grab_hard_eval_image_augmentations(img_size, target)
     self.transform_val = transforms.Compose([
       transforms.ToPILImage(),
-      transforms.Resize(size=(img_size,img_size), antialias=False),
+      transforms.Resize(size=(img_size,img_size)),
       transforms.ToTensor(),
       transforms.Lambda(lambda x : x.float())
     ])
