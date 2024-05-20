@@ -20,18 +20,18 @@ class Evaluator(pl.LightningModule):
 
     if self.hparams.datatype == 'imaging' or self.hparams.datatype == 'multimodal':
       self.model = ImagingModel(self.hparams)
-    if self.hparams.datatype == 'tabular':
-      self.model = TabularModel(self.hparams)
     if self.hparams.datatype == 'imaging_and_tabular':
       self.model = MultimodalModel(self.hparams)
-    if self.hparams.use_transformer:
-      assert dataset is not None, 'Dataset must be provided for transformer models'
-      cat_mask = dataset.get_cat_mask()
-      self.cat_mask = cat_mask
-      num_cont = dataset.get_number_of_numerical_features()
-      cat_card = dataset.get_cat_card()
-      assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
-      self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
+    if self.hparams.datatype == 'tabular':
+      self.model = TabularModel(self.hparams)
+      if self.hparams.use_transformer:
+        assert dataset is not None, 'Dataset must be provided for transformer models'
+        cat_mask = dataset.get_cat_mask()
+        self.cat_mask = cat_mask
+        num_cont = dataset.get_number_of_numerical_features()
+        cat_card = dataset.get_cat_card()
+        assert isinstance(self.hparams.tabular_tokenizer, DictConfig), 'Tabular tokenizer must be provided for transformer models'
+        self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
 
     task = 'binary' if self.hparams.num_classes == 2 else 'multiclass'
     
@@ -53,7 +53,7 @@ class Evaluator(pl.LightningModule):
     """
     Generates a prediction from a data point
     """
-    if self.hparams.use_transformer:
+    if self.hparams.use_transformer and self.hparams.datatype == 'tabular':
       x_num = x[:, ~self.cat_mask]
       x_cat = x[:, self.cat_mask].type(torch.int64)
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)
