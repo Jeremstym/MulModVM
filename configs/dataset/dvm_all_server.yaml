@@ -14,6 +14,7 @@ eval_metric: acc
 data_orig:
 low_data_splits: ['']
 addendum: _all_views2
+use_labels: False
 
 labels_train: labels_model_all_train${addendum}.pt 
 labels_val: labels_model_all_val${addendum}.pt 
