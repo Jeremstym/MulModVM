@@ -35,12 +35,12 @@ def load_datasets(hparams):
       hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
       hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
       hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-      use_cache=hparams.use_cache, use_transformer=hparams.use_transformer, use_labels=hparams.use_labels)
+      use_cache=hparams.use_cache, use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
     val_dataset = ContrastiveImagingAndTabularDataset(
       hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
       hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
       hparams.labels_val, hparams.img_size, hparams.live_loading,
-      use_cache=hparams.use_cache, use_transformer=hparams.use_transformer, use_labels=hparams.use_labels)
+      use_cache=hparams.use_cache, use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
     hparams.input_size = train_dataset.get_input_size()
   elif hparams.datatype == 'imaging':
     transform = grab_image_augmentations(hparams.img_size, hparams.target, hparams.crop_scale_lower)

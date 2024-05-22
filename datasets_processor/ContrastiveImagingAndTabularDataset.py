@@ -28,7 +28,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
-      use_cache: bool = False, use_transformer: bool = False, use_labels: bool = False) -> None:
+      use_cache: bool = False, use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False) -> None:
             
     # Imaging
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
@@ -38,6 +38,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.live_loading = live_loading
     self.use_cache = use_cache
     self.use_labels = use_labels
+    self.use_embds = use_embds
 
     if self.delete_segmentation:
       for im in self.data_imaging:
@@ -143,12 +144,16 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     Generates two views of a subjects image. Also returns original image resized to required dimensions.
     The first is always augmented. The second has {augmentation_rate} chance to be augmented.
     """
-    im = self.data_imaging[index]
-    if self.live_loading:
-      im = cv2.imread(im)
-      im = im / 255
-      im = im.astype("uint8")
-    ims = [self.transform(im)]
+    if not self.use_embds:
+      im = self.data_imaging[index]
+      if self.live_loading:
+        im = cv2.imread(im)
+        im = im / 255
+        im = im.astype("uint8")
+      ims = [self.transform(im)]
+    else: 
+      im = self.data_imaging[index]
+      ims = [self.transform(im)]
     if random.random() < self.augmentation_rate:
       ims.append(self.transform(im))
     else:
