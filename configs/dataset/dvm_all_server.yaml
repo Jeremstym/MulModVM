@@ -5,7 +5,7 @@ defaults:
 target: dvm
 task: classification
 
-num_classes: 101 # 286 if all views, 101 if all views2 (only front views)
+num_classes: 286 # 286 if all views, 101 if all views2 (only front views)
 weights:
 live_loading: True
 delete_segmentation: False
