@@ -31,7 +31,11 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       use_cache: bool = False, use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False) -> None:
             
     # Imaging
+    if use_embds:
+      print('Using embeddings. IMPORTATION... Might take a while.')
     self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
+    if use_embds:
+      print('Embeddings imported.')
     self.transform = augmentation
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
@@ -93,7 +97,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
             continue
           r2 = [float(r1) for r1 in r]
           data.append(r2)
-    print(f'Loaded tabular data from {path_tabular}')
     return data
 
   def generate_marginal_distributions(self, data_path: str) -> None:
@@ -102,7 +105,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     data_df = pd.read_csv(data_path)
     self.marginal_distributions = data_df.transpose().values.tolist()
-    print('Generated marginal distributions')
 
   def get_input_size(self) -> int:
     """
