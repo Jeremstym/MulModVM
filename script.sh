@@ -4,7 +4,7 @@
 #SBATCH --job-name=BoBW-Baseline
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=1-16:00:00
+#SBATCH --time=2-16:00:00
 #SBATCH --output=/home/stympopper/bash/out/%x-%j.out
 #SBATCH --error=/home/stympopper/bash/out/%x-%j.err
 
