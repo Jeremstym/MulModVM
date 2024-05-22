@@ -64,11 +64,11 @@ class ContrastiveImagingAndTabularDataset(Dataset):
 
     # Tabular
     use_header = True if use_transformer else False
-    self.generate_marginal_distributions(data_path_tabular)
     self.c = corruption_rate
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
     self.one_hot_tabular = one_hot_tabular
     self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header)
+    self.generate_marginal_distributions(data_path_tabular)
     
     # Classifier
     self.labels = torch.load(labels_path)
