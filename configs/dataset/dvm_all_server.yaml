@@ -23,7 +23,7 @@ labels_val: labels_model_all_val${addendum}.pt
 data_train_imaging: train_paths${addendum}.pt
 data_val_imaging: val_paths${addendum}.pt
 
-data_train_imaging_tensors: train_images${addendum}.pt
+data_train_imaging_tensors: train_images${addendum}
 data_val_imaging_tensors: val_images${addendum}.pt
 
 data_train_tabular: dvm_features_train_noOH${addendum}_physical_jittered_50.csv
