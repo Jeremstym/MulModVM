@@ -58,6 +58,8 @@ class TabularTransformer(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.cls_token(x)
         x = self.positional_encoding(x)
+        print(f"TabularTransformer: x.shape={x.shape}")
+        raise Exception("TabularTransformer: Not implemented")
         x = self.TransformerEncoder(x)
         # x = self.head(x)
         return x[:, -1, :]
