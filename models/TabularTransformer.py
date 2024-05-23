@@ -49,9 +49,9 @@ class TabularTransformer(nn.Module):
                 parameters = list(filter(lambda p: p.requires_grad, self.encoder.parameters()))
                 assert len(parameters)==0
 
-        self.cls_token = CLSToken(d_token=args.d_token)
+        self.cls_token = CLSToken(d_token=args.tabular_embedding_dim)
         sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES) + 1 # +1 for CLS token
-        self.positional_encoding = PositionalEncoding(sequence_len, args.d_token)
+        self.positional_encoding = PositionalEncoding(sequence_len, args.tabular_embedding_dim)
         self.TransformerEncoder = hydra.utils.instantiate(args.tabular_transformer)
         # self.head = nn.Linear(args.d_token, args.d_token)
 
