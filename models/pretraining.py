@@ -32,6 +32,8 @@ class Pretraining(pl.LightningModule):
   def initialize_tabular_encoder_and_projector(self, dataset=None) -> None:
     if self.hparams.use_transformer:
       self.encoder_tabular = TabularTransformer(self.hparams)
+      if self.hparams.use_xtab:
+        self.load_pretrained_xtab()
       cat_mask = dataset.get_cat_mask()
       self.cat_mask = cat_mask
       num_cont = dataset.get_number_of_numerical_features()
@@ -82,6 +84,14 @@ class Pretraining(pl.LightningModule):
         param.requires_grad = False
       parameters = list(filter(lambda p: p.requires_grad, self.encoder_imaging.parameters()))
       assert len(parameters)==0
+
+  def load_pretrained_xtab(self) -> None:
+    """
+    Can load tabular encoder with pretrained weights from XTab foundation model
+    """
+    loaded_chkpt = torch.load(self.hparams.xtab_path, map_location=self.device)
+    self.encoder_tabular.load_state_dict(loaded_chkpt) # no state_dict key needed as it is the whole state_dict
+    return
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     """
