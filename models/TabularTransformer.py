@@ -20,34 +20,34 @@ class TabularTransformer(nn.Module):
     def __init__(self, args):
         super(TabularTransformer, self).__init__()
 
-        if args.checkpoint:
-            loaded_chkpt = torch.load(args.checkpoint)
-            original_args = loaded_chkpt['hyper_parameters']
-            state_dict = loaded_chkpt['state_dict']
-            self.input_size = original_args['input_size']
+        # if args.checkpoint:
+        #     loaded_chkpt = torch.load(args.checkpoint)
+        #     original_args = loaded_chkpt['hyper_parameters']
+        #     state_dict = loaded_chkpt['state_dict']
+        #     self.input_size = original_args['input_size']
             
-            if 'encoder_tabular.encoder.1.running_mean' in state_dict.keys():
-                encoder_name = 'encoder_tabular.encoder.'
-                self.encoder = self.build_encoder(original_args)
-            elif 'encoder_projector_tabular.encoder.2.running_mean' in state_dict.keys():
-                encoder_name = 'encoder_projector_tabular.encoder.'
-                self.encoder = self.build_encoder_bn_old(original_args)
-            else:
-                encoder_name = 'encoder_projector_tabular.encoder.'
-                self.encoder = self.build_encoder_no_bn(original_args)
+        #     if 'encoder_tabular.encoder.1.running_mean' in state_dict.keys():
+        #         encoder_name = 'encoder_tabular.encoder.'
+        #         self.encoder = self.build_encoder(original_args)
+        #     elif 'encoder_projector_tabular.encoder.2.running_mean' in state_dict.keys():
+        #         encoder_name = 'encoder_projector_tabular.encoder.'
+        #         self.encoder = self.build_encoder_bn_old(original_args)
+        #     else:
+        #         encoder_name = 'encoder_projector_tabular.encoder.'
+        #         self.encoder = self.build_encoder_no_bn(original_args)
 
-            state_dict_encoder = {}
-            for k in list(state_dict.keys()):
-                if k.startswith(encoder_name):
-                    state_dict_encoder[k[len(encoder_name):]] = state_dict[k]
+        #     state_dict_encoder = {}
+        #     for k in list(state_dict.keys()):
+        #         if k.startswith(encoder_name):
+        #             state_dict_encoder[k[len(encoder_name):]] = state_dict[k]
             
-            _ = self.encoder.load_state_dict(state_dict_encoder, strict=True)
+        #     _ = self.encoder.load_state_dict(state_dict_encoder, strict=True)
 
-            if args.finetune_strategy == 'frozen':
-                for _, param in self.encoder.named_parameters():
-                    param.requires_grad = False
-                parameters = list(filter(lambda p: p.requires_grad, self.encoder.parameters()))
-                assert len(parameters)==0
+        #     if args.finetune_strategy == 'frozen':
+        #         for _, param in self.encoder.named_parameters():
+        #             param.requires_grad = False
+        #         parameters = list(filter(lambda p: p.requires_grad, self.encoder.parameters()))
+        #         assert len(parameters)==0
 
         self.cls_token = CLSToken(d_token=args.tabular_embedding_dim)
         sequence_len = len(NUM_FEATURES) + len(CAT_FEATURES) + 1 # +1 for CLS token
