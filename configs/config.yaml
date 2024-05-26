@@ -88,7 +88,7 @@ projector_num_layers: 1
 init_strat: kaiming
 
 # tabular_transformer
-tabular_embedding_dim: 8
+tabular_embedding_dim: 192
 tabular_tokenizer:
   _target_: models.TabularTokenizer.TabularTokenizer
   d_token: ${tabular_embedding_dim}
