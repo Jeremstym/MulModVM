@@ -42,7 +42,7 @@ class Pretraining(pl.LightningModule):
       self.tokenizer = hydra.utils.instantiate(self.hparams.tabular_tokenizer, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
     else:
       self.encoder_tabular = TabularEncoder(self.hparams)
-    self.projector_tabular = SimCLRProjectionHead(self.hparams.embedding_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
+    self.projector_tabular = SimCLRProjectionHead(self.hparams.tabular_embedding_dim, self.hparams.tabular_embedding_dim, self.hparams.projection_dim)
 
   def initialize_classifier_and_metrics(self, nclasses_train, nclasses_val):
     """
