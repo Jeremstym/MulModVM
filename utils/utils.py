@@ -131,6 +131,7 @@ def prepend_paths(hparams):
     'field_indices_tabular', 'field_lengths_tabular',
     'data_test_eval_tabular', 'labels_test_eval_tabular',
     'data_test_eval_imaging', 'labels_test_eval_imaging',
+    'data_train_imaging_tensors', 'data_val_imaging_tensors',
     ]:
     if hp in hparams and hparams[hp]:
       hparams['{}_short'.format(hp)] = hparams[hp]
@@ -153,6 +154,7 @@ def re_prepend_paths(hparams):
     'field_indices_tabular', 'field_lengths_tabular',
     'data_test_eval_tabular', 'labels_test_eval_tabular',
     'data_test_eval_imaging', 'labels_test_eval_imaging',
+    'data_train_imaging_tensors', 'data_val_imaging_tensors',
     ]:
     if hp in hparams and hparams[hp]:
       hparams[hp] = join(db, hparams['{}_short'.format(hp)])
