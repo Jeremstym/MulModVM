@@ -300,7 +300,19 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
 
   def __init__(
       self,
-      data: Sequence,
+      data_path_imaging: Sequence,
+      delete_segmentation: bool,
+      augmentation: transforms.Compose,
+      augmentation_rate: float,
+      data_path_tabular: str,
+      corruption_rate: float,
+      field_lengths_tabular: str,
+      one_hot_tabular: bool,
+      labels_path: str,
+      img_size: int,
+      live_loading: bool,
+      missing_values: list = [],
+      use_labels: bool = False,
       transform: Sequence[Callable] | Callable | None = None,
       cache_num: int = sys.maxsize,
       cache_rate: float = 1.0,
@@ -353,9 +365,14 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
               Not following these recommendations may lead to runtime errors or duplicated cache across processes.
 
       """
-      if not isinstance(transform, transforms.Compose):
-          transform = transforms.Compose(transform)
-      super().__init__(data=data, transform=transform)
+      # if not isinstance(transform, transforms.Compose):
+      #     transform = transforms.Compose(transform)
+      # super().__init__(data=data, transform=transform)
+      super().__init__()
+      self.transform = augmentation
+      self.delete_segmentation = delete_segmentation
+      self.augmentation_rate = augmentation_rate
+      self.live_loading = live_loading
       self.set_num = cache_num  # tracking the user-provided `cache_num` option
       self.set_rate = cache_rate  # tracking the user-provided `cache_rate` option
       self.progress = progress
@@ -370,7 +387,30 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       self.cache_num = 0
       self._cache: list | ListProxy = []
       self._hash_keys: list = []
-      self.set_data(data)
+      self.data = torch.load(data_path_imaging)
+      self.set_data(self.data)
+
+      if self.delete_segmentation:
+        for im in self.data_imaging:
+          im[0,:,:] = 0
+
+      self.default_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize(size=(img_size,img_size)),
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x : x.float())
+      ])
+
+      # Tabular
+      use_header = True if use_transformer else False
+      self.c = corruption_rate
+      self.field_lengths_tabular = torch.load(field_lengths_tabular)
+      self.one_hot_tabular = one_hot_tabular
+      self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header)
+      self.generate_marginal_distributions(data_path_tabular)
+      
+      # Classifier
+      self.labels = torch.load(labels_path)
 
   def set_data(self, data: Sequence) -> None:
       """
