@@ -180,7 +180,7 @@ class CacheDataset(ImageDataset):
         copy_cache: bool = True,
         as_contiguous: bool = True,
         hash_as_key: bool = False,
-        hash_func: Callable[..., bytes] = pickle_hashing,
+        # hash_func: Callable[..., bytes] = pickle_hashing,
         runtime_cache: bool | str | list | ListProxy = False,
     ) -> None:
         """
