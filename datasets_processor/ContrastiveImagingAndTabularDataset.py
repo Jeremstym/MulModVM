@@ -308,6 +308,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       corruption_rate: float,
       field_lengths_tabular: str,
       one_hot_tabular: bool,
+      use_transformer: bool,
       labels_path: str,
       img_size: int,
       live_loading: bool,
