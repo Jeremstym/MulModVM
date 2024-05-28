@@ -25,7 +25,7 @@ multitarget:
 wandb_entity: 
 data_base: 
 num_workers: 0
-persistent_workers: False
+persistent_workers: True
 use_cache: True
 num_sanity_val_steps: 2
 
