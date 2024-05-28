@@ -369,7 +369,11 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       # if not isinstance(transform, transforms.Compose):
       #     transform = transforms.Compose(transform)
       # super().__init__(data=data, transform=transform)
-      super().__init__()
+      super().__init__(
+        data_path_imaging, delete_segmentation, augmentation, augmentation_rate, 
+        data_path_tabular, corruption_rate, field_lengths_tabular, one_hot_tabular,
+        labels_path, img_size, live_loading, missing_values, use_cache, use_transformer, use_labels, False
+      )
       self.transform = augmentation
       self.delete_segmentation = delete_segmentation
       self.augmentation_rate = augmentation_rate
