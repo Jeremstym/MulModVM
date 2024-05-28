@@ -63,7 +63,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
-      use_cache: bool = False, use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False) -> None:
+      use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False) -> None:
             
     # Imaging
     if use_embds:
@@ -75,7 +75,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
     self.live_loading = live_loading
-    self.use_cache = use_cache
+    # self.use_cache = use_cache
     self.use_labels = use_labels
     self.use_embds = use_embds
 
@@ -372,7 +372,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       super().__init__(
         data_path_imaging, delete_segmentation, augmentation, augmentation_rate, 
         data_path_tabular, corruption_rate, field_lengths_tabular, one_hot_tabular,
-        labels_path, img_size, live_loading, missing_values, use_cache, use_transformer, use_labels, False
+        labels_path, img_size, live_loading, missing_values, use_transformer, use_labels, False
       )
       self.transform = augmentation
       self.delete_segmentation = delete_segmentation
