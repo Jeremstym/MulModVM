@@ -33,7 +33,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     # Imaging
     if use_embds:
       print('Using embeddings. IMPORTATION... Might take a while.')
-    self.data_imaging = torch.load(data_path_imaging, map_location='cuda', mmap=True)
+    self.data_imaging = torch.load(data_path_imaging, map_location='cuda')
     if use_embds:
       print('Embeddings imported.')
     self.transform = augmentation
