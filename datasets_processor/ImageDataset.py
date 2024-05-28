@@ -233,7 +233,7 @@ class CacheDataset(ImageDataset):
         self.copy_cache = copy_cache
         self.as_contiguous = as_contiguous
         self.hash_as_key = hash_as_key
-        self.hash_func = hash_func
+        # self.hash_func = hash_func
         self.num_workers = num_workers
         if self.num_workers is not None:
             self.num_workers = max(int(self.num_workers), 1)

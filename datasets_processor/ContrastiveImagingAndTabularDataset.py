@@ -321,7 +321,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       copy_cache: bool = True,
       as_contiguous: bool = False,
       hash_as_key: bool = False,
-      hash_func: Callable[..., bytes] = pickle_hashing,
+      # hash_func: Callable[..., bytes] = pickle_hashing,
       runtime_cache: bool | str | list | ListProxy = False,
   ) -> None:
       """
@@ -379,7 +379,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       self.copy_cache = copy_cache
       self.as_contiguous = as_contiguous
       self.hash_as_key = hash_as_key
-      self.hash_func = hash_func
+      # self.hash_func = hash_func
       self.num_workers = num_workers
       if self.num_workers is not None:
           self.num_workers = max(int(self.num_workers), 1)
