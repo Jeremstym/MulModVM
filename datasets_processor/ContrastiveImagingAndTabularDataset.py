@@ -530,7 +530,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       #   imaging_views = self.cache_list[index]
       #   unaugmented_image = self.cache_list_original[index]
       # else:
-      imaging_views, unaugmented_image = self._cache(index)
+      imaging_views, unaugmented_image = self._cache[index]
       tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
       if self.one_hot_tabular:
         tabular_views = [self.one_hot_encode(tv) for tv in tabular_views]
