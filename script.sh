@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=hard
-#SBATCH --nodelist=led
+#SBATCH --nodelist=thin
 #SBATCH --job-name=BoBW-Baseline
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
