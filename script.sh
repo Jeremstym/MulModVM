@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=electronic
+#SBATCH --partition=hard
+#SBATCH --nodelist=zed
 #SBATCH --job-name=BoBW-Baseline
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
