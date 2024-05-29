@@ -72,6 +72,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     if use_embds:
       print('Embeddings imported.')
     self.transform = augmentation
+
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
     self.live_loading = live_loading
@@ -89,6 +90,10 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       transforms.ToTensor(),
       transforms.Lambda(lambda x : x.float())
     ])
+    
+    augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
+    torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
+    raise Exception('Augmented data saved to disk. Rerun script without this block.')
 
     # if self.use_cache:
     #   print('Caching images')
@@ -210,9 +215,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         augmented_data.append(ims)
       return augmented_data
 
-    augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
-    torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
-    raise Exception('Augmented data saved to disk. Rerun script without this block.')
 
   # def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
   #   """
