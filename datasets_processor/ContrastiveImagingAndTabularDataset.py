@@ -157,7 +157,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     to be corrupted (determined by hyperparam corruption_rate)
     and replaces their values with ones sampled from marginal distribution
     """
-    subject = copy.deepcopy(subject)
+    subject = deepcopy(subject)
 
     indices = random.sample(list(range(len(subject))), int(len(subject)*self.c)) 
     for i in indices:
