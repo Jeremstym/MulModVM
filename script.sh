@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=funky
-#SBATCH --job-name=BoBW-Baseline
+#SBATCH --partition=hard
+#SBATCH --job-name=BoBW-Transformer
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --time=2-16:00:00
@@ -12,8 +12,8 @@ uname -a
 nvidia-smi
 cd MulModVM
 
-# poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False use_xtab=True wandb_name=Bob-LightTransformer-XTab
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=128 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False use_xtab=True wandb_name=Bob-LightTransformer-XTab-BN
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal pretrain=True max_epochs=100 batch_size=256 use_transformer=True num_workers=8
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=False one_hot=True wandb_name=BoB-Baseline
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal checkpoint=/home/stympopper/MulModVM/runs/multimodal/Bob2-Transformer/checkpoint_last_epoch_99.ckpt max_epochs=100 batch_size=128 num_workers=26 wandb_name=BobTransFinetune1 use_cache=False use_transformer=True
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False checkpoint=/home/stympopper/MulModVM/runs/multimodal/Bob-LightTransformer-XTab/checkpoint_last_epoch_45.ckpt wandb_name=Bob-XTab-Finetune
+# poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False checkpoint=/home/stympopper/MulModVM/runs/multimodal/Bob-LightTransformer-XTab/checkpoint_last_epoch_45.ckpt wandb_name=Bob-XTab-Finetune
