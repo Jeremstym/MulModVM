@@ -28,6 +28,7 @@ num_workers: 0
 persistent_workers: True
 use_cache: True
 num_sanity_val_steps: 2
+cache_num: null # default is sys.maxsize
 
 wandb_project: 
 sql_address: 

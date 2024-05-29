@@ -36,12 +36,14 @@ def load_datasets(hparams):
         hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
         hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
         hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-        use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, num_workers=hparams.num_workers)
+        use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, num_workers=hparams.num_workers,
+        cache_num=hparams.cache_num)
       val_dataset = CacheDataset(
         hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
         hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
         hparams.labels_val, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-        use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, num_workers=hparams.num_workers)
+        use_transformer=hparams.use_transformer, use_labels=hparams.use_labels, num_workers=hparams.num_workers,
+        cache_num=hparams.cache_num)
     else:
       train_dataset = ContrastiveImagingAndTabularDataset(
         hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
