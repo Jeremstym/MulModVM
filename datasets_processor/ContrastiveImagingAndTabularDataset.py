@@ -503,7 +503,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
 
       if cache_index is None:
           # no cache for this index, execute all the transforms directly
-          return super()._transform(index)
+          return super().generate_imaging_views(index)
 
       if self._cache is None:
           raise RuntimeError("cache buffer is not initialized, please call `set_data()` first.")
