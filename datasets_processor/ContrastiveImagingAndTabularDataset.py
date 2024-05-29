@@ -91,9 +91,9 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       transforms.Lambda(lambda x : x.float())
     ])
 
-    augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
-    torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
-    raise Exception('Augmented data saved to disk. Rerun script without this block.')
+    # augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
+    # torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
+    # raise Exception('Augmented data saved to disk. Rerun script without this block.')
 
     # if self.use_cache:
     #   print('Caching images')
@@ -205,15 +205,15 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     
     return ims, orig_im
 
-  def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
-    """
-    Creates a new dataset with augmented images to save to disk
-    """
-    data_pipeline = []
-    for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-      ims, orig_im = self.generate_imaging_views(i)
-      data_pipeline.append(ims)
-    return data_pipeline
+  # def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
+  #   """
+  #   Creates a new dataset with augmented images to save to disk
+  #   """
+  #   data_pipeline = []
+  #   for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
+  #     ims, orig_im = self.generate_imaging_views(i)
+  #     data_pipeline.append(ims)
+  #   return data_pipeline
     # with ThreadPool(8) as p:
     #   data_pipeline = list(tqdm(p.imap(self.generate_imaging_views, range(len(dataset))), total=len(dataset), desc='Augmenting data'))
     # augmented_data = []
