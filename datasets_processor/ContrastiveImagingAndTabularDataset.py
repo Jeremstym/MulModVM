@@ -90,7 +90,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       transforms.ToTensor(),
       transforms.Lambda(lambda x : x.float())
     ])
-    
+
     augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
     torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
     raise Exception('Augmented data saved to disk. Rerun script without this block.')
@@ -205,15 +205,15 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     
     return ims, orig_im
 
-    def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
-      """
-      Creates a new dataset with augmented images to save to disk
-      """
-      augmented_data = []
-      for i in tqdm(ange(len(dataset)), desc='Augmenting data', total=len(dataset)):
-        ims, _ = self.generate_imaging_views(i)
-        augmented_data.append(ims)
-      return augmented_data
+  def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
+    """
+    Creates a new dataset with augmented images to save to disk
+    """
+    augmented_data = []
+    for i in tqdm(ange(len(dataset)), desc='Augmenting data', total=len(dataset)):
+      ims, _ = self.generate_imaging_views(i)
+      augmented_data.append(ims)
+    return augmented_data
 
 
   # def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
