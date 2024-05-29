@@ -209,11 +209,18 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     """
     Creates a new dataset with augmented images to save to disk
     """
+    data_pipeline = []
+    with ThreadPool(self.num_workers) as p:
+      data_pipeline = list(tqdm(p.imap(self.generate_imaging_views, range(len(dataset))), total=len(dataset), desc='Augmenting data'))
     augmented_data = []
-    for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-      ims, _ = self.generate_imaging_views(i)
+    for ims, orig_im in data_pipeline:
       augmented_data.append(ims)
     return augmented_data
+
+    # for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
+    #   ims = self.generate_imaging_views(i)[0]
+    #   augmented_data.append(ims)
+    # return augmented_data
 
 
   # def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
