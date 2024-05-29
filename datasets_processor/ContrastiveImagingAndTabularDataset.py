@@ -210,7 +210,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     Creates a new dataset with augmented images to save to disk
     """
     augmented_data = []
-    for i in tqdm(ange(len(dataset)), desc='Augmenting data', total=len(dataset)):
+    for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
       ims, _ = self.generate_imaging_views(i)
       augmented_data.append(ims)
     return augmented_data
