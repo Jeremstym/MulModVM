@@ -122,6 +122,7 @@ class Pretraining(pl.LightningModule):
       print(f'x shape after tokenizer: {x.shape}')
     y = self.encoder_tabular(x).flatten(start_dim=1)
     print(f'y shape: {y.shape}, encoder_tabular')
+    raise Exception('stop')
     z = self.projector_tabular(y)
     return z, y
 
