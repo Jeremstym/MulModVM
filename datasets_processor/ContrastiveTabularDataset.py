@@ -45,7 +45,7 @@ class ContrastiveTabularDataset(Dataset):
       FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
     elif use_header:
       FEATURES = NUM_FEATURES + CAT_FEATURES
-      df = pd.read_csv(path_tabular, names=FEATURES)
+      df = pd.read_csv(path, names=FEATURES)
       df.drop(missing_values, axis=0, inplace=True)
       cat_mask = check_categorical_data(df)
       self.cat_mask = cat_mask
