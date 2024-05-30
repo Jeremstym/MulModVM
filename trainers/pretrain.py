@@ -94,7 +94,7 @@ def select_model(hparams, train_dataset):
     else:
       model = SimCLR(hparams)
   elif hparams.datatype == 'tabular':
-    model = SCARF(hparams)
+    model = SCARF(hparams, dataset=train_dataset)
   else:
     raise Exception(f'Unknown datatype {hparams.datatype}')
   return model

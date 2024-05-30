@@ -10,10 +10,10 @@ class SCARF(Pretraining):
   """
   Lightning module for SCARF pretraining. 
   """
-  def __init__(self, hparams) -> None:
+  def __init__(self, hparams, dataset=None) -> None:
     super().__init__(hparams)
 
-    self.initialize_tabular_encoder_and_projector()
+    self.initialize_tabular_encoder_and_projector(dataset=dataset)
 
     self.criterion = NTXentLoss(self.hparams.temperature)
     nclasses = hparams.batch_size*2-1
