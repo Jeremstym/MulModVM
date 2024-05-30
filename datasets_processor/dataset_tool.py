@@ -19,7 +19,7 @@ import numpy as np
 import PIL.Image
 from tqdm import tqdm
 
-from utils.utils import grab_image_augmentations, grab_wids, create_logdir
+from .utils.utils import grab_image_augmentations, grab_wids, create_logdir
 
 #----------------------------------------------------------------------------
 
