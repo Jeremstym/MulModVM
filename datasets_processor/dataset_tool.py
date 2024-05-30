@@ -263,7 +263,9 @@ def convert_dataset(
         ctx.fail('--dest output filename or directory must not be an empty string')
 
     num_files, input_iter = open_dataset(source, max_images=max_images)
+    print(f'Converting {num_files} images')
     archive_root_dir, save_bytes, close_dest = open_dest(dest)
+    print(f'Saving to {archive_root_dir}')
 
     if resolution is None: resolution = (None, None)
     # transform_image = make_transform(transform, *resolution)
@@ -272,7 +274,7 @@ def convert_dataset(
     dataset_attrs = None
 
     labels = []
-    for idx, image in tqdm(enumerate(input_iter), total=num_files):
+    for idx, image in tqdm(enumerate(input_iter), total=num_files, desc='Converting images'):
         idx_str = f'{idx:08d}'
         archive_fname = f'{idx_str[:5]}/img{idx_str}.png'
 
