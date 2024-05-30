@@ -68,8 +68,12 @@ def load_datasets(hparams):
       transform=transform, delete_segmentation=hparams.delete_segmentation, 
       augmentation_rate=hparams.augmentation_rate, img_size=hparams.img_size, live_loading=hparams.live_loading)
   elif hparams.datatype == 'tabular':
-    train_dataset = ContrastiveTabularDataset(hparams.data_train_tabular, hparams.labels_train, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot)
-    val_dataset = ContrastiveTabularDataset(hparams.data_val_tabular, hparams.labels_val, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot)
+    train_dataset = ContrastiveTabularDataset(
+      hparams.data_train_tabular, hparams.labels_train, hparams.corruption_rate, hparams.field_lengths_tabular,
+      hparams.one_hot, hparams.use_transformer, hparams.use_labels, hparams.missing_values)
+    val_dataset = ContrastiveTabularDataset(
+      hparams.data_val_tabular, hparams.labels_val, hparams.corruption_rate, hparams.field_lengths_tabular,
+      hparams.one_hot, hparams.use_transformer, hparams.use_labels, hparams.missing_values)
     hparams.input_size = train_dataset.get_input_size()
   else:
     raise Exception(f'Unknown datatype {hparams.datatype}')

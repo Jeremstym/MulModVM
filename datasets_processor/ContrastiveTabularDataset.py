@@ -7,14 +7,28 @@ import torch
 from torch.utils.data import Dataset
 import pandas as pd
 
+from .TabularAttributes import check_categorical_data, CAT_FEATURES, NUM_FEATURES, CAT_FEATURES_WITH_LABEL
+
 class ContrastiveTabularDataset(Dataset):
   """
   Dataset of tabular data that generates two views, one untouched and one corrupted.
   The corrupted view hsd a random fraction is replaced with values sampled 
   from the empirical marginal distribution of that value
   """
-  def __init__(self, data_path: str, labels_path: str, corruption_rate: float=0.6, field_lengths_tabular: str=None, one_hot: bool=True):
-    self.data = self.read_and_parse_csv(data_path)
+  def __init__(
+    self,
+    data_path: str,
+    labels_path: str,
+    corruption_rate: float=0.6,
+    field_lengths_tabular: str=None,
+    one_hot: bool=True,
+    use_transformer: bool=False,
+    use_labels: bool=False,
+    missing_values: List[int]=[]
+    ):
+    self.use_labels = use_labels
+    use_header = True if use_transformer else False
+    self.data = self.read_and_parse_csv(data_path, use_header=use_header)
     self.labels = torch.load(labels_path)
     self.c = corruption_rate
     self.generate_marginal_distributions(data_path)
@@ -23,16 +37,28 @@ class ContrastiveTabularDataset(Dataset):
 
     self.one_hot = one_hot
   
-  def read_and_parse_csv(self, path: str) -> List[List[float]]:
+  def read_and_parse_csv(self, path: str, missing_values: List[int] = [], use_header: bool = False) -> List[List[float]]:
     """
     Does what it says on the box.
     """
-    with open(path,'r') as f:
-      reader = csv.reader(f)
-      data = []
-      for r in reader:
-        r2 = [float(r1) for r1 in r]
-        data.append(r2)
+    if use_header and self.use_labels:
+      FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
+    elif use_header:
+      FEATURES = NUM_FEATURES + CAT_FEATURES
+      df = pd.read_csv(path_tabular, names=FEATURES)
+      df.drop(missing_values, axis=0, inplace=True)
+      cat_mask = check_categorical_data(df)
+      self.cat_mask = cat_mask
+      field_lengths_tensor = torch.tensor(self.field_lengths_tabular)
+      self.cat_card = field_lengths_tensor[cat_mask]
+      data = df.values.tolist()
+    else:
+      with open(path,'r') as f:
+        reader = csv.reader(f)
+        data = []
+        for r in reader:
+          r2 = [float(r1) for r1 in r]
+          data.append(r2)
     return data
 
   def generate_marginal_distributions(self, data_path: str) -> None:
