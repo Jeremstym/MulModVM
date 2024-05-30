@@ -19,8 +19,32 @@ import numpy as np
 import PIL.Image
 from tqdm import tqdm
 
-from .utils.utils import grab_image_augmentations, grab_wids, create_logdir
-
+def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float = 0.08) -> transforms.Compose:
+  """
+  Defines augmentations to be used with images during contrastive training and creates Compose.
+  """
+  if target.lower() == 'dvm':
+    transform = transforms.Compose([
+      transforms.ToPILImage(),
+      transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
+      transforms.RandomGrayscale(p=0.2),
+      transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
+      transforms.RandomResizedCrop(size=(img_size,img_size), scale=(crop_scale_lower, 1.0), ratio=(0.75, 1.3333333333333333)),
+      transforms.RandomHorizontalFlip(p=0.5),
+      transforms.ToTensor(),
+      #transforms.Resize(size=(img_size,img_size)),
+      transforms.Lambda(lambda x : x.float())
+    ])
+  else:
+    transform = transforms.Compose([
+      transforms.RandomHorizontalFlip(),
+      transforms.RandomRotation(45),
+      transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+      transforms.RandomResizedCrop(size=img_size, scale=(0.2,1), antialias=False),
+      transforms.Lambda(lambda x: x.float())
+    ])
+  return transform
+  
 #----------------------------------------------------------------------------
 
 def error(msg):
