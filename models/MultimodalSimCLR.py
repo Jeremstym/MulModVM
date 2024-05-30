@@ -65,9 +65,6 @@ class MultimodalSimCLR(Pretraining):
     # Augmented views
     z0, embeddings = self.forward_imaging(im_views[1]) 
     z1, _ = self.forward_tabular(tab_views[1])
-    print(f"z0: {z0.shape}, z1: {z1.shape}, y: {y.shape} for imaging and tabular")
-    print(f"embeddings: {embeddings.shape}")
-    raise Exception('stop')
     loss, logits, labels = self.criterion_train(z0, z1, y)
 
     self.log(f"multimodal.train.loss", loss, on_epoch=True, on_step=False)
