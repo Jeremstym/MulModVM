@@ -12,6 +12,7 @@ from torchvision.io import read_image
 import cv2
 from tqdm import tqdm
 has_tqdm = True
+import lmdb
 
 from .TabularAttributes import check_categorical_data, CAT_FEATURES, NUM_FEATURES, CAT_FEATURES_WITH_LABEL
 
@@ -63,15 +64,27 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
-      use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False) -> None:
+      use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False, use_lmdb=False) -> None:
             
     # Imaging
+    self.transform = augmentation
     if use_embds:
       print('Using embeddings. IMPORTATION... Might take a while.')
     self.data_imaging = torch.load(data_path_imaging)
     if use_embds:
       print('Embeddings imported.')
-    self.transform = augmentation
+    if use_lmdb:
+      self.env = lmdb.open(data_path_imaging, write=True, lock=False, readahead=False, meminit=False)
+      with self.env.begin(write=True) as txn:
+        for image_path in tqdm(self.data_imaging, desc='Creating LMDB', total=len(self.data_imaging)):
+          im = cv2.imread(image_path)
+          im = im / 255
+          im = im.astype("uint8")
+          im = self.transform(im)
+          txn.put(image_path.encode(), pickle.dumps(im, protocol=DEFAULT_PROTOCOL))
+    
+    raise Exception('LMDB created. Rerun script without this block.')
+          
 
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
@@ -351,6 +364,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       hash_as_key: bool = False,
       # hash_func: Callable[..., bytes] = pickle_hashing,
       runtime_cache: bool | str | list | ListProxy = False,
+      use_lmdb: bool = False,
   ) -> None:
       """
       Args:
@@ -399,7 +413,8 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       super().__init__(
         data_path_imaging, delete_segmentation, augmentation, augmentation_rate, 
         data_path_tabular, corruption_rate, field_lengths_tabular, one_hot_tabular,
-        labels_path, img_size, live_loading, missing_values, use_transformer, use_labels, False
+        labels_path, img_size, live_loading, missing_values, use_transformer, use_labels, False,
+        use_lmdb=False
       )
       self.transform = augmentation
       self.delete_segmentation = delete_segmentation
