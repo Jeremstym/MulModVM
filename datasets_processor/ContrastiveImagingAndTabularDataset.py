@@ -64,7 +64,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
-      use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False, use_lmdb=False) -> None:
+      use_transformer: bool = False, use_labels: bool = False, use_embds: bool = False, use_lmdb=True) -> None:
             
     # Imaging
     self.transform = augmentation
