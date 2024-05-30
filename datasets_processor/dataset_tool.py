@@ -13,6 +13,7 @@ import zipfile
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
 import torchvision.transforms as transforms
+import torch
 
 import click
 import numpy as np
@@ -44,7 +45,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
       transforms.Lambda(lambda x: x.float())
     ])
   return transform
-  
+
 #----------------------------------------------------------------------------
 
 def error(msg):
