@@ -103,6 +103,24 @@ class ContrastiveTabularDataset(Dataset):
         out.append(torch.nn.functional.one_hot(subject[i].long(), num_classes=int(self.field_lengths[i])))
     return torch.cat(out)
 
+  def get_cat_mask(self) -> torch.Tensor:
+    """
+    Returns the categorical mask
+    """
+    return torch.tensor(self.cat_mask)
+
+  def get_cat_card(self) -> torch.Tensor:
+    """
+    Returns the categorical cardinalities
+    """
+    return torch.tensor(self.cat_card)
+
+  def get_number_of_numerical_features(self) -> int:
+    """
+    Returns the number of numerical features
+    """
+    return len(NUM_FEATURES)
+
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], torch.Tensor]:
     """
     Returns two views of a subjects features, the first element being the original subject features
