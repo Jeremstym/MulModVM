@@ -108,7 +108,7 @@ class Pretraining(pl.LightningModule):
     z = self.projector_imaging(y)
     return z, y
 
-  def forward_tabular(self, x: torch.Tensor) -> torch.Tensor:
+  def forward_tabular(self, x: torch.Tensor, mask_corruption: torch.Tensor = None) -> torch.Tensor:
     """
     Generates projection and encoding of tabular data.
     """
@@ -116,7 +116,7 @@ class Pretraining(pl.LightningModule):
       x_num = x[:, ~self.cat_mask]
       x_cat = x[:, self.cat_mask].type(torch.int64)
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)
-    y = self.encoder_tabular(x).flatten(start_dim=1)
+    y = self.encoder_tabular(x, mask_corruption).flatten(start_dim=1)
     z = self.projector_tabular(y)
     return z, y
 

@@ -182,6 +182,17 @@ class ContrastiveImagingAndTabularDataset(Dataset):
       subject[i] = random.sample(self.marginal_distributions[i],k=1)[0] 
     return subject
 
+  def create_mask(self, subject: List[float]) -> List[bool]:
+    """
+    Creates a mask of features to be corrupted
+    """
+    mask = [False] * len(subject)
+    random.seed(42)
+    indices = random.sample(list(range(len(subject))), int(len(subject)*self.c)) 
+    for i in indices:
+      mask[i] = True
+    return mask
+
   def one_hot_encode(self, subject: torch.Tensor) -> torch.Tensor:
     """
     One-hot encodes a subject's features
@@ -274,7 +285,10 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     #   unaugmented_image = self.cache_list_original[index]
     # else:
     imaging_views, unaugmented_image = self.generate_imaging_views(index)
-    tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
+    if hparams.use_transformer:
+      tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.create_mask(self.data_tabular[index]))]
+    else:
+      tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
     if self.one_hot_tabular:
       tabular_views = [self.one_hot_encode(tv) for tv in tabular_views]
     label = torch.tensor(self.labels[index], dtype=torch.long)
