@@ -49,7 +49,7 @@ class ContrastiveTabularDataset(Dataset):
       df.drop(missing_values, axis=0, inplace=True)
       cat_mask = check_categorical_data(df)
       self.cat_mask = cat_mask
-      field_lengths_tensor = torch.tensor(self.field_lengths_tabular)
+      field_lengths_tensor = torch.tensor(self.field_lengths)
       self.cat_card = field_lengths_tensor[cat_mask]
       data = df.values.tolist()
     else:
