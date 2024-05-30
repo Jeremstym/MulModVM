@@ -28,6 +28,10 @@ class SCARF(Pretraining):
     """
     Forward pass for tabular
     """
+    if self.hparams.use_transformer:
+      x_num = x[:, ~self.cat_mask]
+      x_cat = x[:, self.cat_mask].type(torch.int64)
+      x = self.tokenizer(x_num=x_num, x_cat=x_cat)
     embeddings = self.encoder_tabular(x)
     return embeddings
 
