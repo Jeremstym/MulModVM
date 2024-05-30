@@ -26,15 +26,7 @@ class Pretraining(pl.LightningModule):
     Selects appropriate resnet encoder
     """
     self.encoder_imaging = torchvision_ssl_encoder(self.hparams.model)
-    if self.datatype == 'tabular':
-      self.pooled_dim = self.hparams.tabular_embedding_dim
-    elif self.hparams.model == 'resnet50':
-      self.pooled_dim = 2048
-    elif self.hparams.model == 'resnet18':
-      self.pooled_dim = 512
-    else:
-      self.pooled_dim = 512
-    # self.pooled_dim = 2048 if self.hparams.model=='resnet50' else 512
+    self.pooled_dim = 2048 if self.hparams.model=='resnet50' else 512
     self.projector_imaging = SimCLRProjectionHead(self.pooled_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
 
   def initialize_tabular_encoder_and_projector(self, dataset=None) -> None:

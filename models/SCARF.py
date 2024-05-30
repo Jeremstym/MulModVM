@@ -19,7 +19,7 @@ class SCARF(Pretraining):
     nclasses = hparams.batch_size*2-1
 
     self.initialize_classifier_and_metrics(nclasses, nclasses)
-    self.pooled_dim = self.hparams.embedding_dim
+    self.pooled_dim = self.hparams.tabular_embedding_dim
 
     print(self.encoder_tabular)
     print(self.projector_tabular)
