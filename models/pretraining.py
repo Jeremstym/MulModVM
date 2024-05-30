@@ -113,16 +113,10 @@ class Pretraining(pl.LightningModule):
     Generates projection and encoding of tabular data.
     """
     if self.hparams.use_transformer:
-      print(f'x shape: {x.shape}')
       x_num = x[:, ~self.cat_mask]
-      print(f'x_num shape: {x_num.shape}')
       x_cat = x[:, self.cat_mask].type(torch.int64)
-      print(f'x_cat shape: {x_cat.shape}')
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)
-      print(f'x shape after tokenizer: {x.shape}')
     y = self.encoder_tabular(x).flatten(start_dim=1)
-    print(f'y shape: {y.shape}, encoder_tabular')
-    raise Exception('stop')
     z = self.projector_tabular(y)
     return z, y
 
