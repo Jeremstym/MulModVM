@@ -28,12 +28,12 @@ class ContrastiveTabularDataset(Dataset):
     ):
     self.use_labels = use_labels
     use_header = True if use_transformer else False
+    self.field_lengths = torch.load(field_lengths_tabular)
     self.data = self.read_and_parse_csv(data_path, use_header=use_header)
     self.labels = torch.load(labels_path)
     self.c = corruption_rate
     self.generate_marginal_distributions(data_path)
 
-    self.field_lengths = torch.load(field_lengths_tabular)
 
     self.one_hot = one_hot
   
