@@ -125,6 +125,9 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     
     # Classifier
     self.labels = torch.load(labels_path)
+
+    # Masking
+    self.use_transformer = use_transformer
   
   def read_and_parse_csv(self, path_tabular: str, missing_values: list = [], use_header: bool = False) -> List[List[float]]:
     """
