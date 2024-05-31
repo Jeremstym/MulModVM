@@ -91,6 +91,8 @@ class TabularTransformer(nn.Module):
         return x_masked
 
     def masking_token(self, x: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+        print(f'x size is: {x.size()}')
+        raise Exception('stop')
         mask_token = torch.zeros(1, x.size(1), x.size(2)).to(x.device)
         x = self.mask_tokens(x, mask_token, mask)
         return x
