@@ -90,7 +90,7 @@ class Pretraining(pl.LightningModule):
     Can load tabular encoder with pretrained weights from XTab foundation model
     """
     loaded_chkpt = torch.load(self.hparams.xtab_path, map_location=self.device)
-    self.encoder_tabular.load_state_dict(loaded_chkpt, strict=False) # no state_dict key needed as it is the whole state_dict
+    self.encoder_tabular.load_state_dict(loaded_chkpt, strict=True) # no state_dict key needed as it is the whole state_dict
     return
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
