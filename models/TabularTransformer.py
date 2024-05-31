@@ -55,7 +55,7 @@ class TabularTransformer(nn.Module):
         self.TransformerEncoder = hydra.utils.instantiate(args.tabular_transformer)
         # self.head = nn.Linear(args.d_token, args.d_token)
 
-    def mask_tokens(x: Tensor, mask_token: Tensor, mask: Tensor) -> Tensor:
+    def mask_tokens(x: torch.Tensor, mask_token: torch.Tensor, mask: torch.Tensor) -> Tensor:
         """Replaces tokens in a batch of sequences with a predefined `mask_token`.
 
         References:
