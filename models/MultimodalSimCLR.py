@@ -84,7 +84,10 @@ class MultimodalSimCLR(Pretraining):
     
     # Unaugmented views
     z0, embeddings = self.forward_imaging(original_im)
-    z1, _ = self.forward_tabular(tab_views[0])
+    if self.hparams.use_transformer:
+      z1, _ = self.forward_tabular(*tab_views)
+    else:
+      z1, _ = self.forward_tabular(tab_views[0])
     loss, logits, labels = self.criterion_val(z0, z1, y)
 
     self.log("multimodal.val.loss", loss, on_epoch=True, on_step=False)
