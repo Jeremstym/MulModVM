@@ -108,7 +108,7 @@ tabular_transformer:
   ffn_normalization: layer_norm
   residual_dropout: 0.1
   prenormalization: True
-  first_prenormalization: True
+  first_prenormalization: False
   last_layer_query_idx: null
   cross_attention: False
   n_tokens: null # Only used when compressing the input sequence (`kv_compression_ratio is not None`)
