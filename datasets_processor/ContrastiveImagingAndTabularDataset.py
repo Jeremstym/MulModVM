@@ -73,17 +73,17 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     self.data_imaging = torch.load(data_path_imaging)
     if use_embds:
       print('Embeddings imported.')
-    if use_lmdb:
-      self.env = lmdb.open("/home/stympopper/data/DVMdata/resized_DVM", map_size=int(1e12) , lock=False, readahead=False, meminit=False)
-      with self.env.begin(write=True) as txn:
-        for image_path in tqdm(self.data_imaging, desc='Creating LMDB', total=len(self.data_imaging)):
-          im = cv2.imread(image_path)
-          im = im / 255
-          im = im.astype("uint8")
-          im = self.transform(im)
-          txn.put(image_path.encode(), pickle.dumps(im, protocol=DEFAULT_PROTOCOL))
+    # if use_lmdb:
+    #   self.env = lmdb.open("/home/stympopper/data/DVMdata/resized_DVM", map_size=int(1e12) , lock=False, readahead=False, meminit=False)
+    #   with self.env.begin(write=True) as txn:
+    #     for image_path in tqdm(self.data_imaging, desc='Creating LMDB', total=len(self.data_imaging)):
+    #       im = cv2.imread(image_path)
+    #       im = im / 255
+    #       im = im.astype("uint8")
+    #       im = self.transform(im)
+    #       txn.put(image_path.encode(), pickle.dumps(im, protocol=DEFAULT_PROTOCOL))
     
-    raise Exception('LMDB created. Rerun script without this block.')
+    # raise Exception('LMDB created. Rerun script without this block.')
           
 
     self.delete_segmentation = delete_segmentation
