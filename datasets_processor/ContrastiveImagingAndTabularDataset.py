@@ -285,7 +285,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     #   unaugmented_image = self.cache_list_original[index]
     # else:
     imaging_views, unaugmented_image = self.generate_imaging_views(index)
-    if hparams.use_transformer:
+    if self.use_transformer:
       tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.create_mask(self.data_tabular[index]))]
     else:
       tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
@@ -472,6 +472,9 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
       
       # Classifier
       self.labels = torch.load(labels_path)
+
+      # Masking
+      self.use_transformer = use_transformer
 
   def set_data(self, data: Sequence) -> None:
       """
