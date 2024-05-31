@@ -64,7 +64,7 @@ class MultimodalSimCLR(Pretraining):
     
     # Augmented views
     z0, embeddings = self.forward_imaging(im_views[1]) 
-    if hparams.use_transformer:
+    if self.hparams.use_transformer:
       z1, _ = self.forward_tabular(*tab_views)
     else:
       z1, _ = self.forward_tabular(tab_views[1])
