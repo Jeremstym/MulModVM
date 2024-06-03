@@ -10,7 +10,7 @@ from pytorch_lightning.callbacks import (
 )
 from torch.utils.data.sampler import WeightedRandomSampler
 
-from datasets_processor.ImageDataset import ImageDataset
+from datasets_processor.ImageFastDataset import ImageFastDataset
 from datasets_processor.TabularDataset import TabularDataset
 from datasets_processor.ImagingAndTabularDataset import ImagingAndTabularDataset
 from models.Evaluator import Evaluator
