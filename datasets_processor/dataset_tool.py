@@ -242,8 +242,10 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
     return max_idx, iterate_images()
 
 def open_pickle(source_file, *, max_images: Optional[int]):
-    with open(source_file, 'rb') as file:
-        data = pickle.load(file)
+    # with open(source_file, 'rb') as file:
+    #     data = pickle.load(file)
+
+    data = torch.load(source_file)
 
     max_idx = maybe_min(len(data), max_images)
 
