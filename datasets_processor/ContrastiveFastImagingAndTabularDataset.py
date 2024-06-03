@@ -52,10 +52,10 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
       data_path_imaging: str, delete_segmentation: bool, augmentation: transforms.Compose, augmentation_rate: float, 
       data_path_tabular: str, corruption_rate: float, field_lengths_tabular: str, one_hot_tabular: bool,
       labels_path: str, img_size: int, live_loading: bool, missing_values: list = [], 
-      use_transformer: bool = False, use_labels: bool = False) -> None:
-            
+      use_transformer: bool = False, use_labels: bool = False, max_size: int = None) -> None:
+
     # Imaging
-    self.data_imaging_dataset = ImageFastDataset(data_path_imaging, 'imaging', max_size=None)
+    self.data_imaging_dataset = ImageFastDataset(data_path_imaging, 'imaging', max_size=max_size)
 
     self.delete_segmentation = delete_segmentation
     self.augmentation_rate = augmentation_rate
@@ -71,7 +71,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
     self.c = corruption_rate
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
     self.one_hot_tabular = one_hot_tabular
-    self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header)
+    self.data_tabular = self.read_and_parse_csv(data_path_tabular, missing_values, use_header, max_size=max_size)
     self.generate_marginal_distributions(data_path_tabular)
     
     # Classifier
@@ -80,7 +80,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
     # Masking
     self.use_transformer = use_transformer
   
-  def read_and_parse_csv(self, path_tabular: str, missing_values: list = [], use_header: bool = False) -> List[List[float]]:
+  def read_and_parse_csv(self, path_tabular: str, missing_values: list = [], use_header: bool = False, max_size: int = None) -> List[List[float]]:
     """
     Does what it says on the box.
     """
@@ -99,11 +99,20 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
       with open(path_tabular,'r') as f:
         reader = csv.reader(f)
         data = []
-        for idx, r in enumerate(reader):
-          if idx in missing_values:
-            continue
-          r2 = [float(r1) for r1 in r]
-          data.append(r2)
+        if max_size is not None:
+            for idx, r in enumerate(reader):
+                if idx in missing_values:
+                    continue
+                r2 = [float(r1) for r1 in r]
+                data.append(r2)
+                if idx >= max_size:
+                    break
+        else:
+            for idx, r in enumerate(reader):
+                if idx in missing_values:
+                    continue
+                r2 = [float(r1) for r1 in r]
+                data.append(r2)
     return data
 
   def generate_marginal_distributions(self, data_path: str) -> None:
@@ -159,58 +168,6 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         out.append(torch.nn.functional.one_hot(subject[i].long(), num_classes=int(self.field_lengths_tabular[i])))
     return torch.cat(out)
 
-  def generate_imaging_views(self, index: int) -> List[torch.Tensor]:
-    """
-    Generates two views of a subjects image. Also returns original image resized to required dimensions.
-    The first is always augmented. The second has {augmentation_rate} chance to be augmented.
-    """
-    im = self.data_imaging[index]
-    if self.live_loading:
-        im = cv2.imread(im)
-        im = im / 255
-        im = im.astype("uint8")
-    ims = [self.transform(im)]
-    if random.random() < self.augmentation_rate:
-      ims.append(self.transform(im))
-    else:
-      ims.append(self.default_transform(im))
-
-    orig_im = self.default_transform(im)
-    
-    return ims, orig_im
-
-  # def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
-  #   """
-  #   Creates a new dataset with augmented images to save to disk
-  #   """
-  #   data_pipeline = []
-  #   for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-  #     ims, orig_im = self.generate_imaging_views(i)
-  #     data_pipeline.append(ims)
-  #   return data_pipeline
-    # with ThreadPool(8) as p:
-    #   data_pipeline = list(tqdm(p.imap(self.generate_imaging_views, range(len(dataset))), total=len(dataset), desc='Augmenting data'))
-    # augmented_data = []
-    # for ims, orig_im in data_pipeline:
-    #   augmented_data.append(ims)
-    # return augmented_data
-
-    # for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-    #   ims = self.generate_imaging_views(i)[0]
-    #   augmented_data.append(ims)
-    # return augmented_data
-
-
-  # def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]: 
-  #   """
-  #   Caches the augmented images for later use in a list
-  #   """
-  #   ims, orig_im = self.generate_imaging_views(index)
-  #   # ims = [torch.tensor(im) for im in ims]
-  #   self.cache_list.append(ims)
-  #   self.cache_list_original.append(orig_im)
-  #   return
-
   def get_cat_mask(self) -> torch.Tensor:
     """
     Returns the categorical mask
@@ -230,19 +187,10 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
     return len(NUM_FEATURES)
 
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
-    # if self.use_cache:
-    #   imaging_views = self.cache_list[index]
-    #   unaugmented_image = self.cache_list_original[index]
-    # else:
-    imaging_views, unaugmented_image = self.generate_imaging_views(index)
-    if self.use_transformer:
-      tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.create_mask(self.data_tabular[index]))]
-    else:
-      tabular_views = [torch.tensor(self.data_tabular[index], dtype=torch.float), torch.tensor(self.corrupt(self.data_tabular[index]), dtype=torch.float)]
-    if self.one_hot_tabular:
-      tabular_views = [self.one_hot_encode(tv) for tv in tabular_views]
+    imaging_views = self.data_imaging_dataset.get_image_from_idx(index)
+    tabular_views = torch.tensor(self.create_mask(self.data_tabular[index]))
     label = torch.tensor(self.labels[index], dtype=torch.long)
-    return imaging_views, tabular_views, label, unaugmented_image
+    return imaging_views, tabular_views, label
 
   def __len__(self) -> int:
     return len(self.data_tabular)
