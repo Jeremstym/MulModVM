@@ -190,7 +190,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
     imaging_views = self.data_imaging_dataset.get_image_from_idx(index)
     tabular_views = torch.tensor(self.create_mask(self.data_tabular[index]))
     label = torch.tensor(self.labels[index], dtype=torch.long)
-    return imaging_views, tabular_views, label
+    return (imaging_views, tabular_views), label
 
   def __len__(self) -> int:
     return len(self.data_tabular)
