@@ -47,7 +47,6 @@ class MultimodalModel(nn.Module):
         x = self.imaging_model.encoder(x) # keep only the encoder part
         return x
 
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x_im = self.encoder_imaging(x[0]).squeeze()
         x_proj_im = self.im_head(x_im)
