@@ -251,7 +251,7 @@ def open_pickle(source_file, *, max_images: Optional[int]):
 
     def iterate_images():
         for idx, img_name in enumerate(data):
-            img = np.array(PIL.Image.open(io.BytesIO(img_name)))
+            img = np.array(PIL.Image.open(img_name))
             yield dict(img=img, label=None)
             if idx >= max_idx-1:
                 break
