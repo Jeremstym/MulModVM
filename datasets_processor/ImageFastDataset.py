@@ -37,7 +37,7 @@ from copy import copy, deepcopy
 from multiprocessing.managers import ListProxy
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from typing import IO, TYPE_CHECKING, Any, cast
+from typing import IO, TYPE_CHECKING, Any, cast, List, Optional, Tuple, Union
 
 try:
     import pyspng
