@@ -7,7 +7,6 @@ import pytorch_lightning as pl
 import hydra
 from omegaconf import DictConfig
 
-from models.TabularTokenizer import TabularTokenizer
 from models.TabularModel import TabularModel
 from models.ImagingModel import ImagingModel
 from models.MultimodalModel import MultimodalModel
@@ -17,11 +16,17 @@ class Fusion(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters(hparams)
 
+        assert dataset is not None, 'Dataset must be provided for transformer models'
+        cat_mask = dataset.get_cat_mask()
+        self.cat_mask = cat_mask
+        num_cont = dataset.get_number_of_numerical_features()
+        cat_card = dataset.get_cat_card()
+
         if self.hparams.datatype == 'multimodal' or self.hparams.datatype == 'imaging_and_tabular':
-            self.model = MultimodalModel(self.hparams)
+            self.model = MultimodalModel(self.hparams, cat_cardinalities=cat_card.tolist(), n_num_features=num_cont)
         else:
             raise ValueError('The only way to use the Fusion model is with multimodal or imaging_and_tabular data')
-
+        
         task = 'binary' if self.hparams.num_classes == 2 else 'multiclass'
 
         self.acc_train = torchmetrics.Accuracy(task=task, num_classes=self.hparams.num_classes)
@@ -38,31 +43,11 @@ class Fusion(pl.LightningModule):
 
         print(self.model)
 
-    def forward_tabular(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Generates a prediction from a data point
-        """
-        x_num = x[:, ~self.cat_mask]
-        x_cat = x[:, self.cat_mask].type(torch.int64)
-        x = self.model.tokenizer_tabular(x_num=x_num, x_cat=x_cat)
-        y_hat = self.model.encoder_tabular(x)
-        return y_hat
-
-    def forward_imaging(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Generates a prediction from a data point
-        """
-        y_hat = self.model.encoder_imaging(x)
-        return y_hat
-
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         """
         Generates a prediction from a data point
         """
-        x_tab, x_img = x
-        y_hat_tab = self.forward_tabular(x_tab)
-        y_hat_img = self.forward_imaging(x_img)
-        y_hat = self.model.classifier(y_hat_tab, y_hat_img)
+        y_hat = self.model(x)
         return y_hat
 
     def training_step(self, batch: Tuple[torch.Tensor, torch.Tensor], _) -> torch.Tensor:
