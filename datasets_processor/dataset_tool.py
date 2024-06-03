@@ -246,6 +246,8 @@ def open_pickle(source_file, *, max_images: Optional[int]):
     #     data = pickle.load(file)
 
     data = torch.load(source_file)
+    print(data[0])
+    raise Exception('stop')
 
     max_idx = maybe_min(len(data), max_images)
 
