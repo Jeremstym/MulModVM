@@ -13,6 +13,7 @@ import wandb
 
 from trainers.pretrain import pretrain
 from trainers.evaluate import evaluate
+from trainers.fuse import fuse
 from trainers.test import test
 from trainers.generate_embeddings import generate_embeddings
 from utils.utils import grab_arg_from_checkpoint, prepend_paths, re_prepend_paths
@@ -67,7 +68,7 @@ def run(args: DictConfig):
     pretrain(args, wandb_logger)
     args.checkpoint = os.path.join(base_dir, 'runs', args.datatype, wandb_logger.experiment.name, f'checkpoint_last_epoch_{args.max_epochs-1:02}.ckpt')
   elif args.fusion:
-    fusion(args, wandb_logger)
+    fuse(args, wandb_logger)
     args.checkpoint = os.path.join(base_dir, 'runs', args.datatype, wandb_logger.experiment.name, f'checkpoint_last_epoch_{args.max_epochs-1:02}.ckpt')
     
   if args.test:
