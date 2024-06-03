@@ -7,7 +7,6 @@ import pytorch_lightning as pl
 import hydra
 from omegaconf import DictConfig
 
-from models.TabularTokenizer import TabularTokenizer
 from models.TabularModel import TabularModel
 from models.ImagingModel import ImagingModel
 from models.MultimodalModel import MultimodalModel
