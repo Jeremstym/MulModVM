@@ -150,6 +150,8 @@ def open_dataset(source, *, max_images: Optional[int]):
             return open_mnist(source, max_images=max_images)
         elif file_ext(source) == 'zip':
             return open_image_zip(source, max_images=max_images)
+        elif file_ext(source) == 'pt':
+            return open_pickle(source, max_images=max_images)
         else:
             assert False, 'unknown archive type'
     else:
@@ -235,6 +237,19 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
             arch_fname = arch_fname.replace('\\', '/')
             img = np.array(PIL.Image.open(fname))
             yield dict(img=img, label=labels.get(arch_fname))
+            if idx >= max_idx-1:
+                break
+    return max_idx, iterate_images()
+
+def open_pickle(source_file, *, max_images: Optional[int]):
+    with open(source_file, 'rb') as file:
+        data = pickle.load(file)
+
+    max_idx = maybe_min(len(data), max_images)
+
+    def iterate_images():
+        for idx, img in enumerate(data):
+            yield dict(img=img, label=None)
             if idx >= max_idx-1:
                 break
     return max_idx, iterate_images()
