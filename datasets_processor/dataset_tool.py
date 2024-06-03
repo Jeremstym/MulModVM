@@ -38,7 +38,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
     raise ValueError(f'Unknown target {target}')
   return transform
 
-  def grab_default_transform(img_size: int) -> transforms.Compose:
+def grab_default_transform(img_size: int) -> transforms.Compose:
     """
     Defines default transformations for images.
     """
@@ -46,7 +46,7 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
         transforms.Resize(size=(img_size,img_size)),
         transforms.ToTensor(),
         transforms.Lambda(lambda x : x.float())
-      ])
+        ])
     return transform
 
 #----------------------------------------------------------------------------
