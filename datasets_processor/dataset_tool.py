@@ -26,24 +26,16 @@ def grab_image_augmentations(img_size: int, target: str, crop_scale_lower: float
   """
   if target.lower() == 'dvm':
     transform = transforms.Compose([
-      transforms.ToPILImage(),
       transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
       transforms.RandomGrayscale(p=0.2),
       transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
       transforms.RandomResizedCrop(size=(img_size,img_size), scale=(crop_scale_lower, 1.0), ratio=(0.75, 1.3333333333333333)),
       transforms.RandomHorizontalFlip(p=0.5),
       transforms.ToTensor(),
-      #transforms.Resize(size=(img_size,img_size)),
       transforms.Lambda(lambda x : x.float())
     ])
   else:
-    transform = transforms.Compose([
-      transforms.RandomHorizontalFlip(),
-      transforms.RandomRotation(45),
-      transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
-      transforms.RandomResizedCrop(size=img_size, scale=(0.2,1), antialias=False),
-      transforms.Lambda(lambda x: x.float())
-    ])
+    raise ValueError(f'Unknown target {target}')
   return transform
 
 #----------------------------------------------------------------------------
@@ -266,6 +258,7 @@ def open_pickle(source_file, *, max_images: Optional[int]):
 @click.option('--max-images', help='Output only up to `max-images` images', type=int, default=None)
 @click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
 @click.option('--resolution', help='Output resolution (e.g., \'512x512\')', metavar='WxH', type=parse_tuple)
+@click.option('--normalize', help='Normalize images to have zero mean and unit variance', type=bool, default=False)
 def convert_dataset(
     ctx: click.Context,
     source: str,
@@ -273,6 +266,7 @@ def convert_dataset(
     max_images: Optional[int],
     transform: Optional[str],
     resolution: Optional[Tuple[int, int]],
+    normalize: bool,
 ):
 
     PIL.Image.init() # type: ignore
@@ -296,8 +290,13 @@ def convert_dataset(
         idx_str = f'{idx:08d}'
         archive_fname = f'{idx_str[:5]}/img{idx_str}.png'
 
+        if normalize:
+            img = image['img'] / 255
+            img = img.astype("uint8")
+        else:
+            img = image['img']
         # Apply crop and resize.
-        img = transform_image(image['img'])
+        img = transform_image(img)
 
         # Transform may drop images.
         if img is None:
