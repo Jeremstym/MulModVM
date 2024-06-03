@@ -246,13 +246,12 @@ def open_pickle(source_file, *, max_images: Optional[int]):
     #     data = pickle.load(file)
 
     data = torch.load(source_file)
-    print(data[0])
-    raise Exception('stop')
 
     max_idx = maybe_min(len(data), max_images)
 
     def iterate_images():
-        for idx, img in enumerate(data):
+        for idx, img_name in enumerate(data):
+            img = np.array(PIL.Image.open(io.BytesIO(img_name)))
             yield dict(img=img, label=None)
             if idx >= max_idx-1:
                 break
