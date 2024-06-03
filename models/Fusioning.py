@@ -81,8 +81,36 @@ class Fusion(pl.LightningModule):
         x, y = batch
         y_hat = self.forward(x)
         loss = self.criterion(y_hat, y)
-        self.log("train_loss", loss)
+
+        y_hat = torch.softmax(y_hat.detach(), dim=1)
+        if self.hparams.num_classes == 2:
+            y_hat = y_hat[:, 1]
+
+        self.acc_train(y_hat, y)
+        self.auc_train(y_hat, y)
+
+        self.log("fusion_train_loss", loss, on_epoch=True, on_step=False)
         return loss
+
+    def training_epoch_end(self, _) -> None:
+        """
+        Training epoch end
+        """
+        self.log(
+            "fusion_train_acc",
+            self.acc_train,
+            on_epoch=True,
+            on_step=False,
+            metric_attribute=self.acc_train,
+        )
+
+        self.log(
+            "fusion_train_auc",
+            self.auc_train,
+            on_epoch=True,
+            on_step=False,
+            metric_attribute=self.auc_train,
+        )
 
     def validation_step(self, batch: Tuple[torch.Tensor, torch.Tensor], _) -> None:
         """
@@ -91,9 +119,46 @@ class Fusion(pl.LightningModule):
         x, y = batch
         y_hat = self.forward(x)
         loss = self.criterion(y_hat, y)
-        self.log("val_loss", loss)
+
+        y_hat = torch.softmax(y_hat.detach(), dim=1)
+        if self.hparams.num_classes == 2:
+            y_hat = y_hat[:, 1]
+
         self.acc_val(y_hat, y)
         self.auc_val(y_hat, y)
+
+        self.log("fusion_val_loss", loss)
+
+    def validation_epoch_end(self, _) -> None:
+        """
+        Validation epoch end
+        """
+        if self.trainer.sanity_checking:
+            return
+
+        epoch_val_acc = self.acc_val.compute()
+        epoch_val_auc = self.auc_val.compute()
+
+        self.log(
+            "fusion_val_acc",
+            epoch_val_acc,
+            on_epoch=True,
+            on_step=False,
+            metric_attribute=self.acc_val,
+        )
+
+        self.log(
+            "fusion_val_auc",
+            epoch_val_auc,
+            on_epoch=True,
+            on_step=False,
+            metric_attribute=self.auc_val,
+        )
+
+        self.best_val_score = max(self.best_val_score, epoch_val_acc)
+
+        self.acc_test.reset()
+        self.auc_test.reset()
 
     def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], _) -> None:
         """
@@ -101,6 +166,11 @@ class Fusion(pl.LightningModule):
         """
         x, y = batch
         y_hat = self.forward(x)
+
+        y_hat = torch.softmax(y_hat.detach(), dim=1)
+        if self.hparams.num_classes == 2:
+            y_hat = y_hat[:, 1]
+
         self.acc_test(y_hat, y)
         self.auc_test(y_hat, y)
 
@@ -110,9 +180,33 @@ class Fusion(pl.LightningModule):
         """
         test_acc = self.acc_test.compute()
         test_auc = self.auc_test.compute()
-        self.log("test_acc", test_acc)
-        self.log("test_auc", test_auc)
+
+        self.log("test.acc", test_acc)
+        self.log("test.auc", test_auc)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
+        """
+        Sets optimizer and scheduler.
+        Must use strict equal to false because if check_val_n_epochs is > 1
+        because val metrics not defined when scheduler is queried
+        """
+        optimizer = torch.optim.Adam(
+            self.model.parameters(),
+            lr=self.hparams.lr_eval,
+            weight_decay=self.hparams.weight_decay_eval,
+        )
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            patience=int(10 / self.hparams.check_val_every_n_epoch),
+            min_lr=self.hparams.lr * 0.0001,
+        )
         return optimizer
+
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "monitor": "eval.val.loss",
+                "strict": False,
+            },
+        }
