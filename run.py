@@ -66,7 +66,10 @@ def run(args: DictConfig):
   if args.pretrain:
     pretrain(args, wandb_logger)
     args.checkpoint = os.path.join(base_dir, 'runs', args.datatype, wandb_logger.experiment.name, f'checkpoint_last_epoch_{args.max_epochs-1:02}.ckpt')
-  
+  elif args.fusion:
+    fusion(args, wandb_logger)
+    args.checkpoint = os.path.join(base_dir, 'runs', args.datatype, wandb_logger.experiment.name, f'checkpoint_last_epoch_{args.max_epochs-1:02}.ckpt')
+    
   if args.test:
     test(args, wandb_logger)
   elif args.evaluate:
