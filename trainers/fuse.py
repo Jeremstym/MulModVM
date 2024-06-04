@@ -141,7 +141,7 @@ def fuse(hparams, wandb_logger):
         devices=1,
         callbacks=callbacks,
         logger=wandb_logger,
-        max_epochs=hparams.epochs,
+        max_epochs=hparams.max_epochs,
         check_val_every_n_epoch=hparams.check_val_every_n_epoch,
         val_check_interval=hparams.val_check_interval,
         limit_train_batches=hparams.limit_train_batches,
