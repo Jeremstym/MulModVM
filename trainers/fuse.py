@@ -11,6 +11,9 @@ from pytorch_lightning.callbacks import (
 from torch.utils.data.sampler import WeightedRandomSampler
 
 from datasets_processor.ImageFastDataset import ImageFastDataset
+from datasets_processor.ContrastiveFastImagingAndTabularDataset import (
+    ContrastiveFastImagingAndTabularDataset,
+)
 from datasets_processor.TabularDataset import TabularDataset
 from datasets_processor.ImagingAndTabularDataset import ImagingAndTabularDataset
 from models.Evaluator import Evaluator
@@ -27,13 +30,31 @@ from models.Fusioning import Fusion
 
 def load_datasets(hparams):
     if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
-        train_dataset = ImageFastDataset(
-            data_path=hparams.data_fast_train_imaging,
-            name="fusion_train",
+        train_dataset = ContrastiveFastImagingAndTabularDataset(
+            data_path_imaging=hparams.data_fast_train_imaging,
+            delete_segmentation=hparams.delete_segmentation,
+            data_path_tabular=hparams.data_train_tabular,
+            corruption_rate=hparams.eval_corruption_rate,
+            field_lengths_tabular=hparams.field_lengths_tabular,
+            one_hot_tabular=hparams.eval_one_hot,
+            labels_path=hparams.labels_fast_train_imaging,
+            missing_values=[],
+            use_transformer=hparams.use_transformer,
+            use_labels=False,
+            max_size=None,
         )
-        val_dataset = ImageFastDataset(
-            data_path=hparams.data_fast_val_imaging,
-            name="fusion_val",
+        val_dataset = ContrastiveFastImagingAndTabularDataset(
+            data_path_imaging=hparams.data_fast_val_imaging,
+            delete_segmentation=hparams.delete_segmentation,
+            data_path_tabular=hparams.data_val_tabular,
+            corruption_rate=hparams.eval_corruption_rate,
+            field_lengths_tabular=hparams.field_lengths_tabular,
+            one_hot_tabular=hparams.eval_one_hot,
+            labels_path=hparams.labels_fast_val_imaging,
+            missing_values=[],
+            use_transformer=hparams.use_transformer,
+            use_labels=False,
+            max_size=None,
         )
     else:
         raise Exception(
