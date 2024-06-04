@@ -9,7 +9,7 @@ from omegaconf import DictConfig
 
 from models.TabularModel import TabularModel
 from models.ImagingModel import ImagingModel
-from models.MultimodalModel import MultimodalModel
+from models.MultimodalFusionModel import MultimodalFusionModel
 
 
 class Fusion(pl.LightningModule):
@@ -27,7 +27,7 @@ class Fusion(pl.LightningModule):
             self.hparams.datatype == "multimodal"
             or self.hparams.datatype == "imaging_and_tabular"
         ):
-            self.model = MultimodalModel(
+            self.model = MultimodalFusionModel(
                 self.hparams,
                 cat_cardinalities=cat_card.tolist(),
                 n_num_features=num_cont,
