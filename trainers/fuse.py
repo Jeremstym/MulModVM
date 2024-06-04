@@ -22,6 +22,8 @@ from utils.utils import (
     create_logdir,
 )
 
+from models.Fusioning import Fusion
+
 
 def load_datasets(hparams):
     if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
