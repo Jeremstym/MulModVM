@@ -10,7 +10,7 @@ from models.TabularTransformer import TabularTransformer
 from models.TabularTokenizer import TabularTokenizer
 from models.ImagingModel import ImagingModel
 
-class MultimodalModel(nn.Module):
+class MultimodalFusionModel(nn.Module):
     """
     Evaluation model for imaging and tabular data.
     """
