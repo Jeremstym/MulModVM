@@ -22,7 +22,7 @@ from .TabularAttributes import (
     NUM_FEATURES,
     CAT_FEATURES_WITH_LABEL,
 )
-from ImageFastDataset import ImageFastDataset
+from datasets_processor.ImageFastDataset import ImageFastDataset
 
 import collections.abc
 import math
