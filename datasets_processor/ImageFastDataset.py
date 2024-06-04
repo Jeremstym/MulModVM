@@ -174,7 +174,9 @@ class ImageFastDataset(Dataset):
         return image
 
     def get_image_from_idx(self, idx):
-        return self._load_raw_image(self._raw_idx[idx])
+        image = self._load_raw_image(self._raw_idx[idx])
+        image = image.astype(np.float32)
+        return image
 
     def __len__(self):
         return self._raw_idx.size
