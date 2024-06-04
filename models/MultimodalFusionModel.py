@@ -19,6 +19,7 @@ class MultimodalFusionModel(nn.Module):
         args,
         cat_cardinalities: list,
         n_num_features: int,
+        cat_mask: list,
         ) -> None:
         super().__init__()
     
@@ -33,8 +34,8 @@ class MultimodalFusionModel(nn.Module):
     
 
     def tokenizer_tabular(self, x: torch.Tensor) -> torch.Tensor:
-        x_num = x[:, ~self.cat_mask]
-        x_cat = x[:, self.cat_mask].type(torch.int64)
+        x_num = x[:, ~cat_mask]
+        x_cat = x[:, cat_mask].type(torch.int64)
         x = self.tokenizer(x_num=x_num, x_cat=x_cat)
         return x
 

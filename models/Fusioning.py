@@ -31,6 +31,7 @@ class Fusion(pl.LightningModule):
                 self.hparams,
                 cat_cardinalities=cat_card.tolist(),
                 n_num_features=num_cont,
+                cat_mask=cat_mask,
             )
         else:
             raise ValueError(
