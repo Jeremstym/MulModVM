@@ -28,7 +28,7 @@ class MultimodalFusionModel(nn.Module):
         tab_dim = args.tabular_transformer.d_token
         self.tokenizer = hydra.utils.instantiate(args.tabular_tokenizer, cat_cardinalities=cat_cardinalities, n_num_features=n_num_features)
         self.tab_head = nn.Linear(tab_dim, args.projection_dim)
-        self.im_head = nn.Linear(args.embdding_dim, args.projection_dim)
+        self.im_head = nn.Linear(args.embedding_dim, args.projection_dim)
         self.head = nn.Linear(args.projection_dim*2, args.num_classes)
     
 
