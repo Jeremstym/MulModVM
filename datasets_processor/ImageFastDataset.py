@@ -58,6 +58,7 @@ class ImageFastDataset(Dataset):
         name: str,
         labels: List[int] = None,
         max_size: int = None,
+        resolution: int = None,
         **super_kwargs,
     ):
         self._path = data_path
