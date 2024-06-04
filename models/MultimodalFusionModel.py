@@ -57,6 +57,6 @@ class MultimodalFusionModel(nn.Module):
         x_proj_im = self.im_head(x_im)
         x_tab = self.encoder_tabular(x[1]).squeeze()
         x_proj_tab = self.tab_head(x_tab)
-        x = torch.cat([x_im, x_tab], dim=1)
+        x = torch.cat([x_proj_im, x_proj_tab], dim=1)
         x = self.head(x)
         return x
