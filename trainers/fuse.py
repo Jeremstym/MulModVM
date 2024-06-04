@@ -113,7 +113,7 @@ def fuse(hparams, wandb_logger):
     callbacks.append(
         ModelCheckpoint(
             monitor=f"fusion.val.{hparams.eval_metric}",
-            mode=mode,
+            mode="max",
             filename=f"checkpoint_best_{hparams.eval_metric}",
             dirpath=logdir,
         )
@@ -124,7 +124,7 @@ def fuse(hparams, wandb_logger):
             min_delta=0.0002,
             patience=int(10 * (1 / hparams.val_check_interval)),
             verbose=False,
-            mode=mode,
+            mode="max",
         )
     )
     if hparams.use_wandb:
