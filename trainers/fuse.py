@@ -114,7 +114,7 @@ def fuse(hparams, wandb_logger):
     callbacks = []
     callbacks.append(
         ModelCheckpoint(
-            monitor=f"fusion.val.{hparams.eval_metric}",
+            monitor=f"fusion_val_{hparams.eval_metric}",
             mode="max",
             filename=f"checkpoint_best_{hparams.eval_metric}",
             dirpath=logdir,
@@ -122,7 +122,7 @@ def fuse(hparams, wandb_logger):
     )
     callbacks.append(
         EarlyStopping(
-            monitor=f"fusion.val.{hparams.eval_metric}",
+            monitor=f"fusion_val_{hparams.eval_metric}",
             min_delta=0.0002,
             patience=int(10 * (1 / hparams.val_check_interval)),
             verbose=False,
