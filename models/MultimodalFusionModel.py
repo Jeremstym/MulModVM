@@ -20,7 +20,7 @@ class MultimodalFusionModel(nn.Module):
         cat_cardinalities: list,
         n_num_features: int,
         ) -> None:
-        super(MultimodalModel, self).__init__()
+        super().__init__()
     
         self.imaging_model = ImagingModel(args)
         self.tabular_encoder = TabularTransformer(args)
