@@ -7,6 +7,7 @@ from torchvision.transforms import transforms
 from torchvision.io import read_image
 import cv2
 from tqdm import tqdm
+import numpy as np
 
 has_tqdm = True
 import PIL
