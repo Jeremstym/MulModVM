@@ -28,6 +28,7 @@ from utils.utils import (
 from models.Fusioning import Fusion
 
 
+
 def load_datasets(hparams):
     if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
         train_dataset = ContrastiveFastImagingAndTabularDataset(
@@ -108,7 +109,8 @@ def fuse(hparams, wandb_logger):
         raise Exception(
             "argument dataset must be set to imaging_or_tabular or multimodal for the Fusion model"
         )
-
+    logdir = create_logdir('eval', hparams.resume_training, wandb_logger)
+    
     callbacks = []
     callbacks.append(
         ModelCheckpoint(
@@ -132,7 +134,6 @@ def fuse(hparams, wandb_logger):
 
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
 
-    log_dir = create_logdir("fusion", hparams.logdir)
 
     trainer = Trainer.from_argparse_args(
         hparams,
