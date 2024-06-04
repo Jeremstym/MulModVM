@@ -26,26 +26,12 @@ from utils.utils import (
 def load_datasets(hparams):
     if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
         train_dataset = ImageFastDataset(
-            hparams.data_train_eval_imaging,
-            hparams.labels_train_eval_imaging,
-            hparams.delete_segmentation,
-            hparams.eval_train_augment_rate,
-            grab_arg_from_checkpoint(hparams, "img_size"),
-            target=hparams.target,
-            train=True,
-            live_loading=hparams.live_loading,
-            task=hparams.task,
+            data_path=hparams.data_fast_train_imaging,
+            name="fusion_train",
         )
         val_dataset = ImageFastDataset(
-            hparams.data_val_eval_imaging,
-            hparams.labels_val_eval_imaging,
-            hparams.delete_segmentation,
-            hparams.eval_train_augment_rate,
-            grab_arg_from_checkpoint(hparams, "img_size"),
-            target=hparams.target,
-            train=False,
-            live_loading=hparams.live_loading,
-            task=hparams.task,
+            data_path=hparams.data_fast_val_imaging,
+            name="fusion_val",
         )
     else:
         raise Exception(
