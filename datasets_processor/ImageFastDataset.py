@@ -59,7 +59,7 @@ class ImageFastDataset(Dataset):
         max_size: int = None,
         **super_kwargs,
     ):
-        self.data = data_path
+        self._path = data_path
         self._name = name
         self.labels = labels
 
@@ -174,8 +174,8 @@ class ImageFastDataset(Dataset):
     def get_image_from_idx(self, idx):
         return self._load_raw_image(self._raw_idx[idx])
 
-    def __len__(self) -> int:
-        return len(self.data)
+    def __len__(self):
+        return self._raw_idx.size
 
     def __getitem__(self, idx):
         image = self._load_raw_image(self._raw_idx[idx])
