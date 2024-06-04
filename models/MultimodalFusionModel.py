@@ -31,11 +31,12 @@ class MultimodalFusionModel(nn.Module):
         self.tab_head = nn.Linear(tab_dim, args.projection_dim)
         self.im_head = nn.Linear(args.embedding_dim, args.projection_dim)
         self.head = nn.Linear(args.projection_dim*2, args.num_classes)
+        self.cat_mask = cat_mask
     
 
     def tokenizer_tabular(self, x: torch.Tensor) -> torch.Tensor:
-        x_num = x[:, ~cat_mask]
-        x_cat = x[:, cat_mask].type(torch.int64)
+        x_num = x[:, ~self.cat_mask]
+        x_cat = x[:, self.cat_mask].type(torch.int64)
         x = self.tokenizer(x_num=x_num, x_cat=x_cat)
         return x
 
