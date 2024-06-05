@@ -33,7 +33,8 @@ def create_dict_label(path_to_image: str, path_to_labels: str) -> dict:
     list_labels = torch.load(path_to_labels, map_location=torch.device('cpu'))
 
     cnt = 0
-    for path in list_paths:
+    list_image = []
+    for path in tqdm(list_paths, desc="Creating dict"):
         label = list_labels[cnt]
         list_image[cnt] = [path, label]
         cnt += 1
