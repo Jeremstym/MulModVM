@@ -1,6 +1,7 @@
 from typing import Tuple
 
 import torch
+import torch.nn as nn
 import torchmetrics
 import pytorch_lightning as pl
 
