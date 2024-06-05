@@ -158,6 +158,7 @@ class Evaluator(pl.LightningModule):
         x, y = batch
 
         print(f"label shape: {y.shape}")
+        print(f'label: {y}')
         raise Exception("stop")
 
         y_hat = self.forward(x)
