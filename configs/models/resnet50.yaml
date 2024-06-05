@@ -3,7 +3,7 @@ defaults:
   - _self_
 
 model: resnet50
-embedding_dim: 2048
+embedding_dim: 1024
 lr: 3.e-3
 img_size: 128
 
