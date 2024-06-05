@@ -142,7 +142,7 @@ def make_transform(
 
 #----------------------------------------------------------------------------
 
-def open_dataset(source, *, max_images: Optional[int]):
+def open_dataset(source, *, max_images: Optional[int], label_path: Optional[str] = None):
     if os.path.isdir(source):
         if source.rstrip('/').endswith('_lmdb'):
             return open_lmdb(source, max_images=max_images)
@@ -156,7 +156,7 @@ def open_dataset(source, *, max_images: Optional[int]):
         elif file_ext(source) == 'zip':
             return open_image_zip(source, max_images=max_images)
         elif file_ext(source) == 'pt':
-            return open_pickle(source, max_images=max_images)
+            return open_pickle(source, max_images=max_images, label_path=label_path)
         else:
             assert False, 'unknown archive type'
     else:
@@ -246,18 +246,28 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
                 break
     return max_idx, iterate_images()
 
-def open_pickle(source_file, *, max_images: Optional[int]):
+def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[str] = None):
     # with open(source_file, 'rb') as file:
     #     data = pickle.load(file)
 
     data = torch.load(source_file)
+    if label_path is not None:
+        labels = {}
+        with open(label_path, 'r') as file:
+            labels = json.load(file)
+            if labels is not None:
+                labels = { x[0]: x[1] for x in labels }
+            else:
+                labels = {}
+    else:
+        labels = None
 
     max_idx = maybe_min(len(data), max_images)
 
     def iterate_images():
         for idx, img_name in enumerate(data):
             img = np.array(PIL.Image.open(img_name))
-            yield dict(img=img, label=None)
+            yield dict(img=img, label=labels.get(img_name))
             if idx >= max_idx-1:
                 break
     return max_idx, iterate_images()
@@ -267,6 +277,7 @@ def open_pickle(source_file, *, max_images: Optional[int]):
 @click.command()
 @click.pass_context
 @click.option('--source', help='Directory or archive name for input dataset', required=True, metavar='PATH')
+@click.option('--labels', help='Directory or archive name for input labels', required=False, metavar='PATH')
 @click.option('--dest', help='Output directory or archive name for output dataset', required=True, metavar='PATH')
 @click.option('--max-images', help='Output only up to `max-images` images', type=int, default=None)
 @click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
@@ -275,6 +286,7 @@ def open_pickle(source_file, *, max_images: Optional[int]):
 def convert_dataset(
     ctx: click.Context,
     source: str,
+    labels: Optional[str],
     dest: str,
     max_images: Optional[int],
     transform: Optional[str],
