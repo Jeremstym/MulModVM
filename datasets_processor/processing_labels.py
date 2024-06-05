@@ -47,7 +47,7 @@ def create_dict_label(path_to_image: str, path_to_labels: str) -> dict:
 
 def export_json(dict_label: dict, path: str) -> None:
     os.chdir(path)
-    with open("dataset.json", "w") as f:
+    with open("dataset_val.json", "w") as f:
         json.dump(dict_label, f)
 
 def export_pickle(dict_label: dict, path: str) -> None:
@@ -58,5 +58,5 @@ def export_pickle(dict_label: dict, path: str) -> None:
 ### ---------- Programs -------------
 
 if __name__ == "__main__":
-    dict_label = create_dict_label(path_to_image_train, path_to_labels_train)
+    dict_label = create_dict_label(path_to_image_val, path_to_labels_val)
     export_json(dict_label, path_to_image)
