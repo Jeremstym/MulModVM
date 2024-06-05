@@ -1,5 +1,5 @@
 defaults:
-  - models: resnet50
+  - models: resnet18
   - _self_
   - dataset: dvm_all_server
 
