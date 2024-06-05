@@ -30,7 +30,7 @@ class Fusion(pl.LightningModule):
         ), "Fusion model must be imaging_and_tabular or multimodal"
 
         self.tokenizer = hydra.utils.instantiate(
-            args.tabular_tokenizer,
+            self.hparams.tabular_tokenizer,
             cat_cardinalities=cat_cardinalities,
             n_num_features=num_cont,
         )
@@ -38,7 +38,7 @@ class Fusion(pl.LightningModule):
 
         self.imaging_model = ImagingModel(self.hparams)
 
-        self.head = nn.Linear(args.projection_dim * 2, args.num_classes)
+        self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
 
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
 
