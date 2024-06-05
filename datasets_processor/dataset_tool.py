@@ -252,7 +252,7 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
 
     data = torch.load(source_file)
     if label_path is not None:
-        print(label_path)
+        print(f'Loading labels from {label_path}')
         labels = {}
         with open(label_path, 'r') as file:
             labels = json.load(file)
