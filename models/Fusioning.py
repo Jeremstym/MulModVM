@@ -30,7 +30,7 @@ class Fusion(pl.LightningModule):
             or self.hparams.datatype == "multimodal"
         ), "Fusion model must be imaging_and_tabular or multimodal"
 
-        self.tokenizer = hydra.utils.instantiate(
+        self.tabular_tokenizer = hydra.utils.instantiate(
             self.hparams.tabular_tokenizer,
             cat_cardinalities=cat_cardinalities,
             n_num_features=num_cont,
@@ -38,7 +38,12 @@ class Fusion(pl.LightningModule):
         self.encoder_tabular = hydra.utils.instantiate(self.hparams.tabular_transformer)
 
         self.imaging_model = ImagingModel(self.hparams)
-
+        self.tab_head = nn.Linear(
+            self.hparams.tabular_transformer.d_token, self.hparams.projection_dim
+        )
+        self.im_head = nn.Linear(
+            self.hparams.embedding_dim, self.hparams.projection_dim
+        )
         self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
 
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
@@ -68,15 +73,17 @@ class Fusion(pl.LightningModule):
         self.best_val_score = 0
 
         # print all model
-        print(self.tokenize_tabular)
+        print(self.tabular_tokenizer)
         print(self.encoder_tabular)
+        print(self.tab_head)
         print(self.imaging_model.encoder)
+        print(self.im_head)
         print(self.head)
 
     def tokenize_tabular(self, x: torch.Tensor) -> torch.Tensor:
         x_num = x[:, ~self.cat_mask]
         x_cat = x[:, self.cat_mask].type(torch.int64)
-        x = self.tokenizer(x_num=x_num, x_cat=x_cat)
+        x = self.tabular_tokenizer(x_num=x_num, x_cat=x_cat)
         return x
 
     def encoder_tabular(self, x: torch.Tensor) -> torch.Tensor:
@@ -91,7 +98,7 @@ class Fusion(pl.LightningModule):
         return x
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
-        x_im = self.encoder_imaging(x[0]) # only keep the encoder output
+        x_im = self.encoder_imaging(x[0])  # only keep the encoder output
         x_proj_im = self.im_head(x_im)
         x_tab = self.encoder_tabular(x[1]).squeeze()
         x_proj_tab = self.tab_head(x_tab)
@@ -219,7 +226,14 @@ class Fusion(pl.LightningModule):
         because val metrics not defined when scheduler is queried
         """
         optimizer = torch.optim.Adam(
-            self.model.parameters(),
+            [
+                {"params": self.imaging_model.parameters()},
+                {"params": self.im_head.parameters()},
+                {"params": self.tabular_tokenizer.parameters()},
+                {"params": self.encoder_tabular.parameters()},
+                {"params": self.tab_head.parameters()},
+                {"params": self.head.parameters()},
+            ],
             lr=self.hparams.lr_eval,
             weight_decay=self.hparams.weight_decay_eval,
         )
