@@ -7,7 +7,6 @@ from omegaconf import DictConfig
 
 from models.TabularModel import TabularModel
 from models.TabularTransformer import TabularTransformer
-from models.TabularTokenizer import TabularTokenizer
 from models.ImagingModel import ImagingModel
 
 class MultimodalFusionModel(nn.Module):
@@ -19,7 +18,6 @@ class MultimodalFusionModel(nn.Module):
         args,
         cat_cardinalities: list,
         n_num_features: int,
-        cat_mask: list,
         ) -> None:
         super().__init__()
     
@@ -27,21 +25,12 @@ class MultimodalFusionModel(nn.Module):
         self.tabular_encoder = TabularTransformer(args)
         # in_dim = 4096
         tab_dim = args.tabular_transformer.d_token
-        self.tokenizer = hydra.utils.instantiate(args.tabular_tokenizer, cat_cardinalities=cat_cardinalities, n_num_features=n_num_features)
         self.tab_head = nn.Linear(tab_dim, args.projection_dim)
         self.im_head = nn.Linear(args.embedding_dim, args.projection_dim)
         self.head = nn.Linear(args.projection_dim*2, args.num_classes)
-        self.cat_mask = cat_mask
     
 
-    def tokenizer_tabular(self, x: torch.Tensor) -> torch.Tensor:
-        x_num = x[:, ~self.cat_mask]
-        x_cat = x[:, self.cat_mask].type(torch.int64)
-        x = self.tokenizer(x_num=x_num, x_cat=x_cat)
-        return x
-
     def encoder_tabular(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.tokenizer_tabular(x)
         x = self.tabular_encoder(x)
         return x
 
