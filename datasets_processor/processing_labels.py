@@ -23,6 +23,7 @@ path_to_image_train = "/home/stympopper/data/DVMdata/features/train_paths_all_vi
 path_to_image_val = "/home/stympopper/data/DVMdata/features/val_paths_all_views.pt"
 path_to_labels_train = "/home/stympopper/data/DVMdata/features/labels_model_all_train_all_views.pt"
 path_to_labels_val = "/home/stympopper/data/DVMdata/features/labels_model_all_val_all_views.pt"
+path_to_image = "/home/stympopper/data/DVMdata/features/"
 
 ### ---------- Functions -------------
 
