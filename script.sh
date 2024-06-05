@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=hard
+#SBATCH --partition=electronic
 #SBATCH --job-name=BoBW-Baseline-ImageOnly
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
