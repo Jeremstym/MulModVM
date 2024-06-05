@@ -298,7 +298,7 @@ def convert_dataset(
     if dest == '':
         ctx.fail('--dest output filename or directory must not be an empty string')
 
-    num_files, input_iter = open_dataset(source, max_images=max_images)
+    num_files, input_iter = open_dataset(source, max_images=max_images, label_path=labels)
     print(f'Converting {num_files} images')
     archive_root_dir, save_bytes, close_dest = open_dest(dest)
     print(f'Saving to {archive_root_dir}')
