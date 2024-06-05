@@ -1,6 +1,7 @@
 #!/bin/bash
-#SBATCH --partition=hard
-#SBATCH --nodelist=top
+#SBATCH --partition=electronic
+#SBATCH --nodes=1
+#SBATCH --gpus-per-node=1
 #SBATCH --job-name=BoB_DataProcessing
 #SBATCH --time=1-16:00:00
 #SBATCH --output=/home/stympopper/bash/out/%x-%j.out
