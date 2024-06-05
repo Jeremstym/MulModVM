@@ -67,7 +67,11 @@ class Fusion(pl.LightningModule):
 
         self.best_val_score = 0
 
-        print(self.model)
+        # print all model
+        print(self.tokenize_tabular)
+        print(self.encoder_tabular)
+        print(self.imaging_model.encoder)
+        print(self.head)
 
     def tokenize_tabular(self, x: torch.Tensor) -> torch.Tensor:
         x_num = x[:, ~self.cat_mask]
