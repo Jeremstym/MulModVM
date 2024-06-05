@@ -16,8 +16,8 @@ from utils.utils import grab_arg_from_checkpoint, grab_hard_eval_image_augmentat
 
 def load_datasets(hparams):
   if hparams.datatype == 'imaging' or hparams.datatype == 'multimodal':
-    train_dataset = ImageFastDataset(hparams.data_train_eval_imaging, hparams.labels_train_eval_imaging, hparams.delete_segmentation, hparams.eval_train_augment_rate, grab_arg_from_checkpoint(hparams, 'img_size'), target=hparams.target, train=True, live_loading=hparams.live_loading, task=hparams.task)
-    val_dataset = ImageFastDataset(hparams.data_val_eval_imaging, hparams.labels_val_eval_imaging, hparams.delete_segmentation, hparams.eval_train_augment_rate, grab_arg_from_checkpoint(hparams, 'img_size'), target=hparams.target, train=False, live_loading=hparams.live_loading, task=hparams.task)
+    train_dataset = ImageFastDataset(hparams.data_fast_train_imaging_labeled, hparams.labels_train_eval_imaging, hparams.delete_segmentation, hparams.eval_train_augment_rate, grab_arg_from_checkpoint(hparams, 'img_size'), target=hparams.target, train=True, live_loading=hparams.live_loading, task=hparams.task)
+    val_dataset = ImageFastDataset(hparams.data_fast_val_imaging_labeled, hparams.labels_val_eval_imaging, hparams.delete_segmentation, hparams.eval_train_augment_rate, grab_arg_from_checkpoint(hparams, 'img_size'), target=hparams.target, train=False, live_loading=hparams.live_loading, task=hparams.task)
   elif hparams.datatype == 'tabular':
     train_dataset = TabularDataset(hparams.data_train_eval_tabular, hparams.labels_train_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
     val_dataset = TabularDataset(hparams.data_val_eval_tabular, hparams.labels_val_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
