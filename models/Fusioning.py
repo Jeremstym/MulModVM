@@ -86,11 +86,11 @@ class Fusion(pl.LightningModule):
         x = self.tabular_tokenizer(x_num=x_num, x_cat=x_cat)
         return x
 
-    def encoder_tabular(self, x: torch.Tensor) -> torch.Tensor:
+    def encode_tabular(self, x: torch.Tensor) -> torch.Tensor:
         x = self.encoder_tabular(x)
         return x
 
-    def encoder_imaging(self, x: torch.Tensor) -> torch.Tensor:
+    def encode_imaging(self, x: torch.Tensor) -> torch.Tensor:
         if self.imaging_model.bolt_encoder:
             x = self.imaging_model.encoder(x)[0]
         else:
@@ -98,9 +98,9 @@ class Fusion(pl.LightningModule):
         return x
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
-        x_im = self.encoder_imaging(x[0])  # only keep the encoder output
+        x_im = self.encode_imaging(x[0])  # only keep the encoder output
         x_proj_im = self.im_head(x_im)
-        x_tab = self.encoder_tabular(x[1]).squeeze()
+        x_tab = self.encode_tabular(x[1]).squeeze()
         x_proj_tab = self.tab_head(x_tab)
         print(x_proj_im.shape, x_proj_tab.shape)
         x = torch.cat([x_proj_im, x_proj_tab], dim=1)
