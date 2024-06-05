@@ -65,7 +65,7 @@ class ImageFastDataset(Dataset):
     ):
         self._path = data_path
         self._name = name
-        self.use_labels = use_labels
+        self._use_labels = use_labels
         self._raw_labels = None
         self._label_shape = None
         self.one_hot_labels = one_hot_labels
