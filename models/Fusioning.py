@@ -36,6 +36,8 @@ class Fusion(pl.LightningModule):
             n_num_features=num_cont,
         )
         self.encoder_tabular = TabularTransformer(self.hparams)
+        if self.hparams.use_xtab:
+            self.load_pretrained_xtab()
 
         self.imaging_model = ImagingModel(self.hparams)
         self.tab_head = nn.Linear(
@@ -252,3 +254,16 @@ class Fusion(pl.LightningModule):
                 "strict": False,
             },
         }
+
+    def load_pretrained_xtab(self) -> None:
+        """
+        Can load tabular encoder with pretrained weights from XTab foundation model
+        """
+        loaded_chkpt = torch.load(self.hparams.xtab_path, map_location=self.device)
+        self.encoder_tabular.load_state_dict(loaded_chkpt, strict=False) # no state_dict key needed as it is the whole state_dict
+        learned_layer = [layer for layer in self.encoder_tabular.state_dict()]
+        xtab_layer = [layer for layer in loaded_chkpt.keys()]
+        intersection = set(learned_layer).intersection(set(xtab_layer))
+        assert len(intersection) > 0, "No layers in common between learned model and XTab model"
+        print(f"Loaded XTab model with layers: {intersection}")
+        return
