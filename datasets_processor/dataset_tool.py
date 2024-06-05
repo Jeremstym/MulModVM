@@ -259,6 +259,7 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
             if labels is not None:
                 labels = { x[0]: x[1] for x in labels }
             else:
+                raise ValueError('Labels file is empty') # exceptionnaly raise an error here
                 labels = {}
 
     max_idx = maybe_min(len(data), max_images)
