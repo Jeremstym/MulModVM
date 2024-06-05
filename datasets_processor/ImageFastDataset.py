@@ -176,11 +176,11 @@ class ImageFastDataset(Dataset):
         if image.ndim == 2:
             image = image[:, :, np.newaxis]  # HW => HWC
         image = image.transpose(2, 0, 1)  # HWC => CHW
+        image = image.astype(np.float32)
         return image
 
     def get_image_from_idx(self, idx):
         image = self._load_raw_image(self._raw_idx[idx])
-        image = image.astype(np.float32)
         return image
 
     def _get_raw_labels(self):
