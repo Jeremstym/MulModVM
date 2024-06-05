@@ -17,7 +17,7 @@ from utils.utils import grab_arg_from_checkpoint, grab_hard_eval_image_augmentat
 def load_datasets(hparams):
   if hparams.datatype == 'imaging' or hparams.datatype == 'multimodal':
     train_dataset = ImageDataset(
-      data_path=hparams.data_train_eval_imaging,
+      data=hparams.data_train_eval_imaging,
       labels=hparams.labels_train_eval_imaging,
       delete_segmentation=hparams.delete_segmentation,
       eval_train_augment_rate=hparams.augmentation_rate,
@@ -28,7 +28,7 @@ def load_datasets(hparams):
       task=hparams.task
       )
     val_dataset = ImageDataset(
-      data_path=hparams.data_val_eval_imaging,
+      data=hparams.data_val_eval_imaging,
       labels=hparams.labels_val_eval_imaging,
       delete_segmentation=hparams.delete_segmentation,
       eval_train_augment_rate=0,
