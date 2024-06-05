@@ -221,8 +221,6 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
     ) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
         imaging_views = self.data_imaging_dataset.get_image_from_idx(index)
         tabular_views = torch.tensor(self.create_mask(self.data_tabular[index]))
-        print(f"tabular_views shape: {tabular_views.shape}")
-        raise Exception("Stop here")
         label = torch.tensor(self.labels[index], dtype=torch.long)
         return (imaging_views, tabular_views), label
 
