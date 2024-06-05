@@ -57,6 +57,7 @@ class ImageFastDataset(Dataset):
         data_path: str,
         name: str,
         use_labels: bool = False,
+        delete_segmentation: bool = False,
         max_size: int = None,
         resolution: int = None,
         one_hot_labels: bool = False,
