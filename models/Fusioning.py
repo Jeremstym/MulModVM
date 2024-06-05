@@ -35,7 +35,7 @@ class Fusion(pl.LightningModule):
             cat_cardinalities=cat_cardinalities,
             n_num_features=num_cont,
         )
-        self.encoder_tabular = hydra.utils.instantiate(self.hparams.tabular_transformer)
+        self.encoder_tabular = TabularTransformer(self.hparams)
 
         self.imaging_model = ImagingModel(self.hparams)
         self.tab_head = nn.Linear(
