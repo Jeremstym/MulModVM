@@ -16,7 +16,7 @@ class ImagingModel(nn.Module):
       checkpoint = torch.load(args.checkpoint)
       original_args = checkpoint['hyper_parameters']
       state_dict = checkpoint['state_dict']
-      self.pooled_dim = args.embedding_dim if original_args['model']=='resnet50' else 512
+      self.pooled_dim = args.embedding_dim
 
       if 'encoder_imaging.0.weight' in state_dict:
         self.bolt_encoder = False
@@ -45,21 +45,42 @@ class ImagingModel(nn.Module):
         assert len(parameters)==0
     else:
       self.bolt_encoder = True
-      self.pooled_dim = args.embedding_dim if args.model=='resnet50' else 512
+      self.pooled_dim = args.embedding_dim
       self.encoder = torchvision_ssl_encoder(args.model)
+      # self.create_imaging_model(args)
 
     self.classifier = nn.Linear(self.pooled_dim, args.num_classes)
 
   def create_imaging_model(self, args):
     if args['model'] == 'resnet18':
-      model = models.resnet18(pretrained=False, num_classes=100)
-      self.pooled_dim = 512
+      model = models.resnet18(pretrained=False, num_classes=args['num_classes'])
+      # self.pooled_dim = 512
     elif args['model'] == 'resnet50':
-      model = models.resnet50(pretrained=False, num_classes=100)
-      self.pooled_dim = args.embedding_dim
+      model = models.resnet50(pretrained=False, num_classes=args['num_classes'])
+      # self.pooled_dim = args.embedding_dim
+    elif args['model'] == 'vit-b-32':
+      from pl_bolts.models.vision import VisionTransformer
+      model = VisionTransformer.from_name('vit_base_patch16_224', num_classes=args['num_classes'])
+      # self.pooled_dim = args.embedding_dim
     else:
-      raise Exception('Invalid architecture. Please select either resnet18 or resnet50.')
+      raise Exception('Invalid architecture. Please select resnet18, resnet50 or vit-b-32.')
     self.encoder = nn.Sequential(*list(model.children())[:-1])
+
+  def import_model(self, model_name: str) -> None:
+    """
+    Import torchvision model for imaging.
+    """
+    if model_name == 'resnet18':
+      weights = models.ResNet18_Weights.DEFAULT
+      self.encoder = models.resnet18(weights=weights)
+    elif model_name == 'resnet50':
+      weights = models.ResNet50_Weights.DEFAULT
+      self.encoder = models.resnet50(weights=weights)
+    elif model_name == 'vit-b-32':
+      weights = models.ViT_B_32_Weights.DEFAULT
+      self.encoder = models.vit_b_32(weights=weights)
+    else:
+      raise Exception('Invalid architecture. Please select resnet18, resnet50 or vit-b-32.')
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     if self.bolt_encoder:

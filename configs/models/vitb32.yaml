@@ -1,0 +1,13 @@
+# @package _global_
+defaults:
+  - _self_
+
+
+model: vit-b-32
+embedding_dim: 768
+lr: 3.e-3
+img_size: 128
+
+lr_imaging: 3.e-3
+lr_tabular: 3.e-4
+
