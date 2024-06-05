@@ -21,14 +21,12 @@ def load_datasets(hparams):
       name= "imaging_only",
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation, 
-      resolution=grab_arg_from_checkpoint(hparams, 'img_size')
       )
     val_dataset = ImageFastDataset(
       data_path=hparams.data_fast_val_imaging_labeled,
       name= "imaging_only",
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation,
-      resolution=grab_arg_from_checkpoint(hparams, 'img_size')
       )
   elif hparams.datatype == 'tabular':
     train_dataset = TabularDataset(hparams.data_train_eval_tabular, hparams.labels_train_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
