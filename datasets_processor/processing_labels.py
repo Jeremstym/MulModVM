@@ -52,7 +52,7 @@ def export_json(dict_label: dict, path: str) -> None:
 
 def export_pickle(dict_label: dict, path: str) -> None:
     os.chdir(path)
-    with open("dataset_genes.pkl", "wb") as f:
+    with open("dataset.pkl", "wb") as f:
         pickle.dump(dict_label, f)
 
 ### ---------- Programs -------------
