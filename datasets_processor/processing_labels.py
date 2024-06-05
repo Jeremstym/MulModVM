@@ -36,7 +36,7 @@ def create_dict_label(path_to_image: str, path_to_labels: str) -> dict:
     list_image = []
     for path in tqdm(list_paths, desc="Creating dict"):
         label = list_labels[cnt]
-        list_image[cnt] = [path, label]
+        list_image.append([path, label])
         cnt += 1
 
     label_dict = {}
