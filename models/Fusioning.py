@@ -103,7 +103,6 @@ class Fusion(pl.LightningModule):
         x_tokens_tab = self.tokenize_tabular(x[1])
         x_tab = self.encode_tabular(x_tokens_tab).squeeze()
         x_proj_tab = self.tab_head(x_tab)
-        print(x_proj_im.shape, x_proj_tab.shape)
         x = torch.cat([x_proj_im, x_proj_tab], dim=1)
         x = self.head(x)
         return x
