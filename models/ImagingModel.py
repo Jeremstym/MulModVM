@@ -16,7 +16,7 @@ class ImagingModel(nn.Module):
       checkpoint = torch.load(args.checkpoint)
       original_args = checkpoint['hyper_parameters']
       state_dict = checkpoint['state_dict']
-      self.pooled_dim = 2048 if original_args['model']=='resnet50' else 512
+      self.pooled_dim = args.embedding_dim if original_args['model']=='resnet50' else 512
 
       if 'encoder_imaging.0.weight' in state_dict:
         self.bolt_encoder = False
@@ -45,7 +45,7 @@ class ImagingModel(nn.Module):
         assert len(parameters)==0
     else:
       self.bolt_encoder = True
-      self.pooled_dim = 2048 if args.model=='resnet50' else 512
+      self.pooled_dim = args.embedding_dim if args.model=='resnet50' else 512
       self.encoder = torchvision_ssl_encoder(args.model)
 
     self.classifier = nn.Linear(self.pooled_dim, args.num_classes)
@@ -56,7 +56,7 @@ class ImagingModel(nn.Module):
       self.pooled_dim = 512
     elif args['model'] == 'resnet50':
       model = models.resnet50(pretrained=False, num_classes=100)
-      self.pooled_dim = 2048
+      self.pooled_dim = args.embedding_dim
     else:
       raise Exception('Invalid architecture. Please select either resnet18 or resnet50.')
     self.encoder = nn.Sequential(*list(model.children())[:-1])
