@@ -14,7 +14,7 @@ class TabularModel(nn.Module):
   def __init__(self, args):
     super(TabularModel, self).__init__()
 
-    self.encoder = TabularEncoder(args) if not args.use_transformer else TabularTransformer(args)
+    self.encoder = TabularTransformer(args) if args.tabular_model == 'transformer' else TabularEncoder(args)
     self.classifier = nn.Linear(args.tabular_embedding_dim, args.num_classes)
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:

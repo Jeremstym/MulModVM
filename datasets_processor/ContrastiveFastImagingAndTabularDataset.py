@@ -64,12 +64,12 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         one_hot_tabular: bool,
         labels_path: str,
         missing_values: list = [],
-        use_transformer: bool = False,
+        tabular_model: str = "mlp",
         use_labels: bool = False,
         max_size: int = None,
     ) -> None:
 
-        assert use_transformer is True, "This dataset is only for transformer models"
+        assert tabular_model == "transformer", "This dataset is only for transformer models"
 
         # Imaging
         self.data_imaging_dataset = ImageFastDataset(
@@ -84,7 +84,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
                 im[0, :, :] = 0
 
         # Tabular
-        use_header = True if use_transformer else False
+        use_header = True if tabular_model == "transformer" else False
         self.c = corruption_rate
         self.field_lengths_tabular = torch.load(field_lengths_tabular)
         self.one_hot_tabular = one_hot_tabular
@@ -97,7 +97,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         self.labels = torch.load(labels_path)
 
         # Masking
-        self.use_transformer = use_transformer
+        self.tabular_model = tabular_model
 
     def read_and_parse_csv(
         self,

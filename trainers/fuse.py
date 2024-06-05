@@ -40,7 +40,7 @@ def load_datasets(hparams):
             one_hot_tabular=hparams.eval_one_hot,
             labels_path=hparams.labels_train,
             missing_values=hparams.missing_values,
-            use_transformer=hparams.use_transformer,
+            tabular_model=hparams.tabular_model,
             use_labels=False,
             max_size=None,
         )
@@ -53,7 +53,7 @@ def load_datasets(hparams):
             one_hot_tabular=hparams.eval_one_hot,
             labels_path=hparams.labels_val,
             missing_values=hparams.missing_values,
-            use_transformer=hparams.use_transformer,
+            tabular_model=hparams.tabular_model,
             use_labels=False,
             max_size=None,
         )

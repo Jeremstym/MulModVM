@@ -19,7 +19,7 @@ class SCARF(Pretraining):
     nclasses = hparams.batch_size*2-1
 
     self.initialize_classifier_and_metrics(nclasses, nclasses)
-    if self.hparams.use_transformer:
+    if self.hparams.tabular_model == 'transformer':
       self.pooled_dim = self.hparams.tabular_embedding_dim
     else:
       self.pooled_dim = self.hparams.embedding_dim
@@ -31,7 +31,7 @@ class SCARF(Pretraining):
     """
     Forward pass for tabular
     """
-    if self.hparams.use_transformer:
+    if self.hparams.tabular_model == 'transformer':
       x_num = x[:, ~self.cat_mask]
       x_cat = x[:, self.cat_mask].type(torch.int64)
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)

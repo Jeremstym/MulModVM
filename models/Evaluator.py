@@ -23,7 +23,7 @@ class Evaluator(pl.LightningModule):
             self.model = MultimodalModel(self.hparams)
         if self.hparams.datatype == "tabular":
             self.model = TabularModel(self.hparams)
-            if self.hparams.use_transformer:
+            if self.hparams.tabular_model == "transformer":
                 assert (
                     dataset is not None
                 ), "Dataset must be provided for transformer models"
@@ -72,7 +72,7 @@ class Evaluator(pl.LightningModule):
         """
         Generates a prediction from a data point
         """
-        if self.hparams.use_transformer and self.hparams.datatype == "tabular":
+        if self.hparams.tabular_model == "transformer" and self.hparams.datatype == "tabular":
             x_num = x[:, ~self.cat_mask]
             x_cat = x[:, self.cat_mask].type(torch.int64)
             x = self.tokenizer(x_num=x_num, x_cat=x_cat)

@@ -21,13 +21,13 @@ class ContrastiveTabularDataset(Dataset):
     labels_path: str,
     corruption_rate: float=0.6,
     field_lengths_tabular: str=None,
-    one_hot: bool=True,
-    use_transformer: bool=False,
-    use_labels: bool=False,
-    missing_values: List[int]=[]
+    one_hot: bool = True,
+    tabular_model: str = "mlp",
+    use_labels: bool = False,
+    missing_values: List[int] = []
     ):
     self.use_labels = use_labels
-    use_header = True if use_transformer else False
+    use_header = True if tabular_model == "transformer" else False
     self.field_lengths = torch.load(field_lengths_tabular)
     self.data = self.read_and_parse_csv(data_path, use_header=use_header)
     self.labels = torch.load(labels_path)

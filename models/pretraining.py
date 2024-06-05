@@ -30,7 +30,7 @@ class Pretraining(pl.LightningModule):
     self.projector_imaging = SimCLRProjectionHead(self.pooled_dim, self.hparams.embedding_dim, self.hparams.projection_dim)
 
   def initialize_tabular_encoder_and_projector(self, dataset=None) -> None:
-    if self.hparams.use_transformer:
+    if self.hparams.tabular_model == 'transformer':
       self.encoder_tabular = TabularTransformer(self.hparams)
       if self.hparams.use_xtab:
         self.load_pretrained_xtab()
@@ -112,7 +112,7 @@ class Pretraining(pl.LightningModule):
     """
     Generates projection and encoding of tabular data.
     """
-    if self.hparams.use_transformer:
+    if self.hparams.tabular_model == 'transformer':
       x_num = x[:, ~self.cat_mask]
       x_cat = x[:, self.cat_mask].type(torch.int64)
       x = self.tokenizer(x_num=x_num, x_cat=x_cat)

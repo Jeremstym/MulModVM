@@ -80,7 +80,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         img_size: int,
         live_loading: bool,
         missing_values: list = [],
-        use_transformer: bool = False,
+        tabular_model: str = "mlp",
         use_labels: bool = False,
         use_embds: bool = False,
         use_lmdb=True,
@@ -137,7 +137,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         #     self.transforms_and_cache_images(i)
 
         # Tabular
-        use_header = True if use_transformer else False
+        use_header = True if tabular_model == 'transformer' else False
         self.c = corruption_rate
         self.field_lengths_tabular = torch.load(field_lengths_tabular)
         self.one_hot_tabular = one_hot_tabular
@@ -150,7 +150,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         self.labels = torch.load(labels_path)
 
         # Masking
-        self.use_transformer = use_transformer
+        self.tabular_model = tabular_model
 
     def read_and_parse_csv(
         self, path_tabular: str, missing_values: list = [], use_header: bool = False
@@ -319,7 +319,7 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         #   unaugmented_image = self.cache_list_original[index]
         # else:
         imaging_views, unaugmented_image = self.generate_imaging_views(index)
-        if self.use_transformer:
+        if self.tabular_model == 'transformer':
             tabular_views = [
                 torch.tensor(self.data_tabular[index], dtype=torch.float),
                 torch.tensor(self.create_mask(self.data_tabular[index])),
@@ -407,7 +407,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
         img_size: int,
         live_loading: bool,
         missing_values: list = [],
-        use_transformer: bool = True,
+        tabular_model: str = 'mlp',
         use_labels: bool = False,
         transform: Sequence[Callable] | Callable | None = None,
         cache_num: int = sys.maxsize,
@@ -478,7 +478,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
             img_size,
             live_loading,
             missing_values,
-            use_transformer,
+            tabular_model,
             use_labels,
             False,
             use_lmdb=False,
@@ -518,7 +518,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
         )
 
         # Tabular
-        use_header = True if use_transformer else False
+        use_header = True if tabular_model == 'transformer' else False
         self.c = corruption_rate
         self.field_lengths_tabular = torch.load(field_lengths_tabular)
         self.one_hot_tabular = one_hot_tabular
@@ -531,7 +531,7 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
         self.labels = torch.load(labels_path)
 
         # Masking
-        self.use_transformer = use_transformer
+        self.tabular_model = tabular_model
 
     def set_data(self, data: Sequence) -> None:
         """
