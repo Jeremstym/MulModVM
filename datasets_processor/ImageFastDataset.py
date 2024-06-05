@@ -61,6 +61,7 @@ class ImageFastDataset(Dataset):
         max_size: int = None,
         resolution: int = None,
         one_hot_labels: bool = False,
+        labels_path_short: str = None,
         **super_kwargs,
     ):
         self._path = data_path
@@ -69,6 +70,7 @@ class ImageFastDataset(Dataset):
         self._raw_labels = None
         self._label_shape = None
         self.one_hot_labels = one_hot_labels
+        self._label_path = labels_path_short
 
         if os.path.isdir(self._path):
             self._type = "dir"
@@ -212,6 +214,9 @@ class ImageFastDataset(Dataset):
         return labels
 
     def get_label(self, idx):
+        if self._label_path is not None:
+            label = torch.load(self._label_path)[self._raw_idx[idx]]
+            return label
         label = self._get_raw_labels()[self._raw_idx[idx]]
         if label.dtype == np.int64:
             if self.one_hot_labels:
