@@ -25,8 +25,8 @@ class Fusion(pl.LightningModule):
         cat_cardinalities = cat_card.tolist()
 
         assert (
-            hparams.datatype == "imaging_and_tabular"
-            or hparams.datatype == "multimodal"
+            self.hparams.datatype == "imaging_and_tabular"
+            or self.hparams.datatype == "multimodal"
         ), "Fusion model must be imaging_and_tabular or multimodal"
 
         self.tokenizer = hydra.utils.instantiate(
@@ -34,7 +34,7 @@ class Fusion(pl.LightningModule):
             cat_cardinalities=cat_cardinalities,
             n_num_features=num_cont,
         )
-        self.encoder_tabular = hydra.utils.instantiate(args.tabular_transformer)
+        self.encoder_tabular = hydra.utils.instantiate(self.hparams.tabular_transformer)
 
         self.imaging_model = ImagingModel(self.hparams)
 
