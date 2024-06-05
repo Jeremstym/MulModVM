@@ -56,14 +56,18 @@ class ImageFastDataset(Dataset):
         self,
         data_path: str,
         name: str,
-        labels: List[int] = None,
+        use_labels: bool = False,
         max_size: int = None,
         resolution: int = None,
+        one_hot_labels: bool = False,
         **super_kwargs,
     ):
         self._path = data_path
         self._name = name
-        self.labels = labels
+        self.use_labels = use_labels
+        self._raw_labels = None
+        self._label_shape = None
+        self.one_hot_labels = one_hot_labels
 
         if os.path.isdir(self._path):
             self._type = "dir"
@@ -117,28 +121,28 @@ class ImageFastDataset(Dataset):
         assert self.image_shape[1] == self.image_shape[2]
         return self.image_shape[1]
 
-    # @property
-    # def label_shape(self):
-    #     if self._label_shape is None:
-    #         raw_labels = self._get_raw_labels()
-    #         if raw_labels.dtype == np.int64:
-    #             self._label_shape = [int(np.max(raw_labels)) + 1]
-    #         else:
-    #             self._label_shape = raw_labels.shape[1:]
-    #     return list(self._label_shape)
+    @property
+    def label_shape(self):
+        if self._label_shape is None:
+            raw_labels = self._get_raw_labels()
+            if raw_labels.dtype == np.int64:
+                self._label_shape = [int(np.max(raw_labels)) + 1]
+            else:
+                self._label_shape = raw_labels.shape[1:]
+        return list(self._label_shape)
 
-    # @property
-    # def label_dim(self):
-    #     assert len(self.label_shape) == 1
-    #     return self.label_shape[0]
+    @property
+    def label_dim(self):
+        assert len(self.label_shape) == 1
+        return self.label_shape[0]
 
-    # @property
-    # def has_labels(self):
-    #     return any(x != 0 for x in self.label_shape)
+    @property
+    def has_labels(self):
+        return any(x != 0 for x in self.label_shape)
 
-    # @property
-    # def has_onehot_labels(self):
-    #     return self._get_raw_labels().dtype == np.int64
+    @property
+    def has_onehot_labels(self):
+        return self._get_raw_labels().dtype == np.int64
 
     @staticmethod
     def _file_ext(fname):
@@ -178,6 +182,43 @@ class ImageFastDataset(Dataset):
         image = image.astype(np.float32)
         return image
 
+    def _get_raw_labels(self):
+        if self._raw_labels is None:
+            self._raw_labels = self._load_raw_labels() if self._use_labels else None
+            if self._raw_labels is None:
+                self._raw_labels = np.zeros([self._raw_shape[0], 0], dtype=np.float32)
+            assert isinstance(self._raw_labels, np.ndarray)
+            assert self._raw_labels.shape[0] == self._raw_shape[0]
+            assert self._raw_labels.dtype in [np.float32, np.int64]
+            if self._raw_labels.dtype == np.int64:
+                assert self._raw_labels.ndim == 1
+                assert np.all(self._raw_labels >= 0)
+        return self._raw_labels
+
+    def _load_raw_labels(self):
+        fname = 'dataset.json'
+        if fname not in self._all_fnames:
+            print(f'WARNING: dataset is missing labels ({fname})')
+            return None
+        with self._open_file(fname) as f:
+            labels = json.load(f)['labels']
+        if labels is None:
+            return None
+        labels = dict(labels)
+        labels = [labels[fname.replace('\\', '/')] for fname in self._image_fnames]
+        labels = np.array(labels)
+        labels = labels.astype({1: np.int64, 2: np.float32}[labels.ndim])
+        return labels
+
+    def get_label(self, idx):
+        label = self._get_raw_labels()[self._raw_idx[idx]]
+        if label.dtype == np.int64:
+            if self.one_hot_labels:
+                onehot = np.zeros(self.label_shape, dtype=np.float32)
+                onehot[label] = 1
+                label = onehot
+        return label.copy()
+
     def __len__(self):
         return self._raw_idx.size
 
@@ -186,4 +227,4 @@ class ImageFastDataset(Dataset):
         assert isinstance(image, np.ndarray)
         assert list(image.shape) == self.image_shape
         assert image.dtype == np.uint8
-        return image.copy()
+        return image.copy(), self.get_label(idx)

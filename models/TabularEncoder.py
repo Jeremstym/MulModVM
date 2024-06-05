@@ -52,21 +52,21 @@ class TabularEncoder(nn.Module):
       self.encoder.apply(self.init_weights)
 
   def build_encoder(self, args: Dict) -> nn.Sequential:
-    modules = [nn.Linear(self.input_size, args['embedding_dim'])]
+    modules = [nn.Linear(self.input_size, args['tabular_embedding_dim'])]
     for _ in range(args['encoder_num_layers']-1):
-      modules.extend([nn.BatchNorm1d(args['embedding_dim']), nn.ReLU(), nn.Linear(args['embedding_dim'], args['embedding_dim'])])
+      modules.extend([nn.BatchNorm1d(args['tabular_embedding_dim']), nn.ReLU(), nn.Linear(args['tabular_embedding_dim'], args['tabular_embedding_dim'])])
     return nn.Sequential(*modules)
   
   def build_encoder_no_bn(self, args: Dict) -> nn.Sequential:
-    modules = [nn.Linear(self.input_size, args['embedding_dim'])]
+    modules = [nn.Linear(self.input_size, args['tabular_embedding_dim'])]
     for _ in range(args['encoder_num_layers']-1):
-      modules.extend([nn.ReLU(), nn.Linear(args['embedding_dim'], args['embedding_dim'])])
+      modules.extend([nn.ReLU(), nn.Linear(args['tabular_embedding_dim'], args['tabular_embedding_dim'])])
     return nn.Sequential(*modules)
 
   def build_encoder_bn_old(self, args: Dict) -> nn.Sequential:
-    modules = [nn.Linear(args.input_size, args.embedding_dim)]
+    modules = [nn.Linear(args.input_size, args.tabular_embedding_dim)]
     for _ in range(args.encoder_num_layers-1):
-      modules.extend([nn.ReLU(), nn.BatchNorm1d(args.embedding_dim), nn.Linear(args.embedding_dim, args.embedding_dim)])
+      modules.extend([nn.ReLU(), nn.BatchNorm1d(args.tabular_embedding_dim), nn.Linear(args.tabular_embedding_dim, args.tabular_embedding_dim)])
     return nn.Sequential(*modules)
 
   def init_weights(self, m: nn.Module, init_gain = 0.02) -> None:

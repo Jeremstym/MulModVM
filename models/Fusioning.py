@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 import hydra
 from omegaconf import DictConfig
 
-from models.TabularModel import TabularModel
+from models.TabularEncoder import TabularEncoder
 from models.TabularTransformer import TabularTransformer
 from models.ImagingModel import ImagingModel
 
@@ -18,38 +18,48 @@ class Fusion(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters(hparams)
 
-        assert dataset is not None, "Dataset must be provided for transformer models"
-        cat_mask = dataset.get_cat_mask()
-        self.cat_mask = cat_mask
-        num_cont = dataset.get_number_of_numerical_features()
-        cat_card = dataset.get_cat_card()
-        cat_cardinalities = cat_card.tolist()
+        # Initialize tabular model
+        if hparams.tabular_model == "transformer":
+            assert dataset is not None, "Dataset must be provided for transformer models"
+            cat_mask = dataset.get_cat_mask()
+            self.cat_mask = cat_mask
+            num_cont = dataset.get_number_of_numerical_features()
+            cat_card = dataset.get_cat_card()
+            cat_cardinalities = cat_card.tolist()
+            assert isinstance(
+                self.hparams.tabular_tokenizer, DictConfig
+            ), "Tabular tokenizer must be provided for transformer models"
+            self.tabular_tokenizer = hydra.utils.instantiate(
+                self.hparams.tabular_tokenizer,
+                cat_cardinalities=cat_cardinalities,
+                n_num_features=num_cont,
+            )
 
         assert (
             self.hparams.datatype == "imaging_and_tabular"
             or self.hparams.datatype == "multimodal"
         ), "Fusion model must be imaging_and_tabular or multimodal"
 
-        self.tabular_tokenizer = hydra.utils.instantiate(
-            self.hparams.tabular_tokenizer,
-            cat_cardinalities=cat_cardinalities,
-            n_num_features=num_cont,
-        )
-        self.encoder_tabular = TabularTransformer(self.hparams)
-        if self.hparams.use_xtab:
-            self.load_pretrained_xtab()
+        # Initialize model encoders
+        if self.hparams.tabular_model == "transformer":
+            self.encoder_tabular = TabularTransformer(self.hparams)
+            if self.hparams.use_xtab:
+                self.load_pretrained_xtab()
+        elif self.hparams.tabular_model == "mlp":
+            self.encoder_tabular = TabularEncoder(self.hparams)
 
         self.imaging_model = ImagingModel(self.hparams)
+       
         self.tab_head = nn.Linear(
-            self.hparams.tabular_transformer.d_token, self.hparams.projection_dim
+            self.hparams.tabular_embedding_dim, self.hparams.projection_dim
         )
         self.im_head = nn.Linear(
             self.hparams.embedding_dim, self.hparams.projection_dim
         )
         self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
 
+        # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
-
         self.acc_train = torchmetrics.Accuracy(
             task=task, num_classes=self.hparams.num_classes
         )
@@ -69,10 +79,10 @@ class Fusion(pl.LightningModule):
         self.auc_test = torchmetrics.AUROC(
             task=task, num_classes=self.hparams.num_classes
         )
-
-        self.criterion = torch.nn.CrossEntropyLoss()
-
         self.best_val_score = 0
+
+        # Loss
+        self.criterion = torch.nn.CrossEntropyLoss()
 
         # print all model
         print(self.tabular_tokenizer)
