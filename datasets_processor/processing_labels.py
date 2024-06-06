@@ -58,7 +58,7 @@ def export_pickle(dict_label: dict, path: str) -> None:
         pickle.dump(dict_label, f)
 
 def modify_json(path: str) -> None:
-    with open(path + "dataset.json", "r") as f:
+    with open(path + "/dataset.json", "r") as f:
         data = json.load(f)["labels"]
     new_json = []
     new_json_dict = {}
@@ -66,7 +66,7 @@ def modify_json(path: str) -> None:
         path = path.replace(".png", "_unaugmented.png")
         new_json.append([path, labels])
     
-    with open(path + "dataset_unaugmented.json", "w") as f:
+    with open(path + "/dataset_unaugmented.json", "w") as f:
         json.dump({"labels": new_json}, f)
 
 
