@@ -200,10 +200,14 @@ class ImageFastDataset(Dataset):
 
     def _load_raw_labels(self):
         fname = 'dataset.json'
-        if fname not in self._all_fnames:
+        parent = os.path.dirname(self._path)
+        if fname not in os.listdir(parent):
             print(f'WARNING: dataset is missing labels ({fname})')
             return None
-        with self._open_file(fname) as f:
+        # if fname not in self._all_fnames:
+        #     print(f'WARNING: dataset is missing labels ({fname})')
+        #     return None
+        with self._open_file("../" + fname) as f:
             labels = json.load(f)['labels']
         if labels is None:
             return None
