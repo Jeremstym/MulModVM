@@ -267,7 +267,11 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
     def iterate_images():
         for idx, img_name in enumerate(data):
             img = np.array(PIL.Image.open(img_name))
+            print(f"image name is {img_name}")
             yield dict(img=img, label=labels.get(img_name))
+            if labels.get(img_name) is None:
+                print(f"Label is None for image {img_name}")
+                raise ValueError('Label is None for image')
             if idx >= max_idx-1:
                 break
     return max_idx, iterate_images()
