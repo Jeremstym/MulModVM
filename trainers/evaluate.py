@@ -17,13 +17,13 @@ from utils.utils import grab_arg_from_checkpoint, grab_hard_eval_image_augmentat
 def load_datasets(hparams):
   if hparams.datatype == 'imaging' or hparams.datatype == 'multimodal':
     train_dataset = ImageFastDataset(
-      data_path=hparams.data_train_eval_imaging,
+      data_path=hparams.data_fast_train_imaging,
       name="imaging_train",
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation,
     )
     val_dataset = ImageFastDataset(
-      data_path=hparams.data_val_eval_imaging,
+      data_path=hparams.data_fast_val_imaging,
       name="imaging_val",
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation,
