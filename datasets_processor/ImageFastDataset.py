@@ -8,6 +8,7 @@ from torchvision.io import read_image
 import cv2
 from tqdm import tqdm
 import numpy as np
+import json
 
 has_tqdm = True
 import PIL
