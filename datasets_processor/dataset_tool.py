@@ -268,6 +268,10 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
         for idx, img_name in enumerate(data):
             img = np.array(PIL.Image.open(img_name))
             yield dict(img=img, label=labels.get(img_name))
+            print(labels.get(img_name))
+            if labels.get(img_name) is None:
+                print(f'No label found for {img_name}')
+                raise ValueError('No label found for image')
             if idx >= max_idx-1:
                 break
     return max_idx, iterate_images()
@@ -361,6 +365,9 @@ def convert_dataset(
             image_bits = io.BytesIO()
             img.save(image_bits, format='png', compress_level=0, optimize=False)
             save_bytes(os.path.join(archive_root_dir, "augmented", archive_fname), image_bits.getbuffer())
+            if image['label'] is None:
+                print(f'No label found for {archive_fname}')
+                raise ValueError('No label found for image')
             labels.append([archive_fname, image['label']] if image['label'] is not None else None)
         elif isinstance(img, torch.Tensor):
             img = transforms.ToPILImage()(img)
@@ -368,6 +375,9 @@ def convert_dataset(
             img.save(image_bits, format='png', compress_level=0, optimize=False)
             save_bytes(os.path.join(archive_root_dir, "augmented", archive_fname), image_bits.getbuffer())
             labels.append([archive_fname, image['label']] if image['label'] is not None else None)
+            if image['label'] is None:
+                print(f'No label found for {archive_fname}')
+                raise ValueError('No label found for image')
         else:
             raise ValueError('img must be either a numpy array or a torch tensor')
 
