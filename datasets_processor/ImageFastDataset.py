@@ -152,9 +152,12 @@ class ImageFastDataset(Dataset):
     def _file_ext(fname):
         return os.path.splitext(fname)[1].lower()
 
-    def _open_file(self, fname):
+    def _open_file(self, fname, parent: bool = False):
         if self._type == "dir":
-            return open(os.path.join(self._path, fname), "rb")
+            if parent:
+                parent = os.path.dirname(self._path)
+                return open(os.path.join(parent, fname), "r")
+            return open(os.path.join(self._path, fname), "r")
         if self._type == "zip":
             return self._get_zipfile().open(fname, "r")
         return None
@@ -208,7 +211,7 @@ class ImageFastDataset(Dataset):
         # if fname not in self._all_fnames:
         #     print(f'WARNING: dataset is missing labels ({fname})')
         #     return None
-        with self._open_file("../" + fname) as f:
+        with self._open_file(fname, parent=True) as f:
             labels = json.load(f)['labels']
         if labels is None:
             return None
