@@ -157,6 +157,10 @@ class Evaluator(pl.LightningModule):
         """
         x, y = batch
 
+        print(f'label shape is {y.shape}')
+        print(f"labels are {y}")
+        raise Exception('stop')
+
         y_hat = self.forward(x)
         loss = self.criterion(y_hat, y)
 
