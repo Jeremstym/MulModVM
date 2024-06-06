@@ -24,6 +24,8 @@ path_to_image_val = "/home/stympopper/data/DVMdata/features/val_paths_all_views.
 path_to_labels_train = "/home/stympopper/data/DVMdata/features/labels_model_all_train_all_views.pt"
 path_to_labels_val = "/home/stympopper/data/DVMdata/features/labels_model_all_val_all_views.pt"
 path_to_image = "/home/stympopper/data/DVMdata/features/"
+path_to_json_train = "/home/stympopper/data/DVMdata/readyTrainLabeled"
+path_to_json_val = "/home/stympopper/data/DVMdata/readyValLabeled"
 
 ### ---------- Functions -------------
 
@@ -55,8 +57,25 @@ def export_pickle(dict_label: dict, path: str) -> None:
     with open("dataset.pkl", "wb") as f:
         pickle.dump(dict_label, f)
 
+def modify_json(path: str) -> None:
+    with open(path + "dataset.json", "r") as f:
+        data = json.load(f)["labels"]
+    new_json = []
+    new_json_dict = {}
+    for path, labels in data:
+        path = path.replace(".png", "_unaugmented.png")
+        new_json.append([path, labels])
+    
+    with open(path + "dataset_unaugmented.json", "w") as f:
+        json.dump({"labels": new_json}, f)
+
+
 ### ---------- Programs -------------
 
+# if __name__ == "__main__":
+#     dict_label = create_dict_label(path_to_image_val, path_to_labels_val)
+#     export_json(dict_label, path_to_image)
+
 if __name__ == "__main__":
-    dict_label = create_dict_label(path_to_image_val, path_to_labels_val)
-    export_json(dict_label, path_to_image)
+    modify_json(path_to_json_train)
+    modify_json(path_to_json_val)
