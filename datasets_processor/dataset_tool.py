@@ -255,7 +255,7 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
         print(f'Loading labels from {label_path}')
         labels = {}
         with open(label_path, 'r') as file:
-            labels = json.load(file)
+            labels = json.load(file)["labels"]
             if labels is not None:
                 labels = { x[0]: x[1] for x in labels }
             else:
