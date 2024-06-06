@@ -156,8 +156,8 @@ class ImageFastDataset(Dataset):
         if self._type == "dir":
             if parent:
                 parent = os.path.dirname(self._path)
-                return open(os.path.join(parent, fname), "r")
-            return open(os.path.join(self._path, fname), "r")
+                return open(os.path.join(parent, fname), "rb")
+            return open(os.path.join(self._path, fname), "rb")
         if self._type == "zip":
             return self._get_zipfile().open(fname, "r")
         return None
