@@ -268,7 +268,6 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
         for idx, img_name in enumerate(data):
             img = np.array(PIL.Image.open(img_name))
             yield dict(img=img, label=labels.get(img_name))
-            print(labels.get(img_name))
             if labels.get(img_name) is None:
                 print(f'No label found for {img_name}')
                 raise ValueError('No label found for image')
