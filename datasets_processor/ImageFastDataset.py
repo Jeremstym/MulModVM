@@ -227,6 +227,10 @@ class ImageFastDataset(Dataset):
             image = self.transform_train(image)
         else:
             image = self.transform_val(image)
+        print(f"image shape: {image.shape}")
+        print(f"image type: {image.dtype}")
+        print(f"image max: {image.max()}")
+        raise Exception("stop")
         return image
 
     def get_image_from_idx(self, idx):
