@@ -13,7 +13,6 @@ import cv2
 from tqdm import tqdm
 
 has_tqdm = True
-import lmdb
 
 from .TabularAttributes import (
     check_categorical_data,
@@ -82,35 +81,16 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         missing_values: list = [],
         tabular_model: str = "mlp",
         use_labels: bool = False,
-        use_embds: bool = False,
-        use_lmdb=True,
     ) -> None:
 
         # Imaging
         self.transform = augmentation
-        if use_embds:
-            print("Using embeddings. IMPORTATION... Might take a while.")
         self.data_imaging = torch.load(data_path_imaging)
-        if use_embds:
-            print("Embeddings imported.")
-        # if use_lmdb:
-        #   self.env = lmdb.open("/home/stympopper/data/DVMdata/resized_DVM", map_size=int(1e12) , lock=False, readahead=False, meminit=False)
-        #   with self.env.begin(write=True) as txn:
-        #     for image_path in tqdm(self.data_imaging, desc='Creating LMDB', total=len(self.data_imaging)):
-        #       im = cv2.imread(image_path)
-        #       im = im / 255
-        #       im = im.astype("uint8")
-        #       im = self.transform(im)
-        #       txn.put(image_path.encode(), pickle.dumps(im, protocol=DEFAULT_PROTOCOL))
-
-        # raise Exception('LMDB created. Rerun script without this block.')
 
         self.delete_segmentation = delete_segmentation
         self.augmentation_rate = augmentation_rate
         self.live_loading = live_loading
-        # self.use_cache = use_cache
         self.use_labels = use_labels
-        self.use_embds = use_embds
 
         if self.delete_segmentation:
             for im in self.data_imaging:
@@ -125,16 +105,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
             ]
         )
 
-        # augmented_data = self.create_augmented_dataset(self.data_imaging, self.transform)
-        # torch.save(augmented_data, '/home/stympopper/data/DVMdata/features/augmented_image_data.pt')
-        # raise Exception('Augmented data saved to disk. Rerun script without this block.')
-
-        # if self.use_cache:
-        #   print('Caching images')
-        #   self.cache_list = []
-        #   self.cache_list_original = []
-        #   for i in tqdm(range(len(self.data_imaging))):
-        #     self.transforms_and_cache_images(i)
 
         # Tabular
         use_header = True if tabular_model == 'transformer' else False
@@ -243,16 +213,13 @@ class ContrastiveImagingAndTabularDataset(Dataset):
         Generates two views of a subjects image. Also returns original image resized to required dimensions.
         The first is always augmented. The second has {augmentation_rate} chance to be augmented.
         """
-        if not self.use_embds:
-            im = self.data_imaging[index]
-            if self.live_loading:
-                im = cv2.imread(im)
-                im = im / 255
-                im = im.astype("uint8")
-            ims = [self.transform(im)]
-        else:
-            im = self.data_imaging[index]
-            ims = [self.transform(im)]
+       
+        im = self.data_imaging[index]
+        if self.live_loading:
+            im = cv2.imread(im)
+            im = im / 255
+            im = im.astype("uint8")
+        ims = [self.transform(im)]
         if random.random() < self.augmentation_rate:
             ims.append(self.transform(im))
         else:
@@ -262,36 +229,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
 
         return ims, orig_im
 
-    # def create_augmented_dataset(self, dataset: Dataset, transform: Callable) -> Dataset:
-    #   """
-    #   Creates a new dataset with augmented images to save to disk
-    #   """
-    #   data_pipeline = []
-    #   for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-    #     ims, orig_im = self.generate_imaging_views(i)
-    #     data_pipeline.append(ims)
-    #   return data_pipeline
-    # with ThreadPool(8) as p:
-    #   data_pipeline = list(tqdm(p.imap(self.generate_imaging_views, range(len(dataset))), total=len(dataset), desc='Augmenting data'))
-    # augmented_data = []
-    # for ims, orig_im in data_pipeline:
-    #   augmented_data.append(ims)
-    # return augmented_data
-
-    # for i in tqdm(range(len(dataset)), desc='Augmenting data', total=len(dataset)):
-    #   ims = self.generate_imaging_views(i)[0]
-    #   augmented_data.append(ims)
-    # return augmented_data
-
-    # def transforms_and_cache_images(self, index: int) -> List[torch.Tensor]:
-    #   """
-    #   Caches the augmented images for later use in a list
-    #   """
-    #   ims, orig_im = self.generate_imaging_views(index)
-    #   # ims = [torch.tensor(im) for im in ims]
-    #   self.cache_list.append(ims)
-    #   self.cache_list_original.append(orig_im)
-    #   return
 
     def get_cat_mask(self) -> torch.Tensor:
         """
@@ -314,10 +251,6 @@ class ContrastiveImagingAndTabularDataset(Dataset):
     def __getitem__(
         self, index: int
     ) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
-        # if self.use_cache:
-        #   imaging_views = self.cache_list[index]
-        #   unaugmented_image = self.cache_list_original[index]
-        # else:
         imaging_views, unaugmented_image = self.generate_imaging_views(index)
         if self.tabular_model == 'transformer':
             tabular_views = [
@@ -419,7 +352,6 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
         hash_as_key: bool = False,
         # hash_func: Callable[..., bytes] = pickle_hashing,
         runtime_cache: bool | str | list | ListProxy = False,
-        use_lmdb: bool = False,
     ) -> None:
         """
         Args:
@@ -481,7 +413,6 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
             tabular_model,
             use_labels,
             False,
-            use_lmdb=False,
         )
         self.transform = augmentation
         self.delete_segmentation = delete_segmentation
@@ -662,10 +593,6 @@ class CacheDataset(ContrastiveImagingAndTabularDataset):
     def __getitem__(
         self, index: int
     ) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
-        # if self.use_cache:
-        #   imaging_views = self.cache_list[index]
-        #   unaugmented_image = self.cache_list_original[index]
-        # else:
         imaging_views, unaugmented_image = self._transform(index)
         tabular_views = [
             torch.tensor(self.data_tabular[index], dtype=torch.float),
