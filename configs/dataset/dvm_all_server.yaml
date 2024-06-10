@@ -15,7 +15,7 @@ data_orig:
 low_data_splits: ['']
 addendum: _all_views
 use_labels: False
-use_embds: False
+use_augmented: False
 path_to_images: /home/stympopper/data/DVMdata
 
 labels_train: labels_model_all_train${addendum}.pt 
