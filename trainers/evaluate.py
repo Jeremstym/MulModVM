@@ -18,6 +18,7 @@ def load_datasets(hparams):
   if hparams.datatype == 'imaging' or hparams.datatype == 'multimodal':
     train_dataset = ImageFastDataset(
       data_path=hparams.data_fast_train_imaging,
+      train_augment_rate=hparams.eval_train_augment_rate,
       name="imaging_train",
       img_size=hparams.img_size,
       target=hparams.target,
@@ -27,6 +28,7 @@ def load_datasets(hparams):
     )
     val_dataset = ImageFastDataset(
       data_path=hparams.data_fast_val_imaging,
+      train_augment_rate=0,
       name="imaging_val",
       img_size=hparams.img_size,
       target=hparams.target,
