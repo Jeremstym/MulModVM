@@ -58,6 +58,7 @@ class ImageFastDataset(Dataset):
         data_path: str,
         name: str,
         use_labels: bool = False,
+        train_augment_rate: float = 0.0,
         delete_segmentation: bool = False,
         max_size: int = None,
         resolution: int = None,
@@ -68,6 +69,7 @@ class ImageFastDataset(Dataset):
         self._path = data_path
         self._name = name
         self._use_labels = use_labels
+        self._train_augment_rate = train_augment_rate
         self._raw_labels = None
         self._label_shape = None
         self.one_hot_labels = one_hot_labels
