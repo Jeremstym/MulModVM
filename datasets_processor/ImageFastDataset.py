@@ -227,7 +227,10 @@ class ImageFastDataset(Dataset):
         return self._raw_labels
 
     def _load_raw_labels(self):
-        fname = 'dataset_unaugmented.json'
+        if not self._use_augmented:
+            fname = 'dataset_unaugmented.json'
+        else:
+            fname = 'dataset.json'
         parent = os.path.dirname(self._path)
         if fname not in os.listdir(parent):
             print(f'WARNING: dataset is missing labels ({fname})')
