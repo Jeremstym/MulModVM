@@ -336,8 +336,8 @@ def convert_dataset(
 
         img = image['img']
         # Apply crop and resize.
-        img = transform_image(img)
-        unaugmented_image = resize_image(img)
+        # img = transform_image(img)
+        # unaugmented_image = resize_image(img)
 
         # Transform may drop images.
         if img is None:
@@ -374,7 +374,7 @@ def convert_dataset(
             img = PIL.Image.fromarray(img, { 1: 'L', 3: 'RGB' }[channels])
             image_bits = io.BytesIO()
             img.save(image_bits, format='png', compress_level=0, optimize=False)
-            save_bytes(os.path.join(archive_root_dir, "augmented", archive_fname), image_bits.getbuffer())
+            save_bytes(os.path.join(archive_root_dir, archive_fname), image_bits.getbuffer())
             if image['label'] is None:
                 print(f'No label found for {archive_fname}')
                 raise ValueError('No label found for image')
@@ -383,7 +383,7 @@ def convert_dataset(
             img = transforms.ToPILImage()(img)
             image_bits = io.BytesIO()
             img.save(image_bits, format='png', compress_level=0, optimize=False)
-            save_bytes(os.path.join(archive_root_dir, "augmented", archive_fname), image_bits.getbuffer())
+            save_bytes(os.path.join(archive_root_dir, archive_fname), image_bits.getbuffer())
             labels.append([archive_fname, image['label']] if image['label'] is not None else None)
             if image['label'] is None:
                 print(f'No label found for {archive_fname}')
@@ -392,18 +392,18 @@ def convert_dataset(
             raise ValueError('img must be either a numpy array or a torch tensor')
 
         # Save the unaugmented image as an uncompressed PNG.
-        if isinstance(unaugmented_image, np.ndarray):
-            unaugmented_image = PIL.Image.fromarray(unaugmented_image, { 1: 'L', 3: 'RGB' }[channels])
-            image_bits = io.BytesIO()
-            unaugmented_image.save(image_bits, format='png', compress_level=0, optimize=False)
-            save_bytes(os.path.join(archive_root_dir, "unaugmented", f'{idx_str[:5]}/img{idx_str}_unaugmented.png'), image_bits.getbuffer())
-        elif isinstance(unaugmented_image, torch.Tensor):
-            unaugmented_image = transforms.ToPILImage()(unaugmented_image)
-            image_bits = io.BytesIO()
-            unaugmented_image.save(image_bits, format='png', compress_level=0, optimize=False)
-            save_bytes(os.path.join(archive_root_dir, "unaugmented", f'{idx_str[:5]}/img{idx_str}_unaugmented.png'), image_bits.getbuffer())
-        else:
-            raise ValueError('img must be either a numpy array or a torch tensor')
+        # if isinstance(unaugmented_image, np.ndarray):
+        #     unaugmented_image = PIL.Image.fromarray(unaugmented_image, { 1: 'L', 3: 'RGB' }[channels])
+        #     image_bits = io.BytesIO()
+        #     unaugmented_image.save(image_bits, format='png', compress_level=0, optimize=False)
+        #     save_bytes(os.path.join(archive_root_dir, "unaugmented", f'{idx_str[:5]}/img{idx_str}_unaugmented.png'), image_bits.getbuffer())
+        # elif isinstance(unaugmented_image, torch.Tensor):
+        #     unaugmented_image = transforms.ToPILImage()(unaugmented_image)
+        #     image_bits = io.BytesIO()
+        #     unaugmented_image.save(image_bits, format='png', compress_level=0, optimize=False)
+        #     save_bytes(os.path.join(archive_root_dir, "unaugmented", f'{idx_str[:5]}/img{idx_str}_unaugmented.png'), image_bits.getbuffer())
+        # else:
+        #     raise ValueError('img must be either a numpy array or a torch tensor')
 
     metadata = {
         'labels': labels if all(x is not None for x in labels) else None
