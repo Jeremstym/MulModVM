@@ -223,8 +223,8 @@ class ImageFastDataset(Dataset):
                 image = np.array(PIL.Image.open(f))
         if image.ndim == 2:
             image = image[:, :, np.newaxis]  # HW => HWC
+        image = image.transpose(2, 0, 1)  # HWC => CHW
         image = torch.from_numpy(image).float()
-        # image = image.transpose(2, 0, 1)  # HWC => CHW
         print(f"image shape: {image.shape}")
         print(f"image type: {image.dtype}")
         print(f"image max: {image.max()}")
