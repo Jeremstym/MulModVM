@@ -297,7 +297,7 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
 @click.command()
 @click.pass_context
 @click.option('--source', help='Directory or archive name for input dataset', required=True, metavar='PATH')
-@click.option('--labels', help='Directory or archive name for input labels', required=False, metavar='PATH')
+@click.option('--labels', help='Directory or archive name for input labels', type=str, default=None, metavar='PATH')
 @click.option('--dest', help='Output directory or archive name for output dataset', required=True, metavar='PATH')
 @click.option('--max-images', help='Output only up to `max-images` images', type=int, default=None)
 @click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
