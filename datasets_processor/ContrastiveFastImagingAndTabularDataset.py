@@ -58,6 +58,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         self,
         data_path_imaging: str,
         delete_segmentation: bool,
+        augmentation_rate: float,
         data_path_tabular: str,
         corruption_rate: float,
         field_lengths_tabular: str,

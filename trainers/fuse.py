@@ -34,6 +34,7 @@ def load_datasets(hparams):
         train_dataset = ContrastiveFastImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_train_imaging,
             delete_segmentation=hparams.delete_segmentation,
+            augmentation_rate=hparams.augmentation_rate,
             data_path_tabular=hparams.data_train_tabular,
             corruption_rate=hparams.corruption_rate,
             field_lengths_tabular=hparams.field_lengths_tabular,
@@ -47,6 +48,7 @@ def load_datasets(hparams):
         val_dataset = ContrastiveFastImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_val_imaging,
             delete_segmentation=hparams.delete_segmentation,
+            augmentation_rate=hparams.augmentation_rate,
             data_path_tabular=hparams.data_val_tabular,
             corruption_rate=hparams.corruption_rate,
             field_lengths_tabular=hparams.field_lengths_tabular,
