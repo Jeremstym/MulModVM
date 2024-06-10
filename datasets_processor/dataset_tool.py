@@ -51,6 +51,23 @@ def grab_default_transform(img_size: int) -> transforms.Compose:
         ])
     return transform
 
+def grad_image_eval_transform(img_size: int, target: str) -> transforms.Compose:
+    if target.lower() == 'dvm':
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.RandomApply([transforms.ColorJitter(brightness=0.8, contrast=0.8, saturation=0.8)], p=0.8),
+            transforms.RandomGrayscale(p=0.2),
+            transforms.RandomApply([transforms.GaussianBlur(kernel_size=29, sigma=(0.1, 2.0))],p=0.5),
+            transforms.RandomResizedCrop(size=(img_size,img_size), scale=(0.6, 1.0), ratio=(0.75, 1.3333333333333333)),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.Resize(size=(img_size,img_size), antialias=False),
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x : x.float())
+        ])
+    else:
+        raise ValueError(f'Unknown target {target}')
+    return transform
+
 #----------------------------------------------------------------------------
 
 def error(msg):
@@ -285,7 +302,6 @@ def open_pickle(source_file, *, max_images: Optional[int], label_path: Optional[
 @click.option('--max-images', help='Output only up to `max-images` images', type=int, default=None)
 @click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
 @click.option('--resolution', help='Output resolution (e.g., \'512x512\')', metavar='WxH', type=parse_tuple)
-@click.option('--normalize', help='Normalize images to have zero mean and unit variance', type=bool, default=False)
 def convert_dataset(
     ctx: click.Context,
     source: str,
@@ -294,7 +310,6 @@ def convert_dataset(
     max_images: Optional[int],
     transform: Optional[str],
     resolution: Optional[Tuple[int, int]],
-    normalize: bool,
 ):
 
     PIL.Image.init() # type: ignore
@@ -319,11 +334,10 @@ def convert_dataset(
         idx_str = f'{idx:08d}'
         archive_fname = f'{idx_str[:5]}/img{idx_str}.png'
 
-        if normalize:
-            img = image['img'] / 255
-            img = img.astype("uint8")
-        else:
-            img = image['img']
+        img = image['img']
+        print(f"image shape: {img.shape}")
+        print(f"image max value: {np.max(img)}")
+        raise Exception('stop here')
         # Apply crop and resize.
         img = transform_image(img)
         unaugmented_image = resize_image(img)
