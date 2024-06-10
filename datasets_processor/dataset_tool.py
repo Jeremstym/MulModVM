@@ -337,10 +337,6 @@ def convert_dataset(
         img = image['img']
         # Apply crop and resize.
         img = transform_image(img)
-        print(f"img shape: {img.shape}")
-        print(f"img type: {type(img)}")
-        print(f"img max value: {img.max()}")
-        raise Exception
         unaugmented_image = resize_image(img)
 
         # Transform may drop images.
