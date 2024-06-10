@@ -122,15 +122,15 @@ def fuse(hparams, wandb_logger):
             dirpath=logdir,
         )
     )
-    callbacks.append(
-        EarlyStopping(
-            monitor=f"fusion_val_{hparams.eval_metric}",
-            min_delta=0.0002,
-            patience=int(10 * (1 / hparams.val_check_interval)),
-            verbose=False,
-            mode="max",
-        )
-    )
+    # callbacks.append(
+    #     EarlyStopping(
+    #         monitor=f"fusion_val_{hparams.eval_metric}",
+    #         min_delta=0.0002,
+    #         patience=int(10 * (1 / hparams.val_check_interval)),
+    #         verbose=False,
+    #         mode="max",
+    #     )
+    # )
     if hparams.use_wandb:
         callbacks.append(LearningRateMonitor(logging_interval="epoch"))
 
