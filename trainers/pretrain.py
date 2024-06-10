@@ -30,30 +30,16 @@ def load_datasets(hparams):
   if hparams.datatype == 'multimodal':
     transform = grab_image_augmentations(hparams.img_size, hparams.target)
     hparams.transform = transform.__repr__()
-    if hparams.use_cache:
-      train_dataset = CacheDataset(
-        hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
-        hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
-        hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-        tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, num_workers=hparams.num_workers,
-        cache_num=hparams.cache_num)
-      val_dataset = CacheDataset(
-        hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
-        hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
-        hparams.labels_val, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-        tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, num_workers=hparams.num_workers,
-        cache_num=hparams.cache_num)
-    else:
-      train_dataset = ContrastiveImagingAndTabularDataset(
-        hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
-        hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
-        hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
-        tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
-      val_dataset = ContrastiveImagingAndTabularDataset(
-        hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
-        hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
-        hparams.labels_val, hparams.img_size, hparams.live_loading,
-        tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
+    train_dataset = ContrastiveImagingAndTabularDataset(
+      hparams.data_train_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
+      hparams.data_train_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
+      hparams.labels_train, hparams.img_size, hparams.live_loading, missing_values=hparams.missing_values,
+      tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
+    val_dataset = ContrastiveImagingAndTabularDataset(
+      hparams.data_val_imaging, hparams.delete_segmentation, transform, hparams.augmentation_rate, 
+      hparams.data_val_tabular, hparams.corruption_rate, hparams.field_lengths_tabular, hparams.one_hot,
+      hparams.labels_val, hparams.img_size, hparams.live_loading,
+      tabular_model=hparams.tabular_model, use_labels=hparams.use_labels, use_embds=hparams.use_embds)
     hparams.input_size = train_dataset.get_input_size()
   elif hparams.datatype == 'imaging':
     transform = grab_image_augmentations(hparams.img_size, hparams.target, hparams.crop_scale_lower)
