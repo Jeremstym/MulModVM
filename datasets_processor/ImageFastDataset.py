@@ -225,17 +225,10 @@ class ImageFastDataset(Dataset):
             image = image[:, :, np.newaxis]  # HW => HWC
         image = image.transpose(2, 0, 1)  # HWC => CHW
         image = torch.from_numpy(image).float()
-        print(f"image shape: {image.shape}")
-        print(f"image type: {image.dtype}")
-        print(f"image max: {image.max()}")
         if self.train and random.random() <= self._train_augment_rate:
             image = self.transform_train(image)
         else:
             image = self.transform_val(image)
-        print(f"image shape: {image.shape}")
-        print(f"image type: {image.dtype}")
-        print(f"image max: {image.max()}")
-        raise Exception("stop")
         return image
 
     def get_image_from_idx(self, idx):
