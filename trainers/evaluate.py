@@ -19,6 +19,7 @@ def load_datasets(hparams):
     train_dataset = ImageFastDataset(
       data_path=hparams.data_fast_train_imaging,
       name="imaging_train",
+      img_size=hparams.img_size,
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation,
       train=True,
@@ -26,6 +27,7 @@ def load_datasets(hparams):
     val_dataset = ImageFastDataset(
       data_path=hparams.data_fast_val_imaging,
       name="imaging_val",
+      img_size=hparams.img_size,
       use_labels=True,
       delete_segmentation=hparams.delete_segmentation,
       train=False,

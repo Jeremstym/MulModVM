@@ -57,6 +57,7 @@ class ImageFastDataset(Dataset):
         self,
         data_path: str,
         name: str,
+        img_size: int,
         use_labels: bool = False,
         train_augment_rate: float = 0.0,
         # use_augmented: bool = False,
