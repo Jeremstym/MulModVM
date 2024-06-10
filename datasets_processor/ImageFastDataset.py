@@ -293,5 +293,5 @@ class ImageFastDataset(Dataset):
         assert isinstance(image, torch.Tensor)
         assert list(image.shape) == self.image_shape
         # assert image.dtype == torch.uint8
-        image = image.astype(torch.float32) # already float32?
+        # image = image.astype(torch.float32) # already float32?
         return image.copy(), self.get_label(idx)
