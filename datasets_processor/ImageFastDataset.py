@@ -59,6 +59,7 @@ class ImageFastDataset(Dataset):
         name: str,
         use_labels: bool = False,
         train_augment_rate: float = 0.0,
+        use_augmented: bool = False,
         delete_segmentation: bool = False,
         max_size: int = None,
         resolution: int = None,
@@ -66,24 +67,52 @@ class ImageFastDataset(Dataset):
         labels_path_short: str = None,
         **super_kwargs,
     ):
-        self._path = data_path
+        self._parent_folder = data_path
         self._name = name
         self._use_labels = use_labels
         self._train_augment_rate = train_augment_rate
+        self._use_augmented = use_augmented
         self._raw_labels = None
         self._label_shape = None
         self.one_hot_labels = one_hot_labels
         self._label_path = labels_path_short
 
-        if os.path.isdir(self._path):
+        if not self._use_augmented:
+            self._path = data_path + "/unaugmented"
+            assert os.path.isdir(self._path), f"Path {self._path} is not a directory"
             self._type = "dir"
             self._all_fnames = {
                 os.path.relpath(os.path.join(root, fname), start=self._path)
                 for root, _dirs, files in os.walk(self._path)
                 for fname in files
             }
+        elif self._use_augmented and (self._train_augment_rate > 0.0): #TODO: make a mix of augmented and unaugmented
+            self._path1 = data_path + "/augmented"
+            assert os.path.isdir(self._path1), f"Path {self._path1} is not a directory"
+            self._path2 = data_path + "/unaugmented"
+            assert os.path.isdir(self._path2), f"Path {self._path2} is not a directory"
+            self._paths = [self._path1, self._path2]     
+            self._type = "dir"
+            self._all_fnames1 = {
+                os.path.relpath(os.path.join(root, fname), start=self._path1)
+                for root, _dirs, files in os.walk(self._path1)
+                for fname in files
+            }
+            self._all_fnames2 = {
+                os.path.relpath(os.path.join(root, fname), start=self._path2)
+                for root, _dirs, files in os.walk(self._path2)
+                for fname in files
+            }
         else:
-            raise ValueError(f"Path {self._path} is not a directory")
+            self._path = data_path + "/augmented"
+            assert os.path.isdir(self._path), f"Path {self._path} is not a directory"
+            self._type = "dir"
+            self._all_fnames = {
+                os.path.relpath(os.path.join(root, fname), start=self._path)
+                for root, _dirs, files in os.walk(self._path)
+                for fname in files
+            }
+
 
         PIL.Image.init()
         self._image_fnames = sorted(
@@ -163,13 +192,6 @@ class ImageFastDataset(Dataset):
         if self._type == "zip":
             return self._get_zipfile().open(fname, "r")
         return None
-
-    # def close(self):
-    #     try:
-    #         if self._zipfile is not None:
-    #             self._zipfile.close()
-    #     finally:
-    #         self._zipfile = None
 
     def __getstate__(self):
         return dict(super().__getstate__(), _zipfile=None)
