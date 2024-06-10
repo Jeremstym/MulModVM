@@ -323,8 +323,8 @@ def convert_dataset(
     print(f'Saving to {archive_root_dir}')
 
     if resolution is None: resolution = (None, None)
-    # transform_image = make_transform(transform, *resolution)
-    transform_image = grab_image_augmentations(resolution[0], 'dvm')
+    transform_image = make_transform(transform, *resolution)
+    # transform_image = grab_image_augmentations(resolution[0], 'dvm')
     resize_image = grab_default_transform(resolution[0])
 
     dataset_attrs = None
@@ -336,7 +336,7 @@ def convert_dataset(
 
         img = image['img']
         # Apply crop and resize.
-        # img = transform_image(img)
+        img = transform_image(img)
         # unaugmented_image = resize_image(img)
 
         # Transform may drop images.
