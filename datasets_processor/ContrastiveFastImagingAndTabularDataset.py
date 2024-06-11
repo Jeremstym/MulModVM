@@ -78,6 +78,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
             name="imaging", 
             img_size=img_size,
             target=target,
+            use_labels=use_labels,
             max_size=max_size,
             train_augment_rate=augmentation_rate,
             delete_segmentation=delete_segmentation,

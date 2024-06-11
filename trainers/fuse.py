@@ -44,7 +44,7 @@ def load_datasets(hparams):
             target=hparams.target,
             missing_values=hparams.missing_values,
             tabular_model=hparams.tabular_model,
-            use_labels=False,
+            use_labels=True,
             max_size=None,
         )
         val_dataset = ContrastiveFastImagingAndTabularDataset(
@@ -60,7 +60,7 @@ def load_datasets(hparams):
             target=hparams.target,
             missing_values=hparams.missing_values,
             tabular_model=hparams.tabular_model,
-            use_labels=False,
+            use_labels=True,
             max_size=None,
         )
         hparams.input_size = train_dataset.get_input_size()

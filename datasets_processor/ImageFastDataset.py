@@ -59,7 +59,7 @@ class ImageFastDataset(Dataset):
         name: str,
         img_size: int,
         target: str,
-        # use_labels: bool = False,
+        use_labels: bool = False,
         train_augment_rate: float = 0.0,
         # use_augmented: bool = False,
         train: bool = True,
@@ -72,7 +72,7 @@ class ImageFastDataset(Dataset):
     ):
         self._path = data_path
         self._name = name
-        # self._use_labels = use_labels
+        self._use_labels = use_labels
         self._train_augment_rate = train_augment_rate
         # self._use_augmented = use_augmented
         self._raw_labels = None
