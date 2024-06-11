@@ -165,7 +165,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         else:
             print(f"Tabular input size: {len(self.field_lengths_tabular)}")
             raise Exception("Not implemented yet")
-            return len(self.data_tabular)
+            return len(self.data_tabular[0])
 
     def corrupt(self, subject: List[float]) -> List[float]:
         """
