@@ -241,18 +241,33 @@ class Fusion(pl.LightningModule):
         Must use strict equal to false because if check_val_n_epochs is > 1
         because val metrics not defined when scheduler is queried
         """
-        optimizer = torch.optim.Adam(
-            [
-                {"params": self.imaging_model.parameters()},
-                {"params": self.im_head.parameters()},
-                {"params": self.tabular_tokenizer.parameters()},
-                {"params": self.encoder_tabular.parameters()},
-                {"params": self.tab_head.parameters()},
-                {"params": self.head.parameters()},
-            ],
-            lr=self.hparams.lr_eval,
-            weight_decay=self.hparams.weight_decay_eval,
-        )
+        if self.hparams.tabular_model == "transformer":
+            optimizer = torch.optim.Adam(
+                [
+                    {"params": self.imaging_model.parameters()},
+                    {"params": self.im_head.parameters()},
+                    {"params": self.tabular_tokenizer.parameters()},
+                    {"params": self.encoder_tabular.parameters()},
+                    {"params": self.tab_head.parameters()},
+                    {"params": self.head.parameters()},
+                ],
+                lr=self.hparams.lr_eval,
+                weight_decay=self.hparams.weight_decay_eval,
+            )
+        elif self.hparams.tabular_model == "mlp":
+            optimizer = torch.optim.Adam(
+                [
+                    {"params": self.imaging_model.parameters()},
+                    {"params": self.im_head.parameters()},
+                    {"params": self.encoder_tabular.parameters()},
+                    {"params": self.tab_head.parameters()},
+                    {"params": self.head.parameters()},
+                ],
+                lr=self.hparams.lr_eval,
+                weight_decay=self.hparams.weight_decay_eval,
+            )
+        else:   
+            raise ValueError("Tabular model unknown. Must be 'transformer' or 'mlp'.")
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             patience=int(10 / self.hparams.check_val_every_n_epoch),
