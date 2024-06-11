@@ -64,6 +64,8 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         field_lengths_tabular: str,
         one_hot_tabular: bool,
         labels_path: str,
+        img_size: int,
+        target: str,
         missing_values: list = [],
         tabular_model: str = "mlp",
         use_labels: bool = False,
@@ -72,11 +74,17 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
 
         # Imaging
         self.data_imaging_dataset = ImageFastDataset(
-            data_path_imaging, "imaging", max_size=max_size
+            data_path=data_path_imaging,
+            name="imaging", 
+            img_size=img_size,
+            target=target,
+            max_size=max_size,
+            train_augment_rate=augmentation_rate,
+            delete_segmentation=delete_segmentation,
         )
 
         self.delete_segmentation = delete_segmentation
-        self.use_labels = use_labels
+        self._use_labels = use_labels
 
         if self.delete_segmentation:
             for im in self.data_imaging:
@@ -108,7 +116,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         """
         Does what it says on the box.
         """
-        if use_header and self.use_labels:
+        if use_header and self._use_labels:
             FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
         elif use_header:
             FEATURES = NUM_FEATURES + CAT_FEATURES
@@ -199,6 +207,14 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
                 )
         return torch.cat(out)
 
+    def get_label(self, index: int) -> int:
+        """
+        Returns the label of the subject at index
+        """
+        label = self.data_imaging_dataset.get_label(index)
+        assert label == self.labels[index], f"{label} != {self.labels[index]}"
+        return torch.as_tensor(label, dtype=torch.long)
+
     def get_cat_mask(self) -> torch.Tensor:
         """
         Returns the categorical mask
@@ -223,7 +239,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         imaging_views = self.data_imaging_dataset.get_image_from_idx(index)
         tabular_views = torch.tensor(self.data_tabular[index])
         tabular_mask = self.create_mask(self.data_tabular[index])
-        label = torch.tensor(self.labels[index], dtype=torch.long)
+        label = self.get_label(index)
         return (imaging_views, tabular_views, tabular_mask), label
 
     def __len__(self) -> int:

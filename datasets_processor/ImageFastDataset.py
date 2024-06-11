@@ -235,6 +235,10 @@ class ImageFastDataset(Dataset):
         image = self._load_raw_image(self._raw_idx[idx])
         # image = image.astype(np.float32)
         return image
+    
+    def get_label_from_idx(self, idx):
+        label = self.get_label(idx)
+        return label
 
     def _get_raw_labels(self):
         if self._raw_labels is None:
