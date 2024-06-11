@@ -85,7 +85,8 @@ class Fusion(pl.LightningModule):
         self.criterion = torch.nn.CrossEntropyLoss()
 
         # print all model
-        print(self.tabular_tokenizer)
+        if self.hparams.tabular_model == "transformer":
+            print(self.tabular_tokenizer)
         print(self.encoder_tabular)
         print(self.tab_head)
         print(self.imaging_model.encoder)
