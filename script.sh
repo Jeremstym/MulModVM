@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=hard
-#SBATCH --nodelist=zz
+#SBATCH --nodelist=lizzy
 #SBATCH --job-name=BoBW-Baseline-Fusion
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
@@ -19,5 +19,5 @@ cd MulModVM
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal checkpoint=/home/stympopper/MulModVM/runs/multimodal/Bob2-Transformer/checkpoint_last_epoch_99.ckpt max_epochs=100 batch_size=128 num_workers=26 wandb_name=BobTransFinetune1 use_cache=False use_transformer=True
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False checkpoint=/home/stympopper/MulModVM/runs/multimodal/Bob-LightTransformer-XTab/checkpoint_last_epoch_45.ckpt wandb_name=Bob-XTab-Finetune
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal max_epochs=100 pretrain=True batch_size=256 num_workers=8 persistent_workers=True use_cache=False use_transformer=True one_hot=False use_xtab=True wandb_name=Bob-LightTransformer-XTab-Mask1
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal fusion=True max_epochs=100 batch_size=512 num_workers=16 use_xtab=True wandb_name=BobFusion-Transformer-XTab
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal fusion=True max_epochs=100 batch_size=512 num_workers=16 tabular_embedding_dim=1024 wandb_name=BobFusion-BigTransformer-1024
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=imaging fusion=False evaluate=True max_epochs=150 batch_size=512 num_workers=16 wandb_name=BobBaseline-Image-Fast-Unaugmented
