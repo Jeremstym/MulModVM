@@ -63,6 +63,7 @@ def load_datasets(hparams):
             use_labels=False,
             max_size=None,
         )
+        hparams.input_size = train_dataset.get_input_size()
     else:
         raise Exception(
             "argument dataset must be set to multimodal or imaging_and_tabular for the Fusion model"
