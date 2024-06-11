@@ -117,11 +117,6 @@ class Fusion(pl.LightningModule):
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab, x[2]).squeeze()
         else:
-            print(f'x[1]: {x[1]}')
-            print(f"x[1].shape: {x[1].shape}")
-            print(f"x[2]: {x[2]}")
-            print(f"x[2].shape: {x[2].shape}")
-            raise Exception("Tabular model must be transformer?")
             x_tab = self.encoder_tabular(x[1])
         x_proj_tab = self.tab_head(x_tab)
         x = torch.cat([x_proj_im, x_proj_tab], dim=1)
