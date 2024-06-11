@@ -99,9 +99,9 @@ class Fusion(pl.LightningModule):
         x = self.tabular_tokenizer(x_num=x_num, x_cat=x_cat)
         return x
 
-    def encode_tabular(self, x: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
-        x = self.encoder_tabular(x, mask)
-        return x
+    # def encode_tabular(self, x: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
+    #     x = self.encoder_tabular(x, mask)
+    #     return x
 
     def encode_imaging(self, x: torch.Tensor) -> torch.Tensor:
         if self.imaging_model.bolt_encoder:
@@ -115,9 +115,9 @@ class Fusion(pl.LightningModule):
         x_proj_im = self.im_head(x_im)
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
-            x_tab = self.encode_tabular(x_tokens_tab, x[2]).squeeze()
+            x_tab = self.encoder_tabular(x_tokens_tab, x[2]).squeeze()
         else:
-            x_tab = self.encode_tabular(x[1])
+            x_tab = self.encoder_tabular(x[1])
         x_proj_tab = self.tab_head(x_tab)
         x = torch.cat([x_proj_im, x_proj_tab], dim=1)
         x = self.head(x)
