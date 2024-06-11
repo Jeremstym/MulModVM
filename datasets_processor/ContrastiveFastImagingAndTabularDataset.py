@@ -70,8 +70,6 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         max_size: int = None,
     ) -> None:
 
-        assert tabular_model == "transformer", "This dataset is only for transformer models"
-
         # Imaging
         self.data_imaging_dataset = ImageFastDataset(
             data_path_imaging, "imaging", max_size=max_size
