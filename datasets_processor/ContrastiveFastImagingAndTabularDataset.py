@@ -124,7 +124,7 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
             df.drop(missing_values, axis=0, inplace=True)
             cat_mask = check_categorical_data(df)
             self.cat_mask = cat_mask
-            field_lengths_tensor = torch.tensor(self.field_lengths_tabular)
+            field_lengths_tensor = torch.as_tensor(self.field_lengths_tabular)
             self.cat_card = field_lengths_tensor[cat_mask]
             data = df.values.tolist()
         else:
@@ -219,13 +219,13 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         """
         Returns the categorical mask
         """
-        return torch.tensor(self.cat_mask)
+        return torch.as_tensor(self.cat_mask)
 
     def get_cat_card(self) -> torch.Tensor:
         """
         Returns the categorical cardinalities
         """
-        return torch.tensor(self.cat_card)
+        return torch.as_tensor(self.cat_card)
 
     def get_number_of_numerical_features(self) -> int:
         """
