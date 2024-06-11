@@ -171,16 +171,18 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
             subject[i] = random.sample(self.marginal_distributions[i], k=1)[0]
         return subject
 
-    def create_mask(self, subject: List[float]) -> List[bool]:
+    def create_mask(self, subject: List[float], use_mask: bool = True) -> List[bool]:
         """
         Creates a mask of features to be corrupted
         """
+        if not use_mask:
+            return None
         mask = [False] * len(subject)
         random.seed(42)
         indices = random.sample(list(range(len(subject))), int(len(subject) * self.c))
         for i in indices:
             mask[i] = True
-        return mask
+        return torch.as_tensor(mask)
 
     def one_hot_encode(self, subject: torch.Tensor) -> torch.Tensor:
         """
@@ -221,9 +223,10 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         self, index: int
     ) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
         imaging_views = self.data_imaging_dataset.get_image_from_idx(index)
-        tabular_views = torch.tensor(self.create_mask(self.data_tabular[index]))
+        tabular_views = torch.tensor(self.data_tabular[index])
+        tabular_mask = self.create_mask(self.data_tabular[index])
         label = torch.tensor(self.labels[index], dtype=torch.long)
-        return (imaging_views, tabular_views), label
+        return (imaging_views, tabular_views, tabular_mask), label
 
     def __len__(self) -> int:
         return len(self.data_tabular)
