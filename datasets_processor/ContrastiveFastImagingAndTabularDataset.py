@@ -117,9 +117,10 @@ class ContrastiveFastImagingAndTabularDataset(Dataset):
         """
         Does what it says on the box.
         """
-        if use_header and self._use_labels:
-            FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
-        elif use_header:
+        #TODO: add an additional token when using label as a feature
+        # if use_header and self._use_labels:
+        #     FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
+        if use_header:
             FEATURES = NUM_FEATURES + CAT_FEATURES
             df = pd.read_csv(path_tabular, names=FEATURES)
             df.drop(missing_values, axis=0, inplace=True)
