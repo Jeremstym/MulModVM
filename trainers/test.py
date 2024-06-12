@@ -19,7 +19,7 @@ def test(hparams, wandb_logger=None):
   
   if hparams.datatype == 'imaging':
     test_dataset = ImageFastDataset(
-      data_path=hparams.data_test_eval_imaging,
+      data_path=hparams.data_fast_test_imaging,
       labels_path_short=hparams.labels_test_eval_imaging,
       delete_segmentation=hparams.delete_segmentation,
       train_augment_rate=0.0,
