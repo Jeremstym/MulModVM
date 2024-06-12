@@ -34,7 +34,7 @@ class ImagingModel(nn.Module):
         if k.startswith(self.encoder_name) and not 'projection_head' in k and not 'prototypes' in k:
           state_dict_encoder[k[len(self.encoder_name):]] = state_dict[k]
 
-      log = self.encoder.load_state_dict(state_dict, strict=True)
+      log = self.encoder.load_state_dict(state_dict_encoder, strict=True)
       assert len(log.missing_keys) == 0
 
       # Freeze if needed
