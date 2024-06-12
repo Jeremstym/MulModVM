@@ -2,6 +2,7 @@ from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer
 from datasets_processor.ImageDataset import ImageDataset
+from datasets_processor.ImageFastDataset import ImageFastDataset
 from datasets_processor.TabularDataset import TabularDataset
 from models.Evaluator import Evaluator
 from utils.utils import grab_arg_from_checkpoint
@@ -16,8 +17,18 @@ def test(hparams, wandb_logger=None):
   """
   pl.seed_everything(hparams.seed)
   
-  if hparams.datatype == 'imaging' or hparams.datatype == 'multimodal':
-    test_dataset = ImageDataset(hparams.data_test_eval_imaging, hparams.labels_test_eval_imaging, hparams.delete_segmentation, 0, grab_arg_from_checkpoint(hparams, 'img_size'), target=hparams.target, train=False, live_loading=hparams.live_loading)
+  if hparams.datatype == 'imaging':
+    test_dataset = ImageFastDataset(
+      data_path=hparams.data_test_eval_imaging,
+      labels_path_short=hparams.labels_test_eval_imaging,
+      delete_segmentation=hparams.delete_segmentation,
+      train_augment_rate=0.0,
+      img_size=grab_arg_from_checkpoint(hparams, 'img_size'),
+      target=hparams.target,
+      use_labels=True,
+      train=False,
+      live_loading=hparams.live_loading
+      )
     
     print(test_dataset.transform_val.__repr__())
   elif hparams.datatype == 'tabular':
