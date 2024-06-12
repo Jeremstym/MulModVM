@@ -21,11 +21,11 @@ import json
 
 path_to_image_train = "/home/stympopper/data/DVMdata/features/train_paths_all_views.pt"
 path_to_image_val = "/home/stympopper/data/DVMdata/features/val_paths_all_views.pt"
+path_to_image_test = "/home/stympopper/data/DVMdata/features/test_paths_all_views.pt"
 path_to_labels_train = "/home/stympopper/data/DVMdata/features/labels_model_all_train_all_views.pt"
 path_to_labels_val = "/home/stympopper/data/DVMdata/features/labels_model_all_val_all_views.pt"
+path_to_labels_test = "/home/stympopper/data/DVMdata/features/labels_model_all_test_all_views.pt"
 path_to_image = "/home/stympopper/data/DVMdata/features/"
-path_to_json_train = "/home/stympopper/data/DVMdata/readyTrainLabeled"
-path_to_json_val = "/home/stympopper/data/DVMdata/readyValLabeled"
 
 ### ---------- Functions -------------
 
@@ -49,7 +49,7 @@ def create_dict_label(path_to_image: str, path_to_labels: str) -> dict:
 
 def export_json(dict_label: dict, path: str) -> None:
     os.chdir(path)
-    with open("dataset_val.json", "w") as f:
+    with open("dataset_test.json", "w") as f:
         json.dump(dict_label, f)
 
 def export_pickle(dict_label: dict, path: str) -> None:
@@ -72,10 +72,10 @@ def modify_json(main_path: str) -> None:
 
 ### ---------- Programs -------------
 
-# if __name__ == "__main__":
-#     dict_label = create_dict_label(path_to_image_val, path_to_labels_val)
-#     export_json(dict_label, path_to_image)
-
 if __name__ == "__main__":
-    modify_json(path_to_json_train)
-    modify_json(path_to_json_val)
+    dict_label = create_dict_label(path_to_image_test, path_to_labels_test)
+    export_json(dict_label, path_to_image)
+
+# if __name__ == "__main__":
+#     modify_json(path_to_json_train)
+#     modify_json(path_to_json_val)
