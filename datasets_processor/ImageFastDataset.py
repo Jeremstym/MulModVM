@@ -278,10 +278,11 @@ class ImageFastDataset(Dataset):
         return labels
 
     def get_label(self, idx):
-        if self._label_path is not None:
-            label = torch.load(self._label_path)[self._raw_idx[idx]]
-            return label
         label = self._get_raw_labels()[self._raw_idx[idx]]
+        if self._label_path is not None:
+            label_short = torch.load(self._label_path)[self._raw_idx[idx]]
+            assert label == label_short, f"Label mismatch: {label} vs {label_short}"
+            return label_short
         if label.dtype == np.int64:
             if self.one_hot_labels:
                 onehot = np.zeros(self.label_shape, dtype=np.float32)
