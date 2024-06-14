@@ -57,7 +57,7 @@ class Fusion(pl.LightningModule):
             self.hparams.embedding_dim, self.hparams.projection_dim
         )
         # self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
-        self.head = nn.Linear(self.embedding_dim * 2, self.hparams.num_classes)
+        self.head = nn.Linear(self.hparams.embedding_dim * 2, self.hparams.num_classes)
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
