@@ -93,6 +93,7 @@ def load_datasets(hparams):
             # missing_values=hparams.missing_values,
             tabular_model=hparams.tabular_model,
             train=False,
+            live_loading=hparams.live_loading,
         )
         hparams.input_size = train_dataset.get_input_size()
     else:
