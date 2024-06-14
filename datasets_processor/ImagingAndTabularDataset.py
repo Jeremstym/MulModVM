@@ -30,7 +30,7 @@ class ImagingAndTabularDataset(Dataset):
       self,
       data_path_imaging: str, delete_segmentation: bool, eval_train_augment_rate: float, 
       data_path_tabular: str, field_lengths_tabular: str, eval_one_hot: bool,
-      labels_path: str, img_size: int, live_loading: bool, train: bool, target: str) -> None:
+      labels_path: str, img_size: int, live_loading: bool, train: bool, target: str, tabular_model: str) -> None:
       
     # Imaging
     self.data_imaging_dataset = ImageFastDataset(
@@ -62,7 +62,8 @@ class ImagingAndTabularDataset(Dataset):
     ])
 
     # Tabular
-    self.data_tabular = self.read_and_parse_csv(data_path_tabular)
+    use_header = True if tabular_model == "transformer" else False
+    self.data_tabular = self.read_and_parse_csv(data_path_tabular, use_header=use_header)
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
     self.eval_one_hot = eval_one_hot
     
