@@ -134,7 +134,7 @@ class ImagingAndTabularDataset(Dataset):
     if self.eval_one_hot:
       return int(sum(self.field_lengths_tabular))
     else:
-      return len(self.data[0])
+      return len(self.data_tabular[0])
 
   def one_hot_encode(self, subject: torch.Tensor) -> torch.Tensor:
     """
