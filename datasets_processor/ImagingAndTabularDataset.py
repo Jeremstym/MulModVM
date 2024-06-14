@@ -45,14 +45,14 @@ class ImagingAndTabularDataset(Dataset):
             use_labels=True,
             max_size=None,
         )
-    self.data_imaging = torch.load(data_path_imaging)
+    # self.data_imaging = torch.load(data_path_imaging)
     self.delete_segmentation = delete_segmentation
     self.eval_train_augment_rate = eval_train_augment_rate
     self.live_loading = live_loading
 
-    if self.delete_segmentation:
-      for im in self.data_imaging:
-        im[0,:,:] = 0
+    # # if self.delete_segmentation:
+    #   for im in self.data_imaging:
+    #     im[0,:,:] = 0
 
     self.transform_train = grab_hard_eval_image_augmentations(img_size, target)
 
