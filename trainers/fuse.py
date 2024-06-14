@@ -142,7 +142,7 @@ def fuse(hparams, wandb_logger):
         persistent_workers=hparams.persistent_workers,
     )
 
-    if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
+    if (hparams.datatype == "imaging_and_tabular") or (hparams.datatype == "multimodal"):
         model = Fusion(hparams, dataset=train_dataset)
     else:
         raise Exception(
