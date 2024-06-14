@@ -146,7 +146,7 @@ def fuse(hparams, wandb_logger):
         model = Fusion(hparams, dataset=train_dataset)
     else:
         raise Exception(
-            "argument dataset must be set to imaging_or_tabular or multimodal for the Fusion model"
+            f"argument dataset must be set to imaging_or_tabular or multimodal for the Fusion model, got {hparams.datatype} instead"
         )
     logdir = create_logdir('eval', hparams.resume_training, wandb_logger)
     
