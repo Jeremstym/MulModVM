@@ -56,7 +56,8 @@ class Fusion(pl.LightningModule):
         self.im_head = nn.Linear(
             self.hparams.embedding_dim, self.hparams.projection_dim
         )
-        self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
+        # self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
+        self.head = nn.Linear(self.embedding_dim * 2, self.hparams.num_classes)
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
@@ -88,9 +89,9 @@ class Fusion(pl.LightningModule):
         if self.hparams.tabular_model == "transformer":
             print(self.tabular_tokenizer)
         print(self.encoder_tabular)
-        print(self.tab_head)
+        # print(self.tab_head)
         print(self.imaging_model.encoder)
-        print(self.im_head)
+        # print(self.im_head)
         print(self.head)
 
     def tokenize_tabular(self, x: torch.Tensor) -> torch.Tensor:
@@ -112,14 +113,14 @@ class Fusion(pl.LightningModule):
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         x_im = self.encode_imaging(x[0])  # only keep the encoder output
-        x_proj_im = self.im_head(x_im)
+        # x_proj_im = self.im_head(x_im)
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab, x[2]).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        x_proj_tab = self.tab_head(x_tab)
-        x = torch.cat([x_proj_im, x_proj_tab], dim=1)
+        # x_proj_tab = self.tab_head(x_tab)
+        x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
 
