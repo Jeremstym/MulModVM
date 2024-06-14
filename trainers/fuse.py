@@ -98,7 +98,7 @@ def load_datasets(hparams):
         hparams.input_size = train_dataset.get_input_size()
     else:
         raise Exception(
-            "argument dataset must be set to multimodal or imaging_and_tabular for the Fusion model"
+            f"argument dataset must be set to multimodal or imaging_and_tabular AND GOT {hparams.datatype} instead"
         )
     return train_dataset, val_dataset
 
