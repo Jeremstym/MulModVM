@@ -30,7 +30,7 @@ from models.Fusioning import Fusion
 
 
 def load_datasets(hparams):
-    if hparams.datatype == "imaging_or_tabular" or hparams.datatype == "multimodal":
+    if hparams.datatype == "multimodal":
         train_dataset = ContrastiveFastImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_train_imaging,
             delete_segmentation=hparams.delete_segmentation,
@@ -62,6 +62,32 @@ def load_datasets(hparams):
             tabular_model=hparams.tabular_model,
             use_labels=True,
             max_size=None,
+        )
+        hparams.input_size = train_dataset.get_input_size()
+    elif hparams.datatype == "imaging_and_tabular":
+        train_dataset = ImagingAndTabularDataset(
+            data_path_imaging=hparams.data_train_imaging,
+            data_path_tabular=hparams.data_train_tabular,
+            labels_path=hparams.labels_train,
+            field_lengths_tabular=hparams.field_lengths_tabular,
+            one_hot_tabular=hparams.eval_one_hot,
+            img_size=hparams.img_size,
+            target=hparams.target,
+            missing_values=hparams.missing_values,
+            tabular_model=hparams.tabular_model,
+            train=True,
+        )
+        val_dataset = ImagingAndTabularDataset(
+            data_path_imaging=hparams.data_val_imaging,
+            data_path_tabular=hparams.data_val_tabular,
+            labels_path=hparams.labels_val,
+            field_lengths_tabular=hparams.field_lengths_tabular,
+            one_hot_tabular=hparams.eval_one_hot,
+            img_size=hparams.img_size,
+            target=hparams.target,
+            missing_values=hparams.missing_values,
+            tabular_model=hparams.tabular_model,
+            train=False,
         )
         hparams.input_size = train_dataset.get_input_size()
     else:
