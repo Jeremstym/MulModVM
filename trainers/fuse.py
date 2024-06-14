@@ -68,6 +68,8 @@ def load_datasets(hparams):
         train_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_train_imaging,
             data_path_tabular=hparams.data_train_tabular,
+            delete_segmentation=hparams.delete_segmentation,
+            eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_train,
             field_lengths_tabular=hparams.field_lengths_tabular,
             eval_one_hot=hparams.eval_one_hot,
@@ -76,10 +78,13 @@ def load_datasets(hparams):
             # missing_values=hparams.missing_values,
             tabular_model=hparams.tabular_model,
             train=True,
+            live_loading=hparams.live_loading,
         )
         val_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_val_imaging,
             data_path_tabular=hparams.data_val_tabular,
+            delete_segmentation=hparams.delete_segmentation,
+            eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_val,
             field_lengths_tabular=hparams.field_lengths_tabular,
             eval_one_hot=hparams.eval_one_hot,
