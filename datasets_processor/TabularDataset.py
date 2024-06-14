@@ -36,7 +36,7 @@ class TabularDataset(Dataset):
             for i in range(len(self.data)):
                 self.data[i] = self.one_hot_encode(torch.tensor(self.data[i]))
         else:
-            self.data = torch.tensor(self.data, dtype=torch.float)
+            self.data = torch.as_tensor(self.data, dtype=torch.float)
 
     def get_input_size(self) -> int:
         """
@@ -48,26 +48,68 @@ class TabularDataset(Dataset):
         else:
             return len(self.data[0])
 
-    def read_and_parse_csv(self, path: str):
+    def read_and_parse_csv(
+        self,
+        path_tabular: str,
+        missing_values: list = [],
+        use_header: bool = False,
+        max_size: int = None,
+    ) -> List[List[float]]:
         """
-        Does what it says on the box
+        Does what it says on the box.
         """
-        if self.use_header:
-            df = pd.read_csv(path)
+        #TODO: add an additional token when using label as a feature
+        # if use_header and self._use_labels:
+        #     FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
+        if use_header:
+            FEATURES = NUM_FEATURES + CAT_FEATURES
+            df = pd.read_csv(path_tabular, names=FEATURES)
+            df.drop(missing_values, axis=0, inplace=True)
             cat_mask = check_categorical_data(df)
             self.cat_mask = cat_mask
-            field_lengths_tensor = torch.tensor(self.field_lengths)
+            field_lengths_tensor = torch.as_tensor(self.field_lengths_tabular)
             self.cat_card = field_lengths_tensor[cat_mask]
             data = df.values.tolist()
         else:
-            print("WARNING: dataframe has no headers for tokenization")
-            with open(path, "r") as f:
+            with open(path_tabular, "r") as f:
                 reader = csv.reader(f)
                 data = []
-                for r in reader:
-                    r2 = [float(r1) for r1 in r]
-                    data.append(r2)
+                if max_size is not None:
+                    for idx, r in enumerate(reader):
+                        if idx in missing_values:
+                            continue
+                        r2 = [float(r1) for r1 in r]
+                        data.append(r2)
+                        if idx >= max_size:
+                            break
+                else:
+                    for idx, r in enumerate(reader):
+                        if idx in missing_values:
+                            continue
+                        r2 = [float(r1) for r1 in r]
+                        data.append(r2)
         return data
+        
+    # def read_and_parse_csv(self, path: str):
+    #     """
+    #     Does what it says on the box
+    #     """
+    #     if self.use_header:
+    #         df = pd.read_csv(path)
+    #         cat_mask = check_categorical_data(df)
+    #         self.cat_mask = cat_mask
+    #         field_lengths_tensor = torch.tensor(self.field_lengths)
+    #         self.cat_card = field_lengths_tensor[cat_mask]
+    #         data = df.values.tolist()
+    #     else:
+    #         print("WARNING: dataframe has no headers for tokenization")
+    #         with open(path, "r") as f:
+    #             reader = csv.reader(f)
+    #             data = []
+    #             for r in reader:
+    #                 r2 = [float(r1) for r1 in r]
+    #                 data.append(r2)
+    #     return data
 
     def one_hot_encode(self, subject: torch.Tensor) -> torch.Tensor:
         """
