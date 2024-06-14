@@ -37,19 +37,45 @@ def load_datasets(hparams):
       train=False,
     )
   elif hparams.datatype == 'tabular':
-    train_dataset = TabularDataset(hparams.data_train_eval_tabular, hparams.labels_train_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
-    val_dataset = TabularDataset(hparams.data_val_eval_tabular, hparams.labels_val_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
+    train_dataset = TabularDataset(
+      data_path=hparams.data_train_eval_tabular,
+      labels_path=hparams.labels_train_eval_tabular,
+      eval_one_hot=hparams.eval_one_hot,
+      field_lengths_tabular=hparams.field_lengths_tabular
+      )
+    val_dataset = TabularDataset(
+      data_path=hparams.data_val_eval_tabular,
+      labels_path=hparams.labels_val_eval_tabular,
+      eval_one_hot=hparams.eval_one_hot,
+      field_lengths_tabular=hparams.field_lengths_tabular
+      )
     hparams.input_size = train_dataset.get_input_size()
   elif hparams.datatype == 'imaging_and_tabular':
     train_dataset = ImagingAndTabularDataset(
-      hparams.data_train_eval_imaging, hparams.delete_segmentation, hparams.augmentation_rate, 
-      hparams.data_train_eval_tabular, hparams.field_lengths_tabular, hparams.eval_one_hot,
-      hparams.labels_train_eval_imaging, hparams.img_size, hparams.live_loading, train=True, target=hparams.target
+      data_path_imaging=hparams.data_train_eval_imaging,
+      delete_segmentation=hparams.delete_segmentation,
+      eval_train_augment_rate=hparams.augmentation_rate,
+      data_path_tabular=hparams.data_train_eval_tabular,
+      field_lengths_tabular=hparams.field_lengths_tabular,
+      eval_one_hot=hparams.eval_one_hot,
+      labels_path=hparams.labels_train_eval_imaging,
+      img_size=hparams.img_size,
+      live_loading=hparams.live_loading,
+      train=True,
+      target=hparams.target
     )
     val_dataset = ImagingAndTabularDataset(
-      hparams.data_val_eval_imaging, hparams.delete_segmentation, hparams.augmentation_rate, 
-      hparams.data_val_eval_tabular, hparams.field_lengths_tabular, hparams.eval_one_hot,
-      hparams.labels_val_eval_imaging, hparams.img_size, hparams.live_loading, train=False, target=hparams.target
+      data_path_imaging=hparams.data_val_eval_imaging,
+      delete_segmentation=hparams.delete_segmentation,
+      eval_train_augment_rate=hparams.augmentation_rate,
+      data_path_tabular=hparams.data_val_eval_tabular,
+      field_lengths_tabular=hparams.field_lengths_tabular,
+      eval_one_hot=hparams.eval_one_hot,
+      labels_path=hparams.labels_val_eval_imaging,
+      img_size=hparams.img_size,
+      live_loading=hparams.live_loading,
+      train=False,
+      target=hparams.target
     )
     hparams.input_size = train_dataset.get_input_size()
   else:
