@@ -30,6 +30,8 @@ from models.Fusioning import Fusion
 
 
 def load_datasets(hparams):
+    print(hparams.datatype)
+    raise Exception("test")
     if hparams.datatype == "multimodal":
         train_dataset = ContrastiveFastImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_train_imaging,
