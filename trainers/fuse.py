@@ -128,33 +128,36 @@ def fuse(hparams, wandb_logger):
     train_loader = DataLoader(
         train_dataset,
         batch_size=hparams.batch_size,
-        shuffle=(sampler is None),
+        shuffle=False,
         sampler=sampler,
+        pin_memory=True,
         num_workers=hparams.num_workers,
         persistent_workers=hparams.persistent_workers,
         drop_last=drop,
     )
     val_loader = DataLoader(
         val_dataset,
-        batch_size=hparams.batch_size,
+        batch_size=512,
+        pin_memory=True,
         shuffle=False,
         num_workers=hparams.num_workers,
         persistent_workers=hparams.persistent_workers,
     )
 
+    logdir = create_logdir('fusion', hparams.resume_training, wandb_logger)
+    
     if (hparams.datatype == "imaging_and_tabular") or (hparams.datatype == "multimodal"):
         model = Fusion(hparams, dataset=train_dataset)
     else:
         raise Exception(
             f"argument dataset must be set to imaging_or_tabular or multimodal for the Fusion model, got {hparams.datatype} instead"
         )
-    logdir = create_logdir('eval', hparams.resume_training, wandb_logger)
-    
+    mode = "max"
     callbacks = []
     callbacks.append(
         ModelCheckpoint(
-            monitor=f"fusion_val_{hparams.eval_metric}",
-            mode="max",
+            monitor=f"fusion.val.{hparams.eval_metric}",
+            mode=mode,
             filename=f"checkpoint_best_{hparams.eval_metric}",
             dirpath=logdir,
         )
@@ -170,9 +173,6 @@ def fuse(hparams, wandb_logger):
     # )
     if hparams.use_wandb:
         callbacks.append(LearningRateMonitor(logging_interval="epoch"))
-
-    lr_monitor = LearningRateMonitor(logging_interval="epoch")
-
 
     trainer = Trainer.from_argparse_args(
         hparams,
