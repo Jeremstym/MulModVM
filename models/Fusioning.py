@@ -141,7 +141,7 @@ class Fusion(pl.LightningModule):
         self.acc_train(y_hat, y)
         self.auc_train(y_hat, y)
 
-        self.log("fusion_train_loss", loss, on_epoch=True, on_step=False)
+        self.log("fusion.train.loss", loss, on_epoch=True, on_step=False)
         return loss
 
     def training_epoch_end(self, _) -> None:
@@ -149,7 +149,7 @@ class Fusion(pl.LightningModule):
         Training epoch end
         """
         self.log(
-            "fusion_train_acc",
+            "fusion.train.acc",
             self.acc_train,
             on_epoch=True,
             on_step=False,
@@ -157,7 +157,7 @@ class Fusion(pl.LightningModule):
         )
 
         self.log(
-            "fusion_train_auc",
+            "fusion.train.auc",
             self.auc_train,
             on_epoch=True,
             on_step=False,
@@ -179,7 +179,7 @@ class Fusion(pl.LightningModule):
         self.acc_val(y_hat, y)
         self.auc_val(y_hat, y)
 
-        self.log("fusion_val_loss", loss)
+        self.log("fusion.val.loss", loss)
 
     def validation_epoch_end(self, _) -> None:
         """
@@ -192,7 +192,7 @@ class Fusion(pl.LightningModule):
         epoch_val_auc = self.auc_val.compute()
 
         self.log(
-            "fusion_val_acc",
+            "fusion.val.acc",
             epoch_val_acc,
             on_epoch=True,
             on_step=False,
@@ -200,7 +200,7 @@ class Fusion(pl.LightningModule):
         )
 
         self.log(
-            "fusion_val_auc",
+            "fusion.val.auc",
             epoch_val_auc,
             on_epoch=True,
             on_step=False,
