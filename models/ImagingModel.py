@@ -22,15 +22,12 @@ class ImagingModel(nn.Module):
         self.bolt_encoder = False
         self.encoder_name = 'encoder_imaging.'
         self.create_imaging_model(original_args)
-      elif 'model.encoder.conv1.weight' in state_dict:
-        self.bolt_encoder = False
-        self.encoder_name = 'model.encoder.'
-        self.create_imaging_model(original_args)
       else:
         encoder_name_dict = {'clip' : 'encoder_imaging.', 'remove_fn' : 'encoder_imaging.', 'supcon' : 'encoder_imaging.', 'byol': 'online_network.encoder.', 'simsiam': 'online_network.encoder.', 'swav': 'model.', 'barlowtwins': 'network.encoder.'}
         self.bolt_encoder = True
         self.encoder = torchvision_ssl_encoder(original_args['model'])
-        self.encoder_name = encoder_name_dict[original_args['loss']]
+        # self.encoder_name = encoder_name_dict[original_args['loss']]
+        self.encoder_name = 'model.encoder.'
 
       # Remove prefix and fc layers
       state_dict_encoder = {}
