@@ -50,4 +50,5 @@ def test(hparams, wandb_logger=None):
   model = Evaluator(hparams)
   model.freeze()
   trainer = Trainer.from_argparse_args(hparams, gpus=1, logger=wandb_logger)
-  trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
+  # trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
+  trainer.test(model, test_loader)
