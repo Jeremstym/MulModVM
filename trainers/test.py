@@ -5,6 +5,7 @@ from datasets_processor.ImageDataset import ImageDataset
 from datasets_processor.ImageFastDataset import ImageFastDataset
 from datasets_processor.TabularDataset import TabularDataset
 from models.Evaluator import Evaluator
+from models.Fusioning import Fusion
 from utils.utils import grab_arg_from_checkpoint
 
 
@@ -75,8 +76,9 @@ def test(hparams, wandb_logger=None):
 
     hparams.dataset_length = len(test_loader)
 
-    model = Evaluator(hparams)
+    # model = Evaluator(hparams)
+    model = Fusion(hparams)
     model.freeze()
     trainer = Trainer.from_argparse_args(hparams, gpus=1, logger=wandb_logger)
-    # trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
-    trainer.test(model, test_loader)
+    trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
+    # trainer.test(model, test_loader)
