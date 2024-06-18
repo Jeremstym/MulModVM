@@ -35,6 +35,22 @@ def test(hparams, wandb_logger=None):
   elif hparams.datatype == 'tabular':
     test_dataset = TabularDataset(hparams.data_test_eval_tabular, hparams.labels_test_eval_tabular, hparams.eval_one_hot, hparams.field_lengths_tabular)
     hparams.input_size = test_dataset.get_input_size()
+  elif hparams.datatype == 'multimodal' or hparams.datatype == 'imaging_and_tabular':
+    test_dataset = ImagingAndTabularDataset(
+      data_path_imaging=hparams.data_fast_test_imaging,
+      data_path_tabular=hparams.data_test_eval_tabular,
+      delete_segmentation=hparams.delete_segmentation,
+      eval_train_augment_rate=hparams.eval_train_augment_rate,
+      labels_path=hparams.labels_test_eval_imaging,
+      field_lengths_tabular=hparams.field_lengths_tabular,
+      eval_one_hot=hparams.eval_one_hot,
+      img_size=hparams.img_size,
+      target=hparams.target,
+      tabular_model=hparams.tabular_model,
+      train=False,
+      live_loading=hparams.live_loading
+    )
+    hparams.input_size = test_dataset.get_input_size()
   else:
     raise Exception('argument dataset must be set to imaging, tabular or multimodal')
   
