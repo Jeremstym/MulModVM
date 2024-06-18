@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=hard
 #SBATCH --job-name=BoBFusion-Transformer-192
-#SBATCH --nodelist=top
+#SBATCH --nodelist=zeppelin
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --time=2-16:00:00
