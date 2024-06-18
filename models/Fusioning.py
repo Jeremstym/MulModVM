@@ -14,7 +14,7 @@ from models.ImagingModel import ImagingModel
 
 
 class Fusion(pl.LightningModule):
-    def __init__(self, hparams, dataset=None):
+    def __init__(self, hparams, dataset=None, use_projection: bool = False):
         super().__init__()
         self.save_hyperparameters(hparams)
 
@@ -56,9 +56,13 @@ class Fusion(pl.LightningModule):
         self.im_head = nn.Linear(
             self.hparams.embedding_dim, self.hparams.projection_dim
         )
-        # self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
-        head_input_dim = self.hparams.embedding_dim + self.hparams.tabular_embedding_dim
-        self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
+        if use_projection:
+            self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
+        else:
+            head_input_dim = self.hparams.embedding_dim + self.hparams.tabular_embedding_dim
+            self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
+
+        self.use_projection = use_projection
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
@@ -89,10 +93,12 @@ class Fusion(pl.LightningModule):
         # print all model
         if self.hparams.tabular_model == "transformer":
             print(self.tabular_tokenizer)
-        print(self.encoder_tabular)
-        # print(self.tab_head)
         print(self.imaging_model.encoder)
-        # print(self.im_head)
+        if use_projection:
+            print(self.im_head)
+        print(self.encoder_tabular)
+        if use_projection:
+            print(self.tab_head)
         print(self.head)
 
     def tokenize_tabular(self, x: torch.Tensor) -> torch.Tensor:
@@ -114,13 +120,15 @@ class Fusion(pl.LightningModule):
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         x_im = self.encode_imaging(x[0])  # only keep the encoder output
-        # x_proj_im = self.im_head(x_im)
+        if self.use_projection:
+            x_im = self.im_head(x_im)
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        # x_proj_tab = self.tab_head(x_tab)
+        if self.use_projection:
+            x_tab = self.tab_head(x_tab)
         x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
