@@ -78,7 +78,7 @@ def test(hparams, wandb_logger=None):
     hparams.dataset_length = len(test_loader)
 
     # model = Evaluator(hparams)
-    model = Fusion(hparams)
+    model = Fusion(hparams, dataset=test_dataset)
     model.freeze()
     trainer = Trainer.from_argparse_args(hparams, gpus=1, logger=wandb_logger)
     trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
