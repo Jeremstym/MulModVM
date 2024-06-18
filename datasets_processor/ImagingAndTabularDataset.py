@@ -155,6 +155,24 @@ class ImagingAndTabularDataset(Dataset):
         label = self.data_imaging_dataset.get_label(index)
         assert label == self.labels[index], f"{label} != {self.labels[index]}"
         return torch.as_tensor(label, dtype=torch.long)
+
+  def get_cat_mask(self) -> torch.Tensor:
+        """
+        Returns the categorical mask
+        """
+        return torch.as_tensor(self.cat_mask)
+
+  def get_cat_card(self) -> torch.Tensor:
+      """
+      Returns the categorical cardinalities
+      """
+      return torch.as_tensor(self.cat_card)
+
+  def get_number_of_numerical_features(self) -> int:
+      """
+      Returns the number of numerical features
+      """
+      return len(NUM_FEATURES)
   
   def __getitem__(self, index: int) -> Tuple[List[torch.Tensor], List[torch.Tensor], torch.Tensor, torch.Tensor]:
     # im = self.data_imaging[index]
@@ -172,7 +190,7 @@ class ImagingAndTabularDataset(Dataset):
     if self.eval_one_hot:
       tab = self.one_hot_encode(torch.tensor(self.data_tabular[index]))
     else:
-      tab = torch.tensor(self.data_tabular[index], dtype=torch.float)
+      tab = torch.as_tensor(self.data_tabular[index], dtype=torch.float)
 
     label = self.get_label(index)
 
