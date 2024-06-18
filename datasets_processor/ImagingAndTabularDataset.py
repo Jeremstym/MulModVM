@@ -63,9 +63,9 @@ class ImagingAndTabularDataset(Dataset):
 
     # Tabular
     use_header = True if tabular_model == "transformer" else False
-    self.data_tabular = self.read_and_parse_csv(data_path_tabular, use_header=use_header)
     self.field_lengths_tabular = torch.load(field_lengths_tabular)
     self.eval_one_hot = eval_one_hot
+    self.data_tabular = self.read_and_parse_csv(data_path_tabular, use_header=use_header)
     
     # Classifier
     self.labels = torch.load(labels_path)
