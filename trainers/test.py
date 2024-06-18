@@ -3,6 +3,7 @@ import pytorch_lightning as pl
 from pytorch_lightning import Trainer
 from datasets_processor.ImageDataset import ImageDataset
 from datasets_processor.ImageFastDataset import ImageFastDataset
+from datasets_processor.ImagingAndTabularDataset import ImagingAndTabularDataset
 from datasets_processor.TabularDataset import TabularDataset
 from models.Evaluator import Evaluator
 from models.Fusioning import Fusion
