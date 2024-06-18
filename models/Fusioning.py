@@ -116,7 +116,7 @@ class Fusion(pl.LightningModule):
         # x_proj_im = self.im_head(x_im)
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
-            x_tab = self.encoder_tabular(x_tokens_tab, x[2]).squeeze()
+            x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
         # x_proj_tab = self.tab_head(x_tab)
