@@ -40,8 +40,9 @@ class TabularEncoder(nn.Module):
         if k.startswith(encoder_name):
           state_dict_encoder[k[len(encoder_name):]] = state_dict[k]
       
-      print(f'Encoder keys: {self.encoder.state_dict().keys()}', flush=True)
+      print(f'Old encoder keys: {state_dict.keys()}', flush=True)
       print(f'Loading encoder with keys: {state_dict_encoder.keys()}', flush=True)
+      print(f'Encoder keys: {self.encoder.state_dict().keys()}', flush=True)
       _ = self.encoder.load_state_dict(state_dict_encoder, strict=True)
 
       # Freeze if needed
