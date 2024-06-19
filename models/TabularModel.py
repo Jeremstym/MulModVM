@@ -30,7 +30,7 @@ class TabularModel(nn.Module):
     """
     loaded_chkpt = torch.load(args.xtab_path, map_location=torch.device('cuda')) # load on GPU !
     self.encoder.load_state_dict(loaded_chkpt, strict=False) # no state_dict key needed as it is the whole state_dict
-    learned_layer = [layer for layer in self.encoder_tabular.state_dict()]
+    learned_layer = [layer for layer in self.encoder.state_dict()]
     xtab_layer = [layer for layer in loaded_chkpt.keys()]
     intersection = set(learned_layer).intersection(set(xtab_layer))
     assert len(intersection) > 0, "No layers in common between learned model and XTab model"
