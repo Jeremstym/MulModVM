@@ -78,7 +78,7 @@ def test(hparams, wandb_logger=None):
     hparams.dataset_length = len(test_loader)
 
     if hparams.datatype == 'imaging' or hparams.datatype == 'tabular':
-        model = Evaluator(hparams)
+        model = Evaluator(hparams, dataset=test_dataset)
     elif hparams.datatype == 'multimodal' or hparams.datatype == 'imaging_and_tabular':
         model = Fusion(hparams, dataset=test_dataset)
     model.freeze()
