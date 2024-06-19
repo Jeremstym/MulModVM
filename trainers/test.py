@@ -77,8 +77,10 @@ def test(hparams, wandb_logger=None):
 
     hparams.dataset_length = len(test_loader)
 
-    # model = Evaluator(hparams)
-    model = Fusion(hparams, dataset=test_dataset)
+    if hparams.datatype == 'imaging' or hparams.datatype == 'tabular':
+        model = Evaluator(hparams)
+    elif hparams.datatype == 'multimodal' or hparams.datatype == 'imaging_and_tabular':
+        model = Fusion(hparams, dataset=test_dataset)
     model.freeze()
     trainer = Trainer.from_argparse_args(hparams, gpus=1, logger=wandb_logger)
     trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
