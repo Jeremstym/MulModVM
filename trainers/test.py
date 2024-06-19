@@ -36,10 +36,11 @@ def test(hparams, wandb_logger=None):
         print(test_dataset.transform_val.__repr__())
     elif hparams.datatype == "tabular":
         test_dataset = TabularDataset(
-            hparams.data_test_eval_tabular,
-            hparams.labels_test_eval_tabular,
-            hparams.eval_one_hot,
-            hparams.field_lengths_tabular,
+            data_path=hparams.data_test_eval_tabular,
+            labels_path=hparams.labels_test_eval_tabular,
+            eval_one_hot=hparams.eval_one_hot,
+            field_lengths_tabular=hparams.field_lengths_tabular,
+            use_header=(hparams.tabular_model=='transformer'),
         )
         hparams.input_size = test_dataset.get_input_size()
     elif hparams.datatype == "multimodal" or hparams.datatype == "imaging_and_tabular":

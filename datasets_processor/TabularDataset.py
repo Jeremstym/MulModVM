@@ -30,7 +30,7 @@ class TabularDataset(Dataset):
         self.labels = torch.load(labels_path)
         self.eval_one_hot = eval_one_hot
         self.field_lengths = torch.load(field_lengths_tabular)
-        self.data = self.read_and_parse_csv(data_path)
+        self.data = self.read_and_parse_csv(data_path, use_header=self.use_header)
 
         if self.eval_one_hot:
             for i in range(len(self.data)):
