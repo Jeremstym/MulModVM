@@ -16,7 +16,7 @@ class TabularModel(nn.Module):
 
     self.encoder = TabularTransformer(args) if args.tabular_model == 'transformer' else TabularEncoder(args)
     if args.tabular_model == 'transformer' and args.use_xtab:
-      self.load_pretrained_xtab()
+      self.load_pretrained_xtab(args)
     self.classifier = nn.Linear(args.tabular_embedding_dim, args.num_classes)
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -24,11 +24,11 @@ class TabularModel(nn.Module):
     x = self.classifier(x)
     return x
     
-  def load_pretrained_xtab(self) -> None:
+  def load_pretrained_xtab(self, args) -> None:
     """
     Can load tabular encoder with pretrained weights from XTab foundation model
     """
-    loaded_chkpt = torch.load(self.hparams.xtab_path, map_location=self.device)
+    loaded_chkpt = torch.load(args.xtab_path, map_location=self.device)
     self.encoder.load_state_dict(loaded_chkpt, strict=False) # no state_dict key needed as it is the whole state_dict
     learned_layer = [layer for layer in self.encoder_tabular.state_dict()]
     xtab_layer = [layer for layer in loaded_chkpt.keys()]
