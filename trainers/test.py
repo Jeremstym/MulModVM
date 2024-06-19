@@ -83,6 +83,8 @@ def test(hparams, wandb_logger=None):
     elif hparams.datatype == 'multimodal' or hparams.datatype == 'imaging_and_tabular':
         model = Fusion(hparams, dataset=test_dataset)
     model.freeze()
+    print(f'model state dict: {model.state_dict().keys()}')
+    raise Exception('stop')
     trainer = Trainer.from_argparse_args(hparams, gpus=1, logger=wandb_logger)
     trainer.test(model, test_loader, ckpt_path=hparams.checkpoint)
     # trainer.test(model, test_loader)
