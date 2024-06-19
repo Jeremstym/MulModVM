@@ -21,7 +21,8 @@ class TabularEncoder(nn.Module):
       state_dict = loaded_chkpt['state_dict']
       self.input_size = original_args['input_size']
       
-      if 'encoder_tabular.encoder.1.running_mean' in state_dict.keys():
+      # if 'encoder_tabular.encoder.1.running_mean' in state_dict.keys():
+      if 'model.encoder.1.running_mean' in state_dict.keys():
         encoder_name = 'encoder_tabular.encoder.'
         self.encoder = self.build_encoder(original_args)
       elif 'encoder_projector_tabular.encoder.2.running_mean' in state_dict.keys():
