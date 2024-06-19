@@ -28,7 +28,7 @@ class TabularModel(nn.Module):
     """
     Can load tabular encoder with pretrained weights from XTab foundation model
     """
-    loaded_chkpt = torch.load(args.xtab_path, map_location=self.device)
+    loaded_chkpt = torch.load(args.xtab_path, map_location=args.device)
     self.encoder.load_state_dict(loaded_chkpt, strict=False) # no state_dict key needed as it is the whole state_dict
     learned_layer = [layer for layer in self.encoder_tabular.state_dict()]
     xtab_layer = [layer for layer in loaded_chkpt.keys()]
