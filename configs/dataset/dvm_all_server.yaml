@@ -37,6 +37,10 @@ data_fast_val_imaging_labeled: ${path_to_images}/readyValLabeled
 data_train_tabular: dvm_features_train_noOH${addendum}_physical_jittered_50.csv
 data_val_tabular: dvm_features_val_noOH${addendum}_physical_jittered_50.csv
 
+data_train_tabular_nonphysical: dvm_features_train_noOH_all_views.csv
+data_val_tabular_nonphysical: dvm_features_val_noOH_all_views.csv
+data_test_tabular_nonphysical: dvm_features_test_noOH_all_views.csv
+
 field_lengths_tabular: tabular_lengths${addendum}_physical.pt
 
 
