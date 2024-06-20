@@ -48,7 +48,7 @@ def load_datasets(hparams):
         )
     elif hparams.datatype == "tabular":
         train_dataset = TabularDataset(
-            data_path=hparams.data_train_eval_tabular,
+            data_path=hparams.data_train_tabular_nonphysical,
             labels_path=hparams.labels_train_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
             field_lengths_tabular=hparams.field_lengths_tabular,
@@ -56,7 +56,7 @@ def load_datasets(hparams):
             use_physical=hparams.use_physical,
         )
         val_dataset = TabularDataset(
-            data_path=hparams.data_val_eval_tabular,
+            data_path=hparams.data_val_tabular_nonphysical,
             labels_path=hparams.labels_val_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
             field_lengths_tabular=hparams.field_lengths_tabular,
