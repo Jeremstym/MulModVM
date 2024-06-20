@@ -9,6 +9,7 @@ from .TabularAttributes import (
     CAT_FEATURES,
     NUM_FEATURES,
     CAT_FEATURES_WITH_LABEL,
+    NUM_FEATURS_NON_PHYSICAL,
 )
 
 
@@ -24,9 +25,11 @@ class TabularDataset(Dataset):
         eval_one_hot: bool = True,
         field_lengths_tabular: str = None,
         use_header: bool = True,
+        use_physical: bool = True,
     ):
         super(TabularDataset, self).__init__()
         self.use_header = use_header
+        self.use_physical = use_physical
         self.labels = torch.load(labels_path)
         self.eval_one_hot = eval_one_hot
         self.field_lengths = torch.load(field_lengths_tabular)
@@ -62,10 +65,13 @@ class TabularDataset(Dataset):
         # if use_header and self._use_labels:
         #     FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
         if use_header:
-            FEATURES = NUM_FEATURES + CAT_FEATURES
+            if self.use_physical:
+                FEATURES = NUM_FEATURES + CAT_FEATURES
+            else:
+                FEATURES = NUM_FEATURS_NON_PHYSICAL + CAT_FEATURES
             df = pd.read_csv(path_tabular, names=FEATURES)
             df.drop(missing_values, axis=0, inplace=True)
-            cat_mask = check_categorical_data(df)
+            cat_mask = check_categorical_data(df, features=FEATURES)
             self.cat_mask = cat_mask
             field_lengths_tensor = torch.as_tensor(self.field_lengths)
             self.cat_card = field_lengths_tensor[cat_mask]
