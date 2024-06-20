@@ -175,10 +175,13 @@ data_train_imaging_tensors_short:
 data_val_imaging_tensors_short:
 field_lengths_tabular_short:
 data_train_eval_tabular_short:
+data_train_tabular_nonphysical_short:
 labels_train_eval_tabular_short:
 data_val_eval_tabular_short:
+data_val_tabular_nonphysical_short:
 labels_val_eval_tabular_short:
 data_test_eval_tabular_short:
+data_test_tabular_nonphysical_short:
 labels_test_eval_tabular_short:
 data_train_eval_imaging_short:
 labels_train_eval_imaging_short:
