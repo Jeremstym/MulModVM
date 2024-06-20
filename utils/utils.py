@@ -132,6 +132,8 @@ def prepend_paths(hparams):
     'data_test_eval_tabular', 'labels_test_eval_tabular',
     'data_test_eval_imaging', 'labels_test_eval_imaging',
     'data_train_imaging_tensors', 'data_val_imaging_tensors',
+    'data_train_tabular_nonphysical', 'data_val_tabular_nonphysical',
+    'data_test_tabular_nonphysical',
     ]:
     if hp in hparams and hparams[hp]:
       hparams['{}_short'.format(hp)] = hparams[hp]
