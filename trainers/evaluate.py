@@ -52,12 +52,16 @@ def load_datasets(hparams):
             labels_path=hparams.labels_train_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
             field_lengths_tabular=hparams.field_lengths_tabular,
+            use_header=(hparams.tabular_model == "transformer"),
+            use_physical=hparams.use_physical,
         )
         val_dataset = TabularDataset(
             data_path=hparams.data_val_eval_tabular,
             labels_path=hparams.labels_val_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
             field_lengths_tabular=hparams.field_lengths_tabular,
+            use_header=(hparams.tabular_model == "transformer"),
+            use_physical=hparams.use_physical,
         )
         hparams.input_size = train_dataset.get_input_size()
     elif hparams.datatype == "imaging_and_tabular":
@@ -196,10 +200,12 @@ def evaluate(hparams, wandb_logger):
             hparams.transform_test = test_dataset.transform_val.__repr__()
         elif hparams.datatype == "tabular":
             test_dataset = TabularDataset(
-                hparams.data_test_eval_tabular,
-                hparams.labels_test_eval_tabular,
-                hparams.eval_one_hot,
-                hparams.field_lengths_tabular,
+                data_path=hparams.data_test_eval_tabular,
+                labels_path=hparams.labels_test_eval_tabular,
+                eval_one_hot=hparams.eval_one_hot,
+                field_lengths_tabular=hparams.field_lengths_tabular,
+                use_header=(hparams.tabular_model == "transformer"),
+                use_physical=hparams.use_physical,
             )
             hparams.input_size = test_dataset.get_input_size()
         elif hparams.datatype == "imaging_and_tabular":

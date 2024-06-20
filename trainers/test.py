@@ -41,6 +41,7 @@ def test(hparams, wandb_logger=None):
             eval_one_hot=hparams.eval_one_hot,
             field_lengths_tabular=hparams.field_lengths_tabular,
             use_header=(hparams.tabular_model=='transformer'),
+            use_physical=hparams.use_physical,
         )
         hparams.input_size = test_dataset.get_input_size()
     elif hparams.datatype == "multimodal" or hparams.datatype == "imaging_and_tabular":
