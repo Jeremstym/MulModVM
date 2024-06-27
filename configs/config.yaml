@@ -76,6 +76,11 @@ online_mlp: True
 # Imaging
 augmentation_rate: 0.95
 crop_scale_lower: 0.08
+image_tokenization: False
+num_chanels: 3
+image_size: 224
+patch_size: 16
+hidden_size: 768
 
 # tabular
 corruption_rate: 0.3
