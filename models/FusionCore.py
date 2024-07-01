@@ -39,7 +39,7 @@ class FusionCoreConcat(nn.Module):
 
 class FusionCoreCrossAtt(nn.Module):
 
-    def __init(self, args):
+    def __init__(self, args):
         self.image_dim = args.image_size
         self.tabular_dim = args.tabular_embedding_dim
         self.fusion_dim = args.hidden_size
