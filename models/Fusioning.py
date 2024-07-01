@@ -49,9 +49,7 @@ class Fusion(pl.LightningModule):
             self.imaging_tokenizer = ViTTokenizer(self.hparams)
         else:
             self.imaging_model = ImagingModel(self.hparams)
-        self.im_head = nn.Linear(
-            self.hparams.embedding_dim, self.hparams.projection_dim
-        )
+      
 
         # Initialize tabular encoders
         if self.hparams.tabular_model == "transformer":
@@ -60,10 +58,13 @@ class Fusion(pl.LightningModule):
                 self.load_pretrained_xtab()
         elif self.hparams.tabular_model == "mlp":
             self.encoder_tabular = TabularEncoder(self.hparams)
-        self.tab_head = nn.Linear(
-            self.hparams.tabular_embedding_dim, self.hparams.projection_dim
-        )
-        if use_projection:
+        if self.use_projection:
+            self.tab_head = nn.Linear(
+                self.hparams.tabular_embedding_dim, self.hparams.projection_dim
+            )
+            self.im_head = nn.Linear(
+                self.hparams.embedding_dim, self.hparams.projection_dim
+            )
             self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
         else:
             head_input_dim = self.hparams.embedding_dim + self.hparams.tabular_embedding_dim
@@ -108,10 +109,9 @@ class Fusion(pl.LightningModule):
             print(self.imaging_tokenizer)
         else:
             print(self.imaging_model.encoder)
-        if use_projection:
-            print(self.im_head)
         print(self.encoder_tabular)
         if use_projection:
+            print(self.im_head)
             print(self.tab_head)
         print(self.head)
 
