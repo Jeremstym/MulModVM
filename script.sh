@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=hard
-#SBATCH --job-name=BoBCrossFus
+#SBATCH --job-name=BoBCrossFus_withSelfAtt
 #SBATCH --nodelist=zz
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
