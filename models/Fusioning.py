@@ -11,6 +11,8 @@ from omegaconf import DictConfig
 from models.TabularEncoder import TabularEncoder
 from models.TabularTransformer import TabularTransformer
 from models.ImagingModel import ImagingModel
+from models.ImageTokenizer import ViTTokenizer
+from models.FusionCore import FusionCoreCrossAtt, FusionCoreConcat
 
 
 class Fusion(pl.LightningModule):
@@ -39,22 +41,27 @@ class Fusion(pl.LightningModule):
             self.hparams.datatype == "imaging_and_tabular"
             or self.hparams.datatype == "multimodal"
         ), "Fusion model must be imaging_and_tabular or multimodal"
+        
+        self.use_projection = use_projection
 
-        # Initialize model encoders
+        # Initialize imaging model
+        if self.hparams.image_tokenization:
+            self.imaging_tokenizer = ViTTokenizer(self.hparams)
+        else:
+            self.imaging_model = ImagingModel(self.hparams)
+        self.im_head = nn.Linear(
+            self.hparams.embedding_dim, self.hparams.projection_dim
+        )
+
+        # Initialize tabular encoders
         if self.hparams.tabular_model == "transformer":
             self.encoder_tabular = TabularTransformer(self.hparams)
             if self.hparams.use_xtab:
                 self.load_pretrained_xtab()
         elif self.hparams.tabular_model == "mlp":
             self.encoder_tabular = TabularEncoder(self.hparams)
-
-        self.imaging_model = ImagingModel(self.hparams)
-       
         self.tab_head = nn.Linear(
             self.hparams.tabular_embedding_dim, self.hparams.projection_dim
-        )
-        self.im_head = nn.Linear(
-            self.hparams.embedding_dim, self.hparams.projection_dim
         )
         if use_projection:
             self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
@@ -62,7 +69,11 @@ class Fusion(pl.LightningModule):
             head_input_dim = self.hparams.embedding_dim + self.hparams.tabular_embedding_dim
             self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
 
-        self.use_projection = use_projection
+        # Intialize fusion core
+        if self.hparams.cross_attention:
+            fusion_core = FusionCoreCrossAtt(self.hparams)
+        else:
+            fusion_core = FusionCoreConcat(self.hparams)
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
@@ -93,7 +104,10 @@ class Fusion(pl.LightningModule):
         # print all model
         if self.hparams.tabular_model == "transformer":
             print(self.tabular_tokenizer)
-        print(self.imaging_model.encoder)
+        if self.hparams.image_tokenization:
+            print(self.imaging_tokenizer)
+        else:
+            print(self.imaging_model.encoder)
         if use_projection:
             print(self.im_head)
         print(self.encoder_tabular)
@@ -114,22 +128,24 @@ class Fusion(pl.LightningModule):
     def encode_imaging(self, x: torch.Tensor) -> torch.Tensor:
         if self.imaging_model.bolt_encoder:
             x = self.imaging_model.encoder(x)[0]
+        elif self.hparams.image_tokenization:
+            x = self.imaging_tokenizer(x) 
         else:
             x = self.imaging_model.encoder(x).squeeze()
         return x
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         x_im = self.encode_imaging(x[0])  # only keep the encoder output
-        if self.use_projection:
-            x_im = self.im_head(x_im)
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        if self.use_projection:
-            x_tab = self.tab_head(x_tab)
-        x = torch.cat([x_im, x_tab], dim=1)
+        x = fusion_core(x_im, x_tab)
+        # if self.use_projection:
+        #     x_im = self.im_head(x_im)
+        #     x_tab = self.tab_head(x_tab)
+        # x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
 
