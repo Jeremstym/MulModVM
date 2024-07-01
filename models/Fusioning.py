@@ -53,9 +53,10 @@ class Fusion(pl.LightningModule):
             self.hidden_size = self.hparams.embedding_dim
 
         # Initialize imaging model
-        if self.hparams.image_tokenization and not self.hparams.use_vit:
+        if self.hparams.image_tokenization:
+            assert not self.hparams.use_vit, "ViT model not supported with tokenization because it takes images as input."
             self.imaging_tokenizer = ViTTokenizer(self.hparams)
-        elif self.hparams.image_tokenization and self.hparams.use_vit:
+        elif self.hparams.use_vit:
             assert self.hparams.models == "vit-b-32", "Only vit-b-32 model supported."
             self.imaging_model = ImagingModel(self.hparams)
         else:
