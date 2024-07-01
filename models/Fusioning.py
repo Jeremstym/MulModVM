@@ -74,7 +74,10 @@ class Fusion(pl.LightningModule):
             )
             self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
         else:
-            head_input_dim = self.hidden_size + self.hparams.tabular_embedding_dim
+            if hparams.cross_fusion:
+                head_input_dim = self.hidden_size
+            else:
+                head_input_dim = self.hidden_size + self.hparams.tabular_embedding_dim
             self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
 
         # Metrics
