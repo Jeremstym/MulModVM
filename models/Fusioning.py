@@ -43,13 +43,20 @@ class Fusion(pl.LightningModule):
         ), "Fusion model must be imaging_and_tabular or multimodal"
         
         self.use_projection = use_projection
+        
+        # Intialize fusion core
+        if self.hparams.cross_fusion:
+            self.fusion_core = FusionCoreCrossAtt(self.hparams)
+            self.hidden_size = self.hparams.fusion_dim
+        else:
+            self.fusion_core = FusionCoreConcat(self.hparams)
+            self.hidden_size = self.hparams.embedding_dim
 
         # Initialize imaging model
         if self.hparams.image_tokenization:
             self.imaging_tokenizer = ViTTokenizer(self.hparams)
         else:
             self.imaging_model = ImagingModel(self.hparams)
-      
 
         # Initialize tabular encoders
         if self.hparams.tabular_model == "transformer":
@@ -67,14 +74,8 @@ class Fusion(pl.LightningModule):
             )
             self.head = nn.Linear(self.hparams.projection_dim * 2, self.hparams.num_classes)
         else:
-            head_input_dim = self.hparams.embedding_dim + self.hparams.tabular_embedding_dim
+            head_input_dim = self.hidden_size + self.hparams.tabular_embedding_dim
             self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
-
-        # Intialize fusion core
-        if self.hparams.cross_fusion:
-            self.fusion_core = FusionCoreCrossAtt(self.hparams)
-        else:
-            self.fusion_core = FusionCoreConcat(self.hparams)
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
