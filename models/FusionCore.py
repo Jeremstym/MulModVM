@@ -41,12 +41,12 @@ class FusionCoreCrossAtt(nn.Module):
 
     def __init__(self, args):
         super(FusionCoreCrossAtt, self).__init__()
-        self.image_dim = args.image_size
+        self.image_dim = args.img_size
         self.tabular_dim = args.tabular_embedding_dim
         self.fusion_dim = args.hidden_size
         assert self.tabular_dim == self.fusion_dim, "Tabular and fusion dimensions must be equal for cross-attention"
         assert self.image_dim % args.patch_size == 0, "Image dimensions must be divisible by the patch size"
-        self.num_patches = (args.image_size // args.patch_size) ** 2
+        self.num_patches = (args.img_size // args.patch_size) ** 2
         self.num_tab_tokens = len(NUM_FEATURES) + len(CAT_FEATURES) + 1
 
         self.cls_token = CLSToken(d_token=self.fusion_dim)

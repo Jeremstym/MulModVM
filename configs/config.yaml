@@ -1,6 +1,6 @@
 defaults:
-  - _self_
   - models: resnet50
+  - _self_
   - dataset: dvm_all_server
 
 # Command Center
@@ -78,8 +78,7 @@ augmentation_rate: 0.95
 crop_scale_lower: 0.08
 image_tokenization: False
 num_channels: 3
-image_size: 256
-img_size: ${image_size}
+img_size: 256
 patch_size: 16
 hidden_size: 768
 

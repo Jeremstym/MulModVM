@@ -18,7 +18,7 @@ class ViTTokenizer(nn.Module):
 
     def __init__(self, args):
         super().__init__()
-        image_size, patch_size = args.image_size, args.patch_size
+        image_size, patch_size = args.img_size, args.patch_size
         num_channels, hidden_size = args.num_channels, args.hidden_size
 
         image_size = image_size if isinstance(image_size, collections.abc.Iterable) else (image_size, image_size)
