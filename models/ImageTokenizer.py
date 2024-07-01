@@ -23,6 +23,11 @@ class ViTTokenizer(nn.Module):
 
         image_size = image_size if isinstance(image_size, collections.abc.Iterable) else (image_size, image_size)
         patch_size = patch_size if isinstance(patch_size, collections.abc.Iterable) else (patch_size, patch_size)
+        # In our framework, we require the image to be square
+        assert image_size[0] == image_size[1], "Image size must be square"
+        assert patch_size[0] == patch_size[1], "Patch size must be square"
+        # In our framework, we require the image dimensions to be divisible by the patch size (no interpolation)
+        assert image_size[0] % patch_size[0] == 0, "Image dimensions must be divisible by the patch size"
         num_patches = (image_size[1] // patch_size[1]) * (image_size[0] // patch_size[0])
         self.image_size = image_size
         self.patch_size = patch_size
@@ -53,5 +58,5 @@ class ViTTokenizer(nn.Module):
                     f"Input image size ({height}*{width}) doesn't match model"
                     f" ({self.image_size[0]}*{self.image_size[1]})."
                 )
-        embeddings = self.projection(pixel_values).flatten(2).transpose(1, 2)
+        embeddings = self.projection(pixel_values).flatten(2).transpose(1, 2) # (batch_size, num_patches, hidden_size)
         return embeddings

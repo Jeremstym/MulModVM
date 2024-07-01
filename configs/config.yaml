@@ -78,7 +78,7 @@ augmentation_rate: 0.95
 crop_scale_lower: 0.08
 image_tokenization: False
 num_chanels: 3
-image_size: 224
+image_size: 256
 patch_size: 16
 hidden_size: 768
 
@@ -121,7 +121,7 @@ fusion_core:
   d_out: null # Only used when using a projection head (`projection=True`)
 
 # Tabulartransformer
-tabular_embedding_dim: 192
+tabular_embedding_dim: 768 # or can be 192
 tabular_tokenizer:
   _target_: models.TabularTokenizer.TabularTokenizer
   d_token: ${tabular_embedding_dim}
