@@ -270,11 +270,13 @@ class Fusion(pl.LightningModule):
         if self.hparams.tabular_model == "transformer":
             optimizer = torch.optim.Adam(
                 [
-                    {"params": self.imaging_model.parameters()},
-                    {"params": self.im_head.parameters()},
+                    # {"params": self.imaging_model.parameters()},
+                    {"params": self.imaging_tokenizer.parameters()},
+                    # {"params": self.im_head.parameters()},
                     {"params": self.tabular_tokenizer.parameters()},
                     {"params": self.encoder_tabular.parameters()},
-                    {"params": self.tab_head.parameters()},
+                    # {"params": self.tab_head.parameters()},
+                    {"params": self.fusion_core.parameters()},
                     {"params": self.head.parameters()},
                 ],
                 lr=self.hparams.lr_eval,
@@ -284,9 +286,9 @@ class Fusion(pl.LightningModule):
             optimizer = torch.optim.Adam(
                 [
                     {"params": self.imaging_model.parameters()},
-                    {"params": self.im_head.parameters()},
+                    # {"params": self.im_head.parameters()},
                     {"params": self.encoder_tabular.parameters()},
-                    {"params": self.tab_head.parameters()},
+                    # {"params": self.tab_head.parameters()},
                     {"params": self.head.parameters()},
                 ],
                 lr=self.hparams.lr_eval,
