@@ -126,10 +126,10 @@ class Fusion(pl.LightningModule):
     #     return x
 
     def encode_imaging(self, x: torch.Tensor) -> torch.Tensor:
-        if self.imaging_model.bolt_encoder:
-            x = self.imaging_model.encoder(x)[0]
-        elif self.hparams.image_tokenization:
+        if self.hparams.image_tokenization:
             x = self.imaging_tokenizer(x) 
+        elif self.imaging_model.bolt_encoder:
+            x = self.imaging_model.encoder(x)[0]
         else:
             x = self.imaging_model.encoder(x).squeeze()
         return x
