@@ -63,6 +63,8 @@ class FusionCoreCrossAtt(nn.Module):
         # tabular = self.cls_token(tabular) | Already done in TabularTransformer
         tabular = self.positional_encoding_tabular(tabular) # is this necessary?
         image = self.positional_encoding_image(image)
+        print(f"Image shape: {image.shape}")
+        print(f"Tabular shape: {tabular.shape}")
         fusion = self.fusion(image, tabular)
         print(f"Fusion shape: {fusion.shape}")
         raise Exception
