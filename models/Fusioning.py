@@ -70,7 +70,7 @@ class Fusion(pl.LightningModule):
             self.head = nn.Linear(head_input_dim, self.hparams.num_classes)
 
         # Intialize fusion core
-        if self.hparams.cross_attention:
+        if self.hparams.cross_fusion:
             fusion_core = FusionCoreCrossAtt(self.hparams)
         else:
             fusion_core = FusionCoreConcat(self.hparams)
