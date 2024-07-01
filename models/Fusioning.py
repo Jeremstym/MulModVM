@@ -47,7 +47,7 @@ class Fusion(pl.LightningModule):
         # Intialize fusion core
         if self.hparams.cross_fusion:
             self.fusion_core = FusionCoreCrossAtt(self.hparams)
-            self.hidden_size = self.hparams.fusion_dim
+            self.hidden_size = self.hparams.hidden_size
         else:
             self.fusion_core = FusionCoreConcat(self.hparams)
             self.hidden_size = self.hparams.embedding_dim
