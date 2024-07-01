@@ -1,6 +1,6 @@
 defaults:
-  - models: resnet50
   - _self_
+  - models: resnet50
   - dataset: dvm_all_server
 
 # Command Center
