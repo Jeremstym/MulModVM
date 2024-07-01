@@ -71,9 +71,9 @@ class Fusion(pl.LightningModule):
 
         # Intialize fusion core
         if self.hparams.cross_fusion:
-            fusion_core = FusionCoreCrossAtt(self.hparams)
+            self.fusion_core = FusionCoreCrossAtt(self.hparams)
         else:
-            fusion_core = FusionCoreConcat(self.hparams)
+            self.fusion_core = FusionCoreConcat(self.hparams)
 
         # Metrics
         task = "binary" if self.hparams.num_classes == 2 else "multiclass"
@@ -141,7 +141,7 @@ class Fusion(pl.LightningModule):
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        x = fusion_core(x_im, x_tab)
+        x = self.fusion_core(x_im, x_tab)
         # if self.use_projection:
         #     x_im = self.im_head(x_im)
         #     x_tab = self.tab_head(x_tab)
