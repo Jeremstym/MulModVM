@@ -102,4 +102,4 @@ class TabularTransformer(nn.Module):
         x = self.positional_encoding(x)
         x = self.TransformerEncoder(x)
         # x = self.head(x)
-        return x[:, -1, :]
+        return x

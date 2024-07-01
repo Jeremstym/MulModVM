@@ -64,4 +64,4 @@ class FusionCoreCrossAtt(nn.Module):
         tabular = self.positional_encoding_tabular(tabular) # is this necessary?
         image = self.positional_encoding_image(image)
         fusion = self.fusion(image, tabular)
-        return fusion[:,-1,:] # return only the CLS token
+        return fusion

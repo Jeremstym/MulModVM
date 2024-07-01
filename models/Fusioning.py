@@ -141,7 +141,12 @@ class Fusion(pl.LightningModule):
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        x = self.fusion_core(x_im, x_tab)
+        if self.hparams.cross_fusion:
+            x = self.fusion_core(x_im, x_tab)
+            x = x[:, -1, :]
+        else:
+            x_tab = x_tab[:, -1, :]
+            x = torch.cat([x_im, x_tab], dim=1)
         # if self.use_projection:
         #     x_im = self.im_head(x_im)
         #     x_tab = self.tab_head(x_tab)
