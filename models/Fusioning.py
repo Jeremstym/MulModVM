@@ -67,6 +67,8 @@ class Fusion(pl.LightningModule):
             self.encoder_tabular = TabularTransformer(self.hparams)
             if self.hparams.use_xtab:
                 self.load_pretrained_xtab()
+            if self.hparams.cross_fusion:
+                self.encoder_tabular = nn.Identity() # remove transformer encoder before cross-attention
         elif self.hparams.tabular_model == "mlp":
             self.encoder_tabular = TabularEncoder(self.hparams)
         if self.use_projection:
