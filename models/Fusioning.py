@@ -144,13 +144,16 @@ class Fusion(pl.LightningModule):
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         x_im = self.encode_imaging(x[0])  # only keep the encoder output
+        print(f"Imaging model output shape: {x_im.shape}")
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
+            print(f"Tabular model output shape: {x_tab.shape}")
         else:
             x_tab = self.encoder_tabular(x[1])
         if self.hparams.cross_fusion:
             x = self.fusion_core(x_im, x_tab)
+            print(f"Fusion core output shape: {x.shape}")
             x = x[:, -1, :]
         else:
             x_tab = x_tab[:, -1, :]
@@ -160,6 +163,8 @@ class Fusion(pl.LightningModule):
         #     x_tab = self.tab_head(x_tab)
         # x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
+        print(f"Output shape: {x.shape}")
+        raise Exception("Stop here")
         return x
 
     def training_step(
