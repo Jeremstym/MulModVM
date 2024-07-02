@@ -15,26 +15,17 @@ class FusionCoreConcat(nn.Module):
     """
     def __init__(self, args):
         super(FusionCore, self).__init__()
-        self.image_dim = args.image_dim
-        self.tabular_dim = args.tabular_dim
-        self.fusion_dim = args.fusion_dim
-        self.dropout = args.dropout
+        self.image_dim = args.img_size
+        self.tabular_dim = args.tabular_embedding_dim
+        self.fusion_dim = args.hidden_size
+        assert self.image_dim == self.tabular_dim, "Image and tabular dimensions must be equal for concatenation"
 
-        self.image_linear = nn.Linear(self.image_dim, self.fusion_dim)
-        self.tabular_linear = nn.Linear(self.tabular_dim, self.fusion_dim)
-        self.fusion_linear = nn.Linear(self.fusion_dim * 2, self.fusion_dim)
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(self.dropout)
 
     def forward(self, image: Tensor, tabular: Tensor) -> Tensor:
         """
         Forward pass for the fusion core.
         """
-        image = self.image_linear(image)
-        tabular = self.tabular_linear(tabular)
         fusion = torch.cat((image, tabular), dim=1)
-        fusion = self.relu(self.fusion_linear(fusion))
-        fusion = self.dropout(fusion)
         return fusion
 
 class FusionCoreCrossAtt(nn.Module):
