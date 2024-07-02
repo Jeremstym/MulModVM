@@ -49,7 +49,7 @@ class FusionCoreCrossAtt(nn.Module):
         Forward pass for the fusion core.
         """
         # tabular = self.cls_token(tabular) | Already done in TabularTransformer
-        tabular = self.positional_encoding_tabular(tabular) # is this necessary?
-        image = self.positional_encoding_image(image)
+        # tabular = self.positional_encoding_tabular(tabular) # is this necessary?
+        # image = self.positional_encoding_image(image)
         fusion = self.fusion(tabular, image)
         return fusion[:, self.num_tab_tokens - 1, :]
