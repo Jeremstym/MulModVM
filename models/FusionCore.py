@@ -51,5 +51,5 @@ class FusionCoreCrossAtt(nn.Module):
         # tabular = self.cls_token(tabular) | Already done in TabularTransformer
         tabular = self.positional_encoding_tabular(tabular) # is this necessary?
         image = self.positional_encoding_image(image)
-        fusion = self.fusion(image, tabular)
-        return fusion[:, -1, :]
+        fusion = self.fusion(tabular, image)
+        return fusion[:, self.num_tab_tokens - 1, :]
