@@ -280,14 +280,28 @@ class Fusion(pl.LightningModule):
         Must use strict equal to false because if check_val_n_epochs is > 1
         because val metrics not defined when scheduler is queried
         """
-        if self.hparams.tabular_model == "transformer":
+        if self.hparams.tabular_model == "transformer" and self.hparams.image_tokenization:
             optimizer = torch.optim.Adam(
                 [
-                    {"params": self.imaging_model.parameters()},
-                    # {"params": self.imaging_tokenizer.parameters()},
+                    # {"params": self.imaging_model.parameters()},
+                    {"params": self.imaging_tokenizer.parameters()},
                     # {"params": self.im_head.parameters()},
                     {"params": self.tabular_tokenizer.parameters()},
                     {"params": self.encoder_tabular.parameters()},
+                    # {"params": self.tab_head.parameters()},
+                    {"params": self.fusion_core.parameters()},
+                    {"params": self.head.parameters()},
+                ],
+                lr=self.hparams.lr_eval,
+                weight_decay=self.hparams.weight_decay_eval,
+            )
+        elif self.hparams.tabular_model == "transformer":
+            optimizer = torch.optim.Adam(
+                [
+                    {"params": self.imaging_model.parameters()},
+                    {"params": self.tabular_tokenizer.parameters()},
+                    {"params": self.encoder_tabular.parameters()},
+                    # {"params": self.im_head.parameters()},
                     # {"params": self.tab_head.parameters()},
                     {"params": self.fusion_core.parameters()},
                     {"params": self.head.parameters()},
