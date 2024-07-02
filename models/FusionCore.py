@@ -14,7 +14,7 @@ class FusionCoreConcat(nn.Module):
     Core module for fusing image and tabular data.
     """
     def __init__(self, args):
-        super(FusionCore, self).__init__()
+        super(FusionCoreConcat, self).__init__()
 
     def forward(self, image: Tensor, tabular: Tensor) -> Tensor:
         """
