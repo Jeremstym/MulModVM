@@ -165,8 +165,6 @@ class Fusion(pl.LightningModule):
         """
         x, y = batch
         y_hat = self.forward(x)
-        print(f"y_hat: {y_hat.shape}, y: {y.shape}")
-        raise Exception("Stop")
         loss = self.criterion(y_hat, y)
 
         y_hat = torch.softmax(y_hat.detach(), dim=1)
