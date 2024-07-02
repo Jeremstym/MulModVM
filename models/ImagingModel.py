@@ -50,6 +50,7 @@ class ImagingModel(nn.Module):
         parameters = list(filter(lambda p: p.requires_grad, self.encoder.parameters()))
         assert len(parameters)==0
     elif args.model == 'vit-b-32':
+      self.bolt_encoder = False
       self.import_model(args.model)
       self.pooled_dim = args.embedding_dim
     else:
