@@ -113,11 +113,11 @@ class Fusion(pl.LightningModule):
         # print all model
         if self.hparams.tabular_model == "transformer":
             print(self.tabular_tokenizer)
+        print(self.encoder_tabular)
         if self.hparams.image_tokenization:
             print(self.imaging_tokenizer)
         else:
             print(self.imaging_model.encoder)
-        print(self.encoder_tabular)
         if use_projection:
             print(self.im_head)
             print(self.tab_head)
