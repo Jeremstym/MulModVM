@@ -15,16 +15,13 @@ class FusionCoreConcat(nn.Module):
     """
     def __init__(self, args):
         super(FusionCore, self).__init__()
-        self.image_dim = args.img_size
-        self.tabular_dim = args.tabular_embedding_dim
-        self.fusion_dim = args.hidden_size
-        assert self.image_dim == self.tabular_dim, "Image and tabular dimensions must be equal for concatenation"
-
 
     def forward(self, image: Tensor, tabular: Tensor) -> Tensor:
         """
         Forward pass for the fusion core.
         """
+        if tabular.ndim == 3:
+            tabular = tabular[:, -1, :]
         fusion = torch.cat((image, tabular), dim=1)
         return fusion
 
@@ -55,4 +52,4 @@ class FusionCoreCrossAtt(nn.Module):
         tabular = self.positional_encoding_tabular(tabular) # is this necessary?
         image = self.positional_encoding_image(image)
         fusion = self.fusion(image, tabular)
-        return fusion
+        return fusion[:, -1, :]
