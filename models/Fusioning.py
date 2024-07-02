@@ -57,7 +57,7 @@ class Fusion(pl.LightningModule):
             assert not self.hparams.use_vit, "ViT model not supported with tokenization because it takes images as input."
             self.imaging_tokenizer = ViTTokenizer(self.hparams)
         elif self.hparams.use_vit:
-            assert self.hparams.models == "vit-b-32", "Only vit-b-32 model supported."
+            assert self.hparams.model == "vit-b-32", "Only vit-b-32 model supported."
             self.imaging_model = ImagingModel(self.hparams)
         else:
             self.imaging_model = ImagingModel(self.hparams)
