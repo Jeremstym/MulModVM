@@ -22,7 +22,7 @@ class FusionCoreConcat(nn.Module):
         """
         if tabular.ndim == 3:
             tabular = tabular[:, -1, :]
-        fusion = torch.cat((image, tabular), dim=1)
+        fusion = torch.cat([image, tabular], dim=1)
         return fusion
 
 class FusionCoreCrossAtt(nn.Module):
