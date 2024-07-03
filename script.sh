@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --partition=hard
+#SBATCH --partition=electronic
 #SBATCH --job-name=BoBCrossFus_withSelfAtt
-#SBATCH --nodelist=zz
+#SBATCH --nodelist=punk
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --time=2-16:00:00
