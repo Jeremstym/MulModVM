@@ -49,7 +49,7 @@ class Fusion(pl.LightningModule):
             self.fusion_core = FusionCoreCrossAtt(self.hparams)
             self.hidden_size = self.hparams.hidden_size
         else:
-            self.fusion_core = FusionCoreConcat(self.hparams)
+            # self.fusion_core = FusionCoreConcat(self.hparams)
             self.hidden_size = self.hparams.embedding_dim
 
         # Initialize imaging model
@@ -73,7 +73,7 @@ class Fusion(pl.LightningModule):
 
         elif self.hparams.tabular_model == "mlp":
             self.encoder_tabular = TabularEncoder(self.hparams)
-            
+
         if self.use_projection:
             self.tab_head = nn.Linear(
                 self.hparams.tabular_embedding_dim, self.hparams.projection_dim
@@ -303,7 +303,7 @@ class Fusion(pl.LightningModule):
                     {"params": self.encoder_tabular.parameters()},
                     # {"params": self.im_head.parameters()},
                     # {"params": self.tab_head.parameters()},
-                    {"params": self.fusion_core.parameters()},
+                    # {"params": self.fusion_core.parameters()},
                     {"params": self.head.parameters()},
                 ],
                 lr=self.hparams.lr_eval,
