@@ -49,7 +49,7 @@ class Fusion(pl.LightningModule):
             self.fusion_core = FusionCoreCrossAtt(self.hparams)
             self.hidden_size = self.hparams.hidden_size
         else:
-            # self.fusion_core = FusionCoreConcat(self.hparams)
+            self.fusion_core = FusionCoreConcat(self.hparams)
             self.hidden_size = self.hparams.embedding_dim
 
         # Initialize imaging model
@@ -154,12 +154,12 @@ class Fusion(pl.LightningModule):
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        # x = self.fusion_core(x_im, x_tab)
+        x = self.fusion_core(x_im, x_tab)
         # if self.use_projection:
         #     x_im = self.im_head(x_im)
         #     x_tab = self.tab_head(x_tab)
-        x_tab = x_tab[:, -1, :]
-        x = torch.cat([x_im, x_tab], dim=1)
+        # x_tab = x_tab[:, -1, :]
+        # x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
 
@@ -304,7 +304,7 @@ class Fusion(pl.LightningModule):
                     {"params": self.encoder_tabular.parameters()},
                     # {"params": self.im_head.parameters()},
                     # {"params": self.tab_head.parameters()},
-                    # {"params": self.fusion_core.parameters()},
+                    {"params": self.fusion_core.parameters()},
                     {"params": self.head.parameters()},
                 ],
                 lr=self.hparams.lr_eval,
