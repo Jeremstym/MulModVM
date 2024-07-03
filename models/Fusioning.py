@@ -158,6 +158,7 @@ class Fusion(pl.LightningModule):
         # if self.use_projection:
         #     x_im = self.im_head(x_im)
         #     x_tab = self.tab_head(x_tab)
+        x_tab = x_tab[:, -1, :]
         x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
