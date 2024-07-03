@@ -64,13 +64,16 @@ class Fusion(pl.LightningModule):
 
         # Initialize tabular encoders
         if self.hparams.tabular_model == "transformer":
-            self.encoder_tabular = TabularTransformer(self.hparams)
-            if self.hparams.use_xtab:
-                self.load_pretrained_xtab()
             if self.hparams.cross_fusion:
                 self.encoder_tabular = nn.Identity() # remove transformer encoder before cross-attention
+            else:
+                self.encoder_tabular = TabularTransformer(self.hparams)
+                if self.hparams.use_xtab:
+                    self.load_pretrained_xtab()
+
         elif self.hparams.tabular_model == "mlp":
             self.encoder_tabular = TabularEncoder(self.hparams)
+            
         if self.use_projection:
             self.tab_head = nn.Linear(
                 self.hparams.tabular_embedding_dim, self.hparams.projection_dim
@@ -151,11 +154,11 @@ class Fusion(pl.LightningModule):
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
         else:
             x_tab = self.encoder_tabular(x[1])
-        x = self.fusion_core(x_im, x_tab)
+        # x = self.fusion_core(x_im, x_tab)
         # if self.use_projection:
         #     x_im = self.im_head(x_im)
         #     x_tab = self.tab_head(x_tab)
-        # x = torch.cat([x_im, x_tab], dim=1)
+        x = torch.cat([x_im, x_tab], dim=1)
         x = self.head(x)
         return x
 
