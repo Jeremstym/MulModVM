@@ -5,7 +5,7 @@ defaults:
 model: resnet50
 embedding_dim: 2048
 lr: 3.e-3
-img_size: 256 # 128 possible
+img_size: 128 # 256 possible
 
 lr_imaging: 3.e-3
 lr_tabular: 3.e-4
