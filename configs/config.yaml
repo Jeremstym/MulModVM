@@ -155,7 +155,7 @@ tabular_transformer:
 # Evaluator
 generate_embeddings: False
 keep_projector: False
-eval_train_augment_rate: 0.8
+eval_train_augment_rate: 0.0 # 0.8 with ResNet50
 eval_classifier: linear
 finetune_strategy: frozen
 
