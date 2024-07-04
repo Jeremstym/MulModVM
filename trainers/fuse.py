@@ -100,6 +100,7 @@ def load_datasets(hparams):
         raise Exception(
             f"argument dataset must be set to multimodal or imaging_and_tabular AND GOT {hparams.datatype} instead"
         )
+    print(f"Image will be cropped to {hparams.img_size}x{hparams.img_size} pixels")
     return train_dataset, val_dataset
 
 

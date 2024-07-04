@@ -81,8 +81,6 @@ class ImageFastDataset(Dataset):
         self._label_path = labels_path_short
         self.train = train
 
-        print(f"Image will be cropped to {img_size}x{img_size} pixels")
-
         self.transform_train = grab_hard_eval_image_augmentations(img_size, target)
         self.transform_val = transforms.Compose([
             transforms.ToPILImage(),
