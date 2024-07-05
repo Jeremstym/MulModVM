@@ -123,7 +123,7 @@ fusion_core:
   d_out: null # Only used when using a projection head (`projection=True`)
 
 # Tabulartransformer
-tabular_embedding_dim: 192 # or can be 192 for XTab
+tabular_embedding_dim: 768 # or can be 192 for XTab
 tabular_tokenizer:
   _target_: models.TabularTokenizer.TabularTokenizer
   d_token: ${tabular_embedding_dim}
