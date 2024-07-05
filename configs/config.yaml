@@ -80,7 +80,7 @@ image_tokenization: False
 num_channels: 3
 img_size_tokenizer: 128
 patch_size: 16
-hidden_size: 192
+hidden_size: 768
 use_vit: False
 
 # Tabular
