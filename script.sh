@@ -24,4 +24,4 @@ cd MulModVM
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=imaging_and_tabular fusion=True max_epochs=100 batch_size=512 num_workers=16 tabular_embedding_dim=2048 tabular_model=mlp wandb_name=BobFusion-MLP-2048_v2
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal fusion=True max_epochs=100 batch_size=512 num_workers=16 tabular_model=transformer tabular_embedding_dim=192 wandb_name=BoBFusion-Transformer-192_v2
 # poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=multimodal fusion=True cross_fusion=False image_tokenization=False max_epochs=100 batch_size=128 num_workers=8 wandb_name=DummyConcat
-poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=imaging_and_tabular fusion=True cross_fusion=True image_tokenization=True max_epochs=100 batch_size=256 num_workers=8 wandb_name=CrossAttImg768
+poetry run python run.py data_base=/home/stympopper/data/DVMdata/features/ datatype=imaging_and_tabular fusion=True cross_fusion=True image_tokenization=True max_epochs=100 batch_size=256 num_workers=8 wandb_name=CrossAtt-Img768
