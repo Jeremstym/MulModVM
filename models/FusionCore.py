@@ -37,7 +37,7 @@ class FusionCoreCrossAtt(nn.Module):
         self.num_patches = (args.img_size // args.patch_size) ** 2
         self.num_tab_tokens = len(NUM_FEATURES) + len(CAT_FEATURES) + 1
 
-        self.cls_token = CLSToken(d_token=self.fusion_dim)
+        self.cls_token = CLSToken(d_token=self.tabular_dim)
         sequence_len = self.num_patches + self.num_tab_tokens
         self.positional_encoding_image = PositionalEncoding(self.num_patches, self.fusion_dim)
         self.positional_encoding_tabular = PositionalEncoding(self.num_tab_tokens, self.fusion_dim)       
