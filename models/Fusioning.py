@@ -142,7 +142,10 @@ class Fusion(pl.LightningModule):
         if self.hparams.image_tokenization:
             x = self.imaging_tokenizer(x) 
         elif self.imaging_model.bolt_encoder:
-            x = self.imaging_model.encoder(x)[0]
+            if self.imaging_model.keep_features:
+                x = self.imaging_model.encoder(x)
+            else:
+                x = self.imaging_model.encoder(x)[0]
         else:
             x = self.imaging_model.encoder(x).squeeze()
         return x

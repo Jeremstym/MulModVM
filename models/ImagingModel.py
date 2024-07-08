@@ -57,6 +57,7 @@ class ImagingModel(nn.Module):
       self.bolt_encoder = True
       self.pooled_dim = args.embedding_dim
       # self.encoder = torchvision_ssl_encoder(args.model)
+      self.keep_features = True
       self.create_imaging_model(args)
       
 
