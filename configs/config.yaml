@@ -104,16 +104,16 @@ fusion_core:
   n_self_blocks: 3
   n_cross_blocks: 3
   attention_n_heads: 8
-  attention_dropout: 0.2
+  attention_dropout: 0.5
   attention_initialization: kaiming
   attention_normalization: layer_norm
   ffn_d_hidden: ${fusion_core.d_token}
-  ffn_dropout: 0.1
+  ffn_dropout: 0.4
   ffn_activation: reglu
   ffn_normalization: layer_norm
-  residual_dropout: 0.1
+  residual_dropout: 0.4
   prenormalization: True
-  first_prenormalization: True
+  first_prenormalization: False
   last_layer_query_idx: null
   cross_attention: True
   n_tokens: null # Only used when compressing the input sequence (`kv_compression_ratio is not None`)
