@@ -56,6 +56,7 @@ class ImagingModel(nn.Module):
     elif args.resnet_tokenization:
       self.bolt_encoder = True
       self.keep_features = True
+      self.pooled_dim = args.embedding_dim
       self.create_imaging_model(args)
     else:
       self.bolt_encoder = True
