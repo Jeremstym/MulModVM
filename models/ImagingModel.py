@@ -58,7 +58,6 @@ class ImagingModel(nn.Module):
       self.pooled_dim = args.embedding_dim
       # self.encoder = torchvision_ssl_encoder(args.model)
       self.create_imaging_model(args)
-      print(f'Encoder keys: {self.encoder.state_dict().keys()}', flush=True)
       
 
     self.classifier = nn.Linear(self.pooled_dim, args.num_classes)
@@ -76,7 +75,7 @@ class ImagingModel(nn.Module):
       # self.pooled_dim = args.embedding_dim
     else:
       raise Exception('Invalid architecture. Please select resnet18, resnet50 or vit-b-32.')
-    self.encoder = nn.Sequential(*list(model.children())[:-1])
+    self.encoder = nn.Sequential(*list(model.children())[:-2])
 
   def import_model(self, model_name: str) -> None:
     """
