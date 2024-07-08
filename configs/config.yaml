@@ -79,7 +79,7 @@ crop_scale_lower: 0.08
 image_tokenization: False
 resnet_tokenization: False
 num_channels: 3
-img_size_tokenizer: 2048
+img_size_tokenizer: 2048 # 128 withour resnet tokenization
 patch_size: 16
 hidden_size: 768
 use_vit: False
