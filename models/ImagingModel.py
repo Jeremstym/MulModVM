@@ -53,12 +53,14 @@ class ImagingModel(nn.Module):
       self.bolt_encoder = False
       self.import_model(args.model)
       self.pooled_dim = args.embedding_dim
+    elif args.resnet_tokenization:
+      self.bolt_encoder = True
+      self.keep_features = True
+      self.create_imaging_model(args)
     else:
       self.bolt_encoder = True
       self.pooled_dim = args.embedding_dim
-      # self.encoder = torchvision_ssl_encoder(args.model)
-      self.keep_features = True
-      self.create_imaging_model(args)
+      self.encoder = torchvision_ssl_encoder(args.model)
       
 
     self.classifier = nn.Linear(self.pooled_dim, args.num_classes)
@@ -76,7 +78,7 @@ class ImagingModel(nn.Module):
       # self.pooled_dim = args.embedding_dim
     else:
       raise Exception('Invalid architecture. Please select resnet18, resnet50 or vit-b-32.')
-    self.encoder = nn.Sequential(*list(model.children())[:-2])
+    self.encoder = nn.Sequential(*list(model.children())[:-2]) # Remove fc layer and avgpool
 
   def import_model(self, model_name: str) -> None:
     """

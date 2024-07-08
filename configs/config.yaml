@@ -77,6 +77,7 @@ online_mlp: True
 augmentation_rate: 0.95
 crop_scale_lower: 0.08
 image_tokenization: False
+resnet_tokenization: False
 num_channels: 3
 img_size_tokenizer: 128
 patch_size: 16

@@ -144,6 +144,7 @@ class Fusion(pl.LightningModule):
         elif self.imaging_model.bolt_encoder:
             if self.imaging_model.keep_features:
                 x = self.imaging_model.encoder(x)
+                x = torch.flatten(x, 2).transpose(1, 2)
             else:
                 x = self.imaging_model.encoder(x)[0]
         else:
@@ -152,6 +153,8 @@ class Fusion(pl.LightningModule):
 
     def forward(self, x: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         x_im = self.encode_imaging(x[0])  # only keep the encoder output
+        print(f"Imaging shape: {x_im.shape}")
+        raise Exception("Stop here")
         if self.hparams.tabular_model == "transformer":
             x_tokens_tab = self.tokenize_tabular(x[1])
             x_tab = self.encoder_tabular(x_tokens_tab).squeeze()
