@@ -13,7 +13,6 @@ import cv2
 from tqdm import tqdm
 
 has_tqdm = True
-import lmdb
 import PIL
 
 from .TabularAttributes import (
