@@ -12,7 +12,7 @@ from utils.ssl_online_custom import SSLOnlineEvaluator
 from time import time
 import os
 
-from datasets_processor.ContrastiveImagingAndTabularDataset import ContrastiveImagingAndTabularDataset, CacheDataset
+from datasets_processor.ContrastiveImagingAndTabularDataset import ContrastiveImagingAndTabularDataset
 from datasets_processor.ContrastiveImageDataset import ContrastiveImageDataset
 from datasets_processor.ContrastiveTabularDataset import ContrastiveTabularDataset
 
