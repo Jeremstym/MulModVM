@@ -81,7 +81,7 @@ resnet_tokenization: False
 num_channels: 3
 img_size_tokenizer: 128
 patch_size: 16
-hidden_size: 2048 # 768 withour resnet tokenization
+hidden_size: 192 # 768 withour resnet tokenization
 use_vit: False
 
 # Tabular
@@ -124,7 +124,7 @@ fusion_core:
   d_out: null # Only used when using a projection head (`projection=True`)
 
 # Tabulartransformer
-tabular_embedding_dim: 2048 # or can be 192 for XTab or 768
+tabular_embedding_dim: 192 # or can be 192 for XTab or 768
 tabular_tokenizer:
   _target_: models.TabularTokenizer.TabularTokenizer
   d_token: ${tabular_embedding_dim}
