@@ -51,6 +51,7 @@ class ImagingModel(nn.Module):
         assert len(parameters)==0
     elif args.model == 'vit-b-32':
       self.bolt_encoder = False
+      self.keep_features = False
       self.import_model(args.model)
       self.pooled_dim = args.embedding_dim
     elif args.resnet_tokenization:
@@ -60,6 +61,7 @@ class ImagingModel(nn.Module):
       self.create_imaging_model(args)
     else:
       self.bolt_encoder = True
+      self.keep_features = False
       self.pooled_dim = args.embedding_dim
       self.encoder = torchvision_ssl_encoder(args.model)
       
