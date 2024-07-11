@@ -26,7 +26,7 @@ multitarget:
 wandb_entity: 
 data_base: 
 num_workers: 0
-persistent_workers: True
+persistent_workers: False
 use_cache: False
 num_sanity_val_steps: 2
 cache_num: null # default is sys.maxsize
