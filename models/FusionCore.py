@@ -4,7 +4,7 @@ import torch.nn as nn
 import hydra
 
 from models.TokenLayers import PositionalEncoding, CLSToken
-from datasets_processor.TabularAttributes import CAT_FEATURES, NUM_FEATURES
+from datasets_processor.TabularAttributes import CAT_FEATURES, NUM_FEATURES, NUM_FEATURS_NON_PHYSICAL
 
 from typing import List, Tuple, Optional, Union, Dict
 from torch import Tensor
@@ -35,7 +35,10 @@ class FusionCoreCrossAtt(nn.Module):
         assert self.tabular_dim == self.fusion_dim, "Tabular and fusion dimensions must be equal for cross-attention"
         assert self.image_dim % args.patch_size == 0, "Image dimensions must be divisible by the patch size"
         self.num_patches = (args.img_size // args.patch_size) ** 2
-        self.num_tab_tokens = len(NUM_FEATURES) + len(CAT_FEATURES) + 1
+        if args.use_physical:
+            self.num_tab_tokens = len(NUM_FEATURES) + len(CAT_FEATURES) + 1
+        else:
+            self.num_tab_tokens = len(NUM_FEATURS_NON_PHYSICAL) + len(CAT_FEATURES) + 1
 
         self.cls_token = CLSToken(d_token=self.tabular_dim)
         sequence_len = self.num_patches + self.num_tab_tokens
