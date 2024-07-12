@@ -209,6 +209,7 @@ data_val_imaging_short:
 data_train_imaging_tensors_short:
 data_val_imaging_tensors_short:
 field_lengths_tabular_short:
+field_lengths_tabular_nonphysical_short:
 data_train_eval_tabular_short:
 data_train_tabular_nonphysical_short:
 labels_train_eval_tabular_short:
