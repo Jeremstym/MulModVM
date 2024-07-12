@@ -118,9 +118,10 @@ class ImagingAndTabularDataset(Dataset):
         #     FEATURES = NUM_FEATURES + CAT_FEATURES_WITH_LABEL
         if use_header:
             if self.use_physical:
-              FEATURES = NUM_FEATURES + CAT_FEATURES
+                FEATURES = NUM_FEATURES + CAT_FEATURES
             else:
-              FEATURES = NUM_FEATURS_NON_PHYSICAL + CAT_FEATURES
+                print("WARNING: using non-physical features")
+                FEATURES = NUM_FEATURS_NON_PHYSICAL + CAT_FEATURES
             df = pd.read_csv(path_tabular, names=FEATURES)
             df.drop(missing_values, axis=0, inplace=True)
             cat_mask = check_categorical_data(df, features=FEATURES)

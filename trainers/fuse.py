@@ -79,6 +79,7 @@ def load_datasets(hparams):
             tabular_model=hparams.tabular_model,
             train=True,
             live_loading=hparams.live_loading,
+            use_physical=hparams.use_physical,
         )
         val_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_val_imaging,
@@ -94,6 +95,7 @@ def load_datasets(hparams):
             tabular_model=hparams.tabular_model,
             train=False,
             live_loading=hparams.live_loading,
+            use_physical=hparams.use_physical,
         )
         hparams.input_size = train_dataset.get_input_size()
     else:
