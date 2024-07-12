@@ -1,7 +1,7 @@
 defaults:
   - _self_
   - models: resnet50
-  - dataset: dvm_all_server_jzay
+  - dataset: dvm_all_server
 
 # Command Center
 pretrain: False
