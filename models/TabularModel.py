@@ -13,6 +13,7 @@ class TabularModel(nn.Module):
   """
   def __init__(self, args):
     super(TabularModel, self).__init__()
+    self.encoder_type = args.tabular_model
 
     self.encoder = TabularTransformer(args) if args.tabular_model == 'transformer' else TabularEncoder(args)
     if args.tabular_model == 'transformer' and args.use_xtab:
@@ -21,7 +22,7 @@ class TabularModel(nn.Module):
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     x = self.encoder(x)
-    if args.tabular_model == 'transformer':
+    if self.encoder_type == 'transformer':
       x = x[:, -1, :]
     x = self.classifier(x)
     return x
