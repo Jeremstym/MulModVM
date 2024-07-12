@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - models: resnet50
+  - models: resnet18
   - dataset: dvm_all_server
 
 # Command Center
@@ -125,7 +125,7 @@ fusion_core:
   d_out: null # Only used when using a projection head (`projection=True`)
 
 # Tabulartransformer
-tabular_embedding_dim: 192 # or can be 192 for XTab or 768
+tabular_embedding_dim: 512 # or can be 192 for XTab or 768, 512 for ResNet18
 tabular_tokenizer:
   _target_: models.TabularTokenizer.TabularTokenizer
   d_token: ${tabular_embedding_dim}
