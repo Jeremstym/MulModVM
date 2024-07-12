@@ -186,7 +186,7 @@ weighted_sampler: False
 classifier_freq: 5
 unit_test: False
 profiler: False
-output_dir: /gpfsstore/rech/rfh/urs81eb/MulModal_Results #/home/stympopper/MulModVM
+output_dir: /home/stympopper/MulModVM # /gpfsstore/rech/rfh/urs81eb/MulModal_Results #
 missing_values: [] #[2695,11563]
 
 transform:
