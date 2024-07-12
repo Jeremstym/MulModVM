@@ -21,6 +21,8 @@ class TabularModel(nn.Module):
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     x = self.encoder(x)
+    if args.tabular_model == 'transformer':
+      x = x[:, -1, :]
     x = self.classifier(x)
     return x
     
