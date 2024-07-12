@@ -67,7 +67,7 @@ def load_datasets(hparams):
     elif hparams.datatype == "imaging_and_tabular":
         train_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_train_imaging,
-            data_path_tabular=hparams.data_train_tabular,
+            data_path_tabular=hparams.data_train_tabular_nonphysical,
             delete_segmentation=hparams.delete_segmentation,
             eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_train,
@@ -82,7 +82,7 @@ def load_datasets(hparams):
         )
         val_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_val_imaging,
-            data_path_tabular=hparams.data_val_tabular,
+            data_path_tabular=hparams.data_val_tabular_nonphysical,
             delete_segmentation=hparams.delete_segmentation,
             eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_val,
