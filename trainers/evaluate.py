@@ -200,7 +200,7 @@ def evaluate(hparams, wandb_logger):
             hparams.transform_test = test_dataset.transform_val.__repr__()
         elif hparams.datatype == "tabular":
             test_dataset = TabularDataset(
-                data_path=hparams.data_test_eval_tabular,
+                data_path=hparams.data_test_eval_tabular_nonphysical,
                 labels_path=hparams.labels_test_eval_tabular,
                 eval_one_hot=hparams.eval_one_hot,
                 field_lengths_tabular=hparams.field_lengths_tabular,
