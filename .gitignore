@@ -7,3 +7,5 @@ diagrams
 .env
 environment_autogluon.yaml
 environment.yaml
+
+*.ipynb
