@@ -68,6 +68,7 @@ class TabularDataset(Dataset):
             if self.use_physical:
                 FEATURES = NUM_FEATURES + CAT_FEATURES
             else:
+                print("WARNING: using non-physical features")
                 FEATURES = NUM_FEATURS_NON_PHYSICAL + CAT_FEATURES
             df = pd.read_csv(path_tabular, names=FEATURES)
             df.drop(missing_values, axis=0, inplace=True)
