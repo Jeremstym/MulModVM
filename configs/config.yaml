@@ -79,9 +79,9 @@ crop_scale_lower: 0.08
 image_tokenization: False
 resnet_tokenization: False
 num_channels: 3
-img_size_tokenizer: 192 # 128 or 256 possible with ResNet50
+img_size_tokenizer: 192 # 128 or 256 possible 
 patch_size: 16
-hidden_size: 192 # 768 withour resnet tokenization
+hidden_size: 512 # 768 withour resnet tokenization or 192 with XTab, ResNet50, 512 with ResNet18
 use_vit: False
 
 # Tabular
