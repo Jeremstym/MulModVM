@@ -51,7 +51,7 @@ def load_datasets(hparams):
             data_path=hparams.data_train_tabular_nonphysical,
             labels_path=hparams.labels_train_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
-            field_lengths_tabular=hparams.field_lengths_tabular,
+            field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
             use_header=(hparams.tabular_model == "transformer"),
             use_physical=hparams.use_physical,
         )
@@ -59,7 +59,7 @@ def load_datasets(hparams):
             data_path=hparams.data_val_tabular_nonphysical,
             labels_path=hparams.labels_val_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
-            field_lengths_tabular=hparams.field_lengths_tabular,
+            field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
             use_header=(hparams.tabular_model == "transformer"),
             use_physical=hparams.use_physical,
         )
@@ -203,7 +203,7 @@ def evaluate(hparams, wandb_logger):
                 data_path=hparams.data_test_eval_tabular_nonphysical,
                 labels_path=hparams.labels_test_eval_tabular,
                 eval_one_hot=hparams.eval_one_hot,
-                field_lengths_tabular=hparams.field_lengths_tabular,
+                field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
                 use_header=(hparams.tabular_model == "transformer"),
                 use_physical=hparams.use_physical,
             )
