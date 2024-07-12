@@ -67,11 +67,11 @@ def load_datasets(hparams):
     elif hparams.datatype == "imaging_and_tabular":
         train_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_train_imaging,
-            data_path_tabular=hparams.data_train_tabular,
+            data_path_tabular=hparams.data_train_tabular_nonphysical,
             delete_segmentation=hparams.delete_segmentation,
             eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_train,
-            field_lengths_tabular=hparams.field_lengths_tabular,
+            field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
             eval_one_hot=hparams.eval_one_hot,
             img_size=hparams.img_size_tokenizer,
             target=hparams.target,
@@ -83,11 +83,11 @@ def load_datasets(hparams):
         )
         val_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_val_imaging,
-            data_path_tabular=hparams.data_val_tabular,
+            data_path_tabular=hparams.data_val_tabular_nonphysical,
             delete_segmentation=hparams.delete_segmentation,
             eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_val,
-            field_lengths_tabular=hparams.field_lengths_tabular,
+            field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
             eval_one_hot=hparams.eval_one_hot,
             img_size=hparams.img_size_tokenizer,
             target=hparams.target,
