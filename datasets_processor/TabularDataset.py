@@ -153,7 +153,10 @@ class TabularDataset(Dataset):
         """
         Returns the number of numerical features
         """
-        return len(NUM_FEATURES)
+        if self.use_physical:
+            return len(NUM_FEATURES)
+        else:
+            return len(NUM_FEATURS_NON_PHYSICAL)
 
     def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
         return self.data[index], self.labels[index]
