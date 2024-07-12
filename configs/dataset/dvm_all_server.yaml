@@ -43,6 +43,7 @@ data_val_tabular_nonphysical: dvm_features_val_noOH_all_views.csv
 data_test_tabular_nonphysical: dvm_features_test_noOH_all_views.csv
 
 field_lengths_tabular: tabular_lengths${addendum}_physical.pt
+field_lengths_tabular_nonphysical: tabular_lengths${addendum}.pt
 
 
 data_train_eval_tabular: dvm_features_train_noOH${addendum}_physical_jittered_50.csv
