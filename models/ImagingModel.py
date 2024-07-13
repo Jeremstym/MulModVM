@@ -81,9 +81,10 @@ class ImagingModel(nn.Module):
       # self.pooled_dim = args.embedding_dim
     else:
       raise Exception('Invalid architecture. Please select resnet18, resnet50 or vit-b-32.')
-      
+
     if self.keep_features:
       self.encoder = nn.Sequential(*list(model.children())[:-2]) # Remove fc layer and avgpool
+      self.encoder.requires_grad = False # Freeze encoder
     else:
       self.encoder = model
 
