@@ -216,7 +216,7 @@ class Evaluator(pl.LightningModule):
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             patience=int(10 / self.hparams.check_val_every_n_epoch),
-            # min_lr=self.hparams.lr * 0.0001,
+            min_lr=self.hparams.lr * 0.0001,
         )
         return optimizer
 
