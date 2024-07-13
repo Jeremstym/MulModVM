@@ -145,11 +145,8 @@ class Fusion(pl.LightningModule):
             if self.imaging_model.keep_features:
                 x = self.imaging_model.encoder(x)
                 x = torch.flatten(x, 2).transpose(1, 2)
-                print(f"image shape before projection {x.shape}")
                 # Project tokens to hidden size
                 x = self.imaging_model.projection(x)
-                print(f"image shape after projection {x.shape}")
-                raise Exception("Not implemented")
             else:
                 x = self.imaging_model.encoder(x)[0]
         else:
