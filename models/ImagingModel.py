@@ -59,6 +59,7 @@ class ImagingModel(nn.Module):
       self.keep_features = True
       self.pooled_dim = args.embedding_dim
       self.create_imaging_model(args)
+      self.projection = nn.Linear(512, args.hidden_size)
     else:
       self.bolt_encoder = True
       self.keep_features = False

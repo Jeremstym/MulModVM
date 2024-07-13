@@ -145,6 +145,8 @@ class Fusion(pl.LightningModule):
             if self.imaging_model.keep_features:
                 x = self.imaging_model.encoder(x)
                 x = torch.flatten(x, 2).transpose(1, 2)
+                # Project tokens to hidden size
+                x = self.imaging_model.projection(x)
             else:
                 x = self.imaging_model.encoder(x)[0]
         else:
