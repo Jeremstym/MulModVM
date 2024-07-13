@@ -85,7 +85,7 @@ class ImagingModel(nn.Module):
 
     if self.keep_features:
       self.encoder = nn.Sequential(*list(model.children())[:-2]) # Remove fc layer and avgpool
-      self.encoder.requires_grad = False # Freeze encoder
+      self.encoder.requires_grad = False # Freeze encoder for tokenization
     else:
       self.encoder = model
 
