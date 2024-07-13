@@ -34,7 +34,10 @@ class FusionCoreCrossAtt(nn.Module):
         self.fusion_dim = args.hidden_size
         assert self.tabular_dim == self.fusion_dim, "Tabular and fusion dimensions must be equal for cross-attention"
         assert self.image_dim % args.patch_size == 0, "Image dimensions must be divisible by the patch size"
-        self.num_patches = (args.img_size // args.patch_size) ** 2
+        if args.models == 'resnet18':
+            self.num_patches = 36
+        else:
+            self.num_patches = (args.img_size // args.patch_size) ** 2
         if args.use_physical:
             self.num_tab_tokens = len(NUM_FEATURES) + len(CAT_FEATURES) + 1
         else:
