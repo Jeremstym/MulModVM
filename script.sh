@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=hard
 #SBATCH --job-name=ResCross-192-Frozen-Prenorm
-#SBATCH --nodelist=top
+#SBATCH --nodelist=zz
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --time=2-16:00:00
