@@ -71,7 +71,9 @@ class ImagingModel(nn.Module):
 
   def create_imaging_model(self, args):
     if args['model'] == 'resnet18':
-      model = models.resnet18(pretrained=False, num_classes=args['num_classes'])
+      # model = models.resnet18(pretrained=True, num_classes=args['num_classes'])
+      weights = models.ResNet18_Weights.DEFAULT
+      model = models.resnet18(weights=weights, num_classes=args['num_classes'])
       # self.pooled_dim = 512
     elif args['model'] == 'resnet50':
       model = models.resnet50(pretrained=False, num_classes=args['num_classes'])
