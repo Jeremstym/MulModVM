@@ -36,10 +36,10 @@ def test(hparams, wandb_logger=None):
         print(test_dataset.transform_val.__repr__())
     elif hparams.datatype == "tabular":
         test_dataset = TabularDataset(
-            data_path=hparams.data_test_tabular,
+            data_path=hparams.data_test_tabular_nonphysical,
             labels_path=hparams.labels_test_eval_tabular,
             eval_one_hot=hparams.eval_one_hot,
-            field_lengths_tabular=hparams.field_lengths_tabular,
+            field_lengths_tabular=hparams.field_lengths_tabular_nonphysical,
             use_header=(hparams.tabular_model=='transformer'),
             use_physical=hparams.use_physical,
         )
