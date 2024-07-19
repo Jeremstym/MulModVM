@@ -47,7 +47,7 @@ def test(hparams, wandb_logger=None):
     elif hparams.datatype == "multimodal" or hparams.datatype == "imaging_and_tabular":
         test_dataset = ImagingAndTabularDataset(
             data_path_imaging=hparams.data_fast_test_imaging,
-            data_path_tabular=hparams.data_test_eval_tabular,
+            data_path_tabular=hparams.data_test_tabular_nonphysical,
             delete_segmentation=hparams.delete_segmentation,
             eval_train_augment_rate=hparams.eval_train_augment_rate,
             labels_path=hparams.labels_test_eval_imaging,
