@@ -12,6 +12,10 @@ class ImagingModel(nn.Module):
     super(ImagingModel, self).__init__()
 
     if args.checkpoint:
+      if args.resnet_tokenization:
+        self.keep_features = True
+      else:
+        self.keep_features = False
       # Load weights
       checkpoint = torch.load(args.checkpoint)
       original_args = checkpoint['hyper_parameters']
