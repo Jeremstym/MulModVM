@@ -58,6 +58,7 @@ def test(hparams, wandb_logger=None):
             tabular_model=hparams.tabular_model,
             train=False,
             live_loading=hparams.live_loading,
+            use_physical=hparams.use_physical,
         )
         hparams.input_size = test_dataset.get_input_size()
     else:
